@@ -1,5 +1,4 @@
 "use client";
-import { getAllCourses } from "@/lib/api";
 import { Facebook_CHAT_URL } from "@/lib/constants";
 import { useState } from "react";
 
