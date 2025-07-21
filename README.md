@@ -1,1 +1,1 @@
-# innolab-mn.github.io
+InnoLab - Innovation Laboratory
