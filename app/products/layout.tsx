@@ -1,6 +1,7 @@
 import "../globals.css";
 import { Inter } from "next/font/google";
 import {Header, Footer} from "../header_footer";
+import GoogleAnalytics from "../googleAnalytics";
 
 
 export const metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({
         <section className="min-h-screen">
           <Header />
           <main>{children}</main>
+          <GoogleAnalytics />
           <Footer />
         </section>
       </body>

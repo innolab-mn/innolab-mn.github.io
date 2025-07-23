@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import GoogleAnalytics from './googleAnalytics';
 
 export const metadata = {
   title: `InnoLab - Innovation Laboratory`,
@@ -12,6 +13,8 @@ const inter = Inter({
   display: "swap",
 });
 
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
 export default function RootLayout({
   children,
 }: {
@@ -22,6 +25,7 @@ export default function RootLayout({
       <body>
         <section className="min-h-screen">
           {children}
+          <GoogleAnalytics />
         </section>
       </body>
     </html>
