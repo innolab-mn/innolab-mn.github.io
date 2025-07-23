@@ -16,6 +16,7 @@ jobs:
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       CONTENTFUL_REVALIDATE_SECRET: ${{ secrets.CONTENTFUL_REVALIDATE_SECRET }}
       NEXT_PUBLIC_PREVIEW: ${{ secrets.NEXT_PUBLIC_PREVIEW }}
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
