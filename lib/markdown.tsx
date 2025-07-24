@@ -31,7 +31,7 @@ function RichTextAsset({
   const asset = assets?.find((asset) => asset.sys.id === id);
 
   if (asset?.url) {
-    return <Image src={asset.url} layout="fill" alt={asset.description} />;
+    return <div><img src={asset.url} alt={asset.description} /></div>;
   }
 
   return null;
