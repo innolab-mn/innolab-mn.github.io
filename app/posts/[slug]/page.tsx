@@ -10,6 +10,30 @@ import { getAllPosts, getPostAndMorePosts } from "@/lib/api";
 
 export const dynamic = "force-static"
 
+
+import { Metadata } from "next";
+
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const { post } = await getPostAndMorePosts(params.slug, true);
+
+  return {
+    title: post.title,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || "",
+      type: "article",
+      images: [
+        {
+          url: post.coverImage?.url || "/innolab_logo.svg", // fallback if missing
+          alt: post.title,
+        },
+      ],
+    },
+  };
+}
+
+
 export async function generateStaticParams() {
   const allPosts = await getAllPosts(true);
 
@@ -18,11 +42,7 @@ export async function generateStaticParams() {
   }));
 }
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
+
 
 const PostPage = async ({ params }: any) => {
   const {slug} = await params;

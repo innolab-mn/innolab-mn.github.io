@@ -1,14 +1,12 @@
 import Link from 'next/link'; // Import the Link component
 import { getAllProducts } from "@/lib/api";
 import { Facebook_CHAT_URL } from '@/lib/constants';
+import { formatPrice } from '@/lib/utils';
 
 export const dynamic = "force-static";
 
 // Helper function to format the price
-const formatPrice = (price: Number) => {
-  // Convert to string and add apostrophe every three digits from the end
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
-};
+
 
 const ProductPreview = ({ product }: any) => {
   const formattedPrice = formatPrice(product.price);
@@ -30,7 +28,7 @@ const ProductPreview = ({ product }: any) => {
         )}
         <p className="text-xl font-semibold p-4 pt-2 mt-auto text-gray-400">
           Үнэ: {product.originalPrice && product.originalPrice !== product.price && (<span className='line-through'>{formatPrice(product.originalPrice)}₮</span>)}
-           <span> </span><span className='text-black'>{formatPrice(product.price)}₮</span>
+           <span> </span><span className='text-black'>{formatPrice(product.price)}₮</span> (НӨАТ ороогүй)
         </p>
       </div>
     </Link>

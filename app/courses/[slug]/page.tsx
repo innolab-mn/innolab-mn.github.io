@@ -7,6 +7,27 @@ import { getAllCourses, getCourseAndMoreCourses } from "@/lib/api";
 
 export const dynamic = "force-static"
 
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const { course } = await getCourseAndMoreCourses(params.slug, true);
+
+  return {
+    title: course.title,
+    openGraph: {
+      title: course.title,
+      description: course.title,
+      type: "article",
+      images: [
+        {
+          url: course.coverImage?.url || "/innolab_logo.svg", // fallback if missing
+          alt: course.title,
+        },
+      ],
+    },
+  };
+}
+
 export async function generateStaticParams() {
   const courses = await getAllCourses(true);
 

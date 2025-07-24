@@ -5,6 +5,29 @@ import { getAllPosts, getAllProducts, getProductAndMoreProducts } from "@/lib/ap
 
 export const dynamic = "force-static"
 
+import { Metadata } from "next";
+import { formatPrice } from "@/lib/utils";
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const { product } = await getProductAndMoreProducts(params.slug, true);
+
+  return {
+    title: product.title,
+    openGraph: {
+      title: product.title,
+      description: product.title,
+      type: "article",
+      images: [
+        {
+          url: product.coverImage?.url || "/innolab_logo.svg", // fallback if missing
+          alt: product.title,
+        },
+      ],
+    },
+  };
+}
+
+
 export async function generateStaticParams() {
   const products = await getAllProducts(true);
 
@@ -29,7 +52,10 @@ const PostPage = async ({ params }: any) => {
         <h1 className="mb-6 text-center text-3xl font-extrabold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
           {product.title}
         </h1>
-
+        <p className="text-xl font-semibold p-4 pt-2 mt-auto text-gray-400">
+          Үнэ: {product.originalPrice && product.originalPrice !== product.price && (<span className='line-through'>{formatPrice(product.originalPrice)}₮</span>)}
+           <span> </span><span className='text-black'>{formatPrice(product.price)}₮</span> (НӨАТ ороогүй)
+        </p>
         {product.imageCollection && (
           <div className="mb-8 md:mb-10 lg:mb-12">
             <img
