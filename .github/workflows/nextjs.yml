@@ -3,7 +3,10 @@ name: Deploy Next.js Static to GitHub Pages
 on:
   push:
     branches: [main]
-
+  workflow_dispatch:
+  repository_dispatch:
+    types: [contenful-update]
+  
 permissions:
   contents: write
 
