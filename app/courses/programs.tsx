@@ -1,8 +1,6 @@
+'use client';
 import { Facebook_CHAT_URL } from "@/lib/constants";
-import { getAllCourses } from "@/lib/api";
-import Programs from "./programs";
-import { formatPrice } from "@/lib/utils";
-import Link from "next/link";
+import { useState } from "react";
 
 export const dynamic = "force-static"
 
@@ -24,52 +22,55 @@ type Logo = {
   desc: string;
 };
 
+const Programs = ({ params }: any) => {
 
-const CoursePreview = ({ course }: any) => {
+  
+  const [active, setActive] = useState<Logo | null>(null);
 
-  return (
-    // Wrap the entire course card content with Link
-    <Link href={`/courses/${course.slug}`} passHref>
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full transform transition duration-300 hover:scale-105 cursor-pointer">
-        <h2 className="text-lg sm:text-xl font-bold p-4 pb-0 text-gray-800">
-          {course.title}
-        </h2>
-        {course.imageCollection && (
-          <img
-            src={course.imageCollection.items[0]? course.imageCollection.items[0].url : '/assets/default-course-image.png'  }
-            alt={course.title}
-            className="w-full h-48 object-cover mt-2"
-          />
-        )}
-        <p className="text-xl font-semibold p-4 pt-2 mt-auto text-gray-400">
-          Үнэ: <span className='text-black'>{formatPrice(course.price)}₮</span> (НӨАТ ороогүй)
-        </p>
-      </div>
-    </Link>
-  );
-};
-
-const CoursePage = async ({ params }: any) => {
-
-  const courses = await getAllCourses(true);
   return (
     <div className="container mx-auto px-5 max-w-5xl">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
-      { courses.map((course: any) => (
-        <CoursePreview key={course.slug} course={course} />
-      ))}
-      { courses.length === 0 && (
-        <div className="text-center text-2xl font-bold mt-20 mb-20">
-          Сургалтын мэдээлэл шинэчлэгдэж байна.
-        </div>)}
+      <div className="flex flex-row flex-wrap justify-center items-center gap-8 py-8">
+        {logos.map((logo: Logo, index) => (
+          <img
+            key={index}
+            src={logo.src}
+            alt={logo.alt}
+            className="h-20 cursor-pointer hover:scale-105 transition"
+            onClick={() => setActive(logo)}
+          />
+        ))}
       </div>
-      <h1 className="text-xl mb-4">
-        Та <a href="tel:86001161" className="text-blue-600 ml-1 hover:text-blue-800">86001161</a> дугаар руу холбогдох эсвэл 
-        <span> </span><a href={Facebook_CHAT_URL} className='text-blue-600 ml-1 hover:text-blue-800'>Facebook chat</a>-аас хүссэн мэдээллээ авна уу.
-      </h1>
-      <Programs />
+      {active && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setActive(null)} // outside click
+        >
+          <div
+            className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full relative"
+            onClick={(e) => e.stopPropagation()} // prevents closing when clicking inside
+          >
+            <button
+              className="absolute top-2 right-2 text-gray-500 p-4 text-2xl hover:text-black"
+              onClick={() => setActive(null)}
+            >
+              ✕
+            </button>
+            <img src={active.src} alt={active.alt} className="h-20 mx-auto mb-4" />
+            {/* <h2 className="text-xl font-semibold text-center mb-2">{active.alt}</h2> */}
+            <p className="text-gray-700 text-center">{active.desc}</p>
+            <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setActive(null)}
+              className="text-black font-bold hover:underline px-4 py-2 border border-gray-300 rounded-full transition duration-300 hover:bg-gray-100"
+            >
+              Хаах
+            </button>
+          </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default CoursePage;
+export default Programs;

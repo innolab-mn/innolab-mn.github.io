@@ -1,7 +1,7 @@
 import Date from "../../date";
 
 import { Markdown } from "@/lib/markdown";
-import { getAllPosts, getAllProducts, getProductAndMoreProducts } from "@/lib/api";
+import { getAllProducts, getProductAndMoreProducts } from "@/lib/api";
 
 export const dynamic = "force-static"
 
@@ -36,13 +36,8 @@ export async function generateStaticParams() {
   }));
 }
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
 
-const PostPage = async ({ params }: any) => {
+const ProductPage = async ({ params }: any) => {
   const { slug } = await params;
   const { product, moreProducts } = await getProductAndMoreProducts(slug, true);
 
@@ -83,4 +78,4 @@ const PostPage = async ({ params }: any) => {
   );
 }
 
-export default PostPage;
+export default ProductPage;
