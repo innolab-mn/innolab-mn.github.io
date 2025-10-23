@@ -15,6 +15,17 @@ const POST_GRAPHQL_FIELDS = `
   content {
     json
     links {
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on YoutubeVideo {
+            videoId
+          }
+        }
+      }
       assets {
         block {
           sys {
@@ -59,6 +70,17 @@ const PRODUCT_GRAPHQL_FIELDS = `
   content {
     json
     links {
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on YoutubeVideo {
+            videoId
+          }
+        }
+      }
       assets {
         block {
           sys {
@@ -100,6 +122,17 @@ const COURSE_GRAPHQL_FIELDS = `
   content {
     json
     links {
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on YoutubeVideo {
+            videoId
+          }
+        }
+      }
       assets {
         block {
           sys {
