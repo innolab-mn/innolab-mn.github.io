@@ -1,0 +1,7 @@
+:HL["/_next/static/chunks/1l_dc1thd4bad.css","style"]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/assets/innolab_logo.svg","image"]
+:HL["/assets/facebook.png","image"]
+:HL["/assets/youtube_no_text.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/2LeuOZsBs5RXZWXdUjIEIy/bfd20cea37e163727da46b6b5b85dee4/SO101_Follower.webp","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"products","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"b-ren-ugsragdsan-robot-gar-so-arm101","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Vd_L7LW-vfYxbOEHU25NY"}

@@ -1,0 +1,9 @@
+:HL["/_next/static/chunks/1l_dc1thd4bad.css","style"]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/assets/innolab_logo.svg","image"]
+:HL["/assets/facebook.png","image"]
+:HL["/assets/youtube_no_text.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/3cHzzjQYLSOZZ9GZsLVhVU/d1e916d27692bb403cf28773775b66a8/miniature_soldiers.jpg","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/6yMlcHsnZwsmdtKNTIZwo2/b8c446fb4f08c4d990a7523d07370628/tamiya_2023.jpg","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/tLC7UFycj8XoOPBU1wgid/f3a718da934ae2c3e99ce2573de57f0e/tamiya_robot.jpg","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"posts","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"tamiyaa-negen-zuunyg-damzhsan-uran-b-teel-ba-ilerkhiilel-sgen-baiguulagch","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Vd_L7LW-vfYxbOEHU25NY"}
