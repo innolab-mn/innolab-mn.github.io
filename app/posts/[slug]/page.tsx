@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import MoreStories from "../../more-stories";
 import Avatar from "../../avatar";
@@ -8,14 +9,25 @@ import CoverImage from "../../cover-image";
 import { Markdown } from "@/lib/markdown";
 import { getAllPosts, getPostAndMorePosts } from "@/lib/api";
 
-export const dynamic = "force-static"
-
+export const dynamic = "force-static";
 
 import { Metadata } from "next";
 
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const { post } = await getPostAndMorePosts(params.slug, true);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await getPostAndMorePosts(slug, true);
+
+  if (!data?.post) {
+    return {
+      title: "Post Not Found",
+    };
+  }
+
+  const { post } = data;
 
   return {
     title: post.title,
@@ -25,14 +37,13 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       type: "article",
       images: [
         {
-          url: post.coverImage?.url || "/innolab_logo.svg", // fallback if missing
+          url: post.coverImage?.url || "/innolab_logo.svg",
           alt: post.title,
         },
       ],
     },
   };
 }
-
 
 export async function generateStaticParams() {
   const allPosts = await getAllPosts(true);
@@ -42,14 +53,18 @@ export async function generateStaticParams() {
   }));
 }
 
+const PostPage = async ({ params }: Props) => {
+  const { slug } = await params;
+  const data = await getPostAndMorePosts(slug, true);
 
+  if (!data?.post) {
+    notFound();
+  }
 
-const PostPage = async ({ params }: any) => {
-  const {slug} = await params;
-  const { post, morePosts } = await getPostAndMorePosts(slug, true);
+  const { post, morePosts } = data;
 
   return (
-    <div className="container mx-auto px-5 max-w-5xl">
+    <div className="container mx-auto max-w-5xl px-5">
       <article>
         <h1 className="mb-12 text-center text-3xl font-bold leading-tight tracking-tighter md:text-left md:text-4xl md:leading-none lg:text-4xl">
           {post.title}
@@ -60,7 +75,7 @@ const PostPage = async ({ params }: any) => {
           )}
         </div>
         <div className="mb-8 sm:mx-0 md:mb-16">
-          <CoverImage title={post.title} url={post.coverImage.url} />
+          <CoverImage title={post.title} url={post.coverImage?.url} />
         </div>
         <div className="mx-auto max-w-2xl">
           <div className="mb-6 block md:hidden">
@@ -79,10 +94,10 @@ const PostPage = async ({ params }: any) => {
           </div>
         </div>
       </article>
-      <hr className="border-accent-2 mt-28 mb-24" />
+      <hr className="border-accent-2 mb-24 mt-28" />
       <MoreStories morePosts={morePosts} />
     </div>
   );
-}
+};
 
 export default PostPage;
