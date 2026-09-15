@@ -24,7 +24,7 @@ function Header() {
               <li><a href="/products" className="text-gray-700 hover:text-gray-900">Дэлгүүр</a></li>
               <li><a href={Facebook_URL} className="text-gray-700 hover:text-gray-900"><img height={20} width={20} src="/assets/facebook.png" /></a></li>
               <li><a href={Youtube_URL} className="text-gray-700 hover:text-gray-900"><img height={20} width={20} src="/assets/youtube_no_text.png" /></a></li>
-              
+
             </ul>
           </nav>
 
@@ -60,12 +60,12 @@ function Header() {
 
             <div className="absolute bottom-6 left-0 w-full px-5">
               <address className="not-italic text-center text-gray-600 text-sm leading-relaxed">
-              <a href="tel:86001161" className="text-blue-600 hover:text-blue-800 underline">
-                +97686001161
-              </a>{" "}
-              – Chingeltei, 3-р хороо, Pearl Tower, Corp B #504,
-              <br />
-              Ulaanbaatar, Mongolia
+                <a href="tel:86001161" className="text-blue-600 hover:text-blue-800 underline">
+                  +97686001161
+                </a>{" "}
+                – Sukhbaatar District, M Building #601,
+                <br />
+                Ulaanbaatar, Mongolia
               </address>
             </div>
           </nav>
@@ -77,31 +77,31 @@ function Header() {
 
 function Footer() {
   return (
-<footer className="bg-accent-1 border-t border-accent-2">
-  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="py-12 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
-      <Image
-        src="/assets/innolab_logo.svg"
-        alt="InnoLab Logo"
-        width={149}
-        height={64}
-        unoptimized
-        className="h-auto w-[149px]"
-      />
+    <footer className="bg-accent-1 border-t border-accent-2">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-12 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
+          <Image
+            src="/assets/innolab_logo.svg"
+            alt="InnoLab Logo"
+            width={149}
+            height={64}
+            unoptimized
+            className="h-auto w-[149px]"
+          />
 
-      <address className="not-italic text-center lg:text-right text-gray-600 text-sm leading-relaxed">
-        © {new Date().getFullYear()} <strong>InnoLab</strong>. All rights reserved.
-        <br />
-        <a href="tel:86001161" className="text-blue-600 hover:text-blue-800 underline">
-          +97686001161
-        </a>{" "}
-        – Chingeltei, 3-р хороо, Pearl Tower, Corp B #504,
-        <br />
-        Ulaanbaatar, Mongolia
-      </address>
-    </div>
-  </div>
-</footer>
+          <address className="not-italic text-center lg:text-right text-gray-600 text-sm leading-relaxed">
+            © {new Date().getFullYear()} <strong>InnoLab</strong>. All rights reserved.
+            <br />
+            <a href="tel:86001161" className="text-blue-600 hover:text-blue-800 underline">
+              +97686001161
+            </a>{" "}
+            – Sukhbaatar District, M Building #601,
+            <br />
+            Ulaanbaatar, Mongolia
+          </address>
+        </div>
+      </div>
+    </footer>
   );
 }
-export {Header, Footer}
+export { Header, Footer }

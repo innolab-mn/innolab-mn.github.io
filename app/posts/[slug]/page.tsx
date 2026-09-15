@@ -19,8 +19,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const data = await getPostAndMorePosts(slug, true);
-
+  const data = await getPostAndMorePosts(slug, false);
   if (!data?.post) {
     return {
       title: "Post Not Found",
@@ -28,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const { post } = data;
-
   return {
     title: post.title,
     openGraph: {
@@ -55,7 +53,7 @@ export async function generateStaticParams() {
 
 const PostPage = async ({ params }: Props) => {
   const { slug } = await params;
-  const data = await getPostAndMorePosts(slug, true);
+  const data = await getPostAndMorePosts(slug, false);
 
   if (!data?.post) {
     notFound();

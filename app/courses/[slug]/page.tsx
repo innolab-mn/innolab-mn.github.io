@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const data = await getCourseAndMoreCourses(slug, true);
+  const data = await getCourseAndMoreCourses(slug, false);
 
   if (!data?.course) {
     return {
@@ -79,7 +79,7 @@ const CoursePage = async ({ params }: Props) => {
     return <div></div>;
   }
 
-  const data = await getCourseAndMoreCourses(slug, true);
+  const data = await getCourseAndMoreCourses(slug, false);
 
   if (!data?.course) {
     notFound();
