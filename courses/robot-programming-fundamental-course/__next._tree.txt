@@ -3,4 +3,5 @@
 :HL["/assets/innolab_logo.svg","image"]
 :HL["/assets/facebook.png","image"]
 :HL["/assets/youtube_no_text.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"robot-programming-fundamental-course","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"L7qLKbWIgBwIT4Kgd67TA"}
+:HL["https://images.ctfassets.net/mjimfx86z1sb/2LeuOZsBs5RXZWXdUjIEIy/bfd20cea37e163727da46b6b5b85dee4/SO101_Follower.webp","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"robot-programming-fundamental-course","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Rs285ZFJp23wHys19HCe2"}

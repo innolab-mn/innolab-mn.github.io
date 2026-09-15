@@ -3,4 +3,9 @@
 :HL["/assets/innolab_logo.svg","image"]
 :HL["/assets/facebook.png","image"]
 :HL["/assets/youtube_no_text.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"posts","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"google-deepmind-iin-g-icetgekh-zakhiral-nobeliin-shagnalt-demis-khassabis","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"L7qLKbWIgBwIT4Kgd67TA"}
+:HL["https://images.ctfassets.net/mjimfx86z1sb/3uIpG7MDJ8vQTALC4UlQiI/f4a1b9eaaf68c915ac6b58515ab5f9d9/image.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/2K4oUyeZdnGEu6Llt7Uq7R/8ae4c0a5e17e94d7543c5cdb33ff212d/image.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/gX1FNVcyzrBrgW6KV0By1/99159d7b164939c74bc5c587c86c5a98/image.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/5AwyGsAi9t6DrQWJD4GEvS/b1e12f6b5e89b1dae534e78f1dcb4ed9/image.png","image"]
+:HL["https://images.ctfassets.net/mjimfx86z1sb/38cn8dy1NUZUAsmbvKhzQW/a24e25dc2f156024d3c5207f68a2d602/image.png","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"posts","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"google-deepmind-iin-g-icetgekh-zakhiral-nobeliin-shagnalt-demis-khassabis","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Rs285ZFJp23wHys19HCe2"}

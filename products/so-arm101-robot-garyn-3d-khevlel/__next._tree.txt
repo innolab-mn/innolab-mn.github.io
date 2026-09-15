@@ -3,4 +3,5 @@
 :HL["/assets/innolab_logo.svg","image"]
 :HL["/assets/facebook.png","image"]
 :HL["/assets/youtube_no_text.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"products","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"so-arm101-robot-garyn-3d-khevlel","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"L7qLKbWIgBwIT4Kgd67TA"}
+:HL["https://images.ctfassets.net/mjimfx86z1sb/7hWA8NjPqCPSiPgDDH4xcc/339d689d96517b55004a05c5f6f428b8/4-114993668-so-arm101-low-cost-ai-arm-3d-printed-parts-for-lerobot_800x.webp","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"products","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"so-arm101-robot-garyn-3d-khevlel","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Rs285ZFJp23wHys19HCe2"}
