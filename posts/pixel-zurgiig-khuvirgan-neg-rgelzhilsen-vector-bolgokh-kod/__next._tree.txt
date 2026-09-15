@@ -3,6 +3,4 @@
 :HL["/assets/innolab_logo.svg","image"]
 :HL["/assets/facebook.png","image"]
 :HL["/assets/youtube_no_text.png","image"]
-:HL["https://images.ctfassets.net/mjimfx86z1sb/56nUOc7ZfxSrCZmwbnBT50/9fc30cd4645bb4817f7c9c2a0f924429/download__1_.png","image"]
-:HL["https://images.ctfassets.net/mjimfx86z1sb/2yBDHQZagRzguxxWZxaPXZ/587b4771e739bd92049c8822dc3aba7f/download.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"posts","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"pixel-zurgiig-khuvirgan-neg-rgelzhilsen-vector-bolgokh-kod","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Vd_L7LW-vfYxbOEHU25NY"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"posts","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"pixel-zurgiig-khuvirgan-neg-rgelzhilsen-vector-bolgokh-kod","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"dC5Rs62Ff-s7OC0Jsy1jg"}

@@ -3,5 +3,4 @@
 :HL["/assets/innolab_logo.svg","image"]
 :HL["/assets/facebook.png","image"]
 :HL["/assets/youtube_no_text.png","image"]
-:HL["https://images.ctfassets.net/mjimfx86z1sb/4nydHfu6CLQD7fTFotzP2m/aff1cbd90303abeab53b5e9c5178fc76/image.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"algorithm-and-python-programming-fundamental","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Vd_L7LW-vfYxbOEHU25NY"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"algorithm-and-python-programming-fundamental","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"dC5Rs62Ff-s7OC0Jsy1jg"}
