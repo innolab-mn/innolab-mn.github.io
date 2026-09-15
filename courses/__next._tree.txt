@@ -7,4 +7,4 @@
 :HL["https://images.ctfassets.net/mjimfx86z1sb/4nydHfu6CLQD7fTFotzP2m/aff1cbd90303abeab53b5e9c5178fc76/image.png","image"]
 :HL["https://images.ctfassets.net/mjimfx86z1sb/2LeuOZsBs5RXZWXdUjIEIy/bfd20cea37e163727da46b6b5b85dee4/SO101_Follower.webp","image"]
 :HL["https://images.ctfassets.net/mjimfx86z1sb/42WSxO8uvipaXFURqGM02v/004e462573b9bfc1d2c1f99811253f81/image.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"dC5Rs62Ff-s7OC0Jsy1jg"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"courses","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"L7qLKbWIgBwIT4Kgd67TA"}
