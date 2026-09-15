@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const data = await getProductAndMoreProducts(slug, false);
+  const data = await getProductAndMoreProducts(slug, true);
 
   if (!data?.product) {
     return {
@@ -78,7 +78,7 @@ const ProductPage = async ({ params }: Props) => {
     return <div></div>;
   }
 
-  const data = await getProductAndMoreProducts(slug, false);
+  const data = await getProductAndMoreProducts(slug, true);
 
   if (!data?.product) {
     notFound();
