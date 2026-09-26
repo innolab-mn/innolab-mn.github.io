@@ -1,5 +1,6 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import "./_components/landing.css";
+import { Geist, Inter, Playfair_Display } from "next/font/google";
 import GoogleAnalytics from './googleAnalytics';
 
 export const metadata = {
@@ -7,13 +8,14 @@ export const metadata = {
   description: `Санаанаас Бодит Биет Хүртэлх Аялал.`,
 };
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const display = Geist({ subsets: ["latin", "cyrillic"], variable: "--font-landing-display", display: "swap" });
+const body = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-landing-body", display: "swap" });
+const serif = Playfair_Display({
+  subsets: ["latin", "cyrillic"],
+  style: ["italic"],
+  variable: "--font-landing-serif",
   display: "swap",
 });
-
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export default function RootLayout({
   children,
@@ -21,12 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body>
-        <section className="min-h-screen">
-          {children}
-          <GoogleAnalytics />
-        </section>
+    <html lang="mn" className={`${display.variable} ${body.variable} ${serif.variable}`}>
+      <body className="font-[family-name:var(--font-landing-body)] bg-[#FBFAF7] text-[#12281A] antialiased selection:bg-[#42A85D] selection:text-black">
+        <noscript>
+          <style>{`[data-reveal],[data-panel-img],.word-reveal{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
+        {children}
+        <GoogleAnalytics />
       </body>
     </html>
   );
