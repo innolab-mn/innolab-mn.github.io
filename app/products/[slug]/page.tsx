@@ -1,132 +1,186 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Date from "../../date";
 
-import { Markdown } from "@/lib/markdown";
 import { getAllProducts, getProductAndMoreProducts } from "@/lib/api";
+import { Facebook_CHAT_URL } from "@/lib/constants";
+import { formatPrice } from "@/lib/utils";
+import LandingEffects from "@/app/_components/landing-effects";
+import RichContent from "@/app/_components/rich-content";
+import { ArrowUpRight, DISPLAY, LandingFooter, LandingNav, PHONE, Price, SERIF, Words, firstImage, img } from "@/app/_components/ui";
+import Gallery from "./gallery";
 
 export const dynamic = "force-static";
 
-import { Metadata } from "next";
-import { formatPrice } from "@/lib/utils";
+type Props = { params: Promise<{ slug: string }> };
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+export async function generateStaticParams() {
+  const products = (await getAllProducts(false)) ?? [];
+  return products.map((product: any) => ({ slug: product.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-
-  if (slug === "placeholder") {
-    return {
-      title: "Placeholder Product",
-      openGraph: {
-        title: "Placeholder Product",
-        description: "This is a placeholder product.",
-        type: "article",
-        images: [
-          {
-            url: "/innolab_logo.svg",
-            alt: "Placeholder Product",
-          },
-        ],
-      },
-    };
-  }
-
-  const data = await getProductAndMoreProducts(slug, true);
-
-  if (!data?.product) {
-    return {
-      title: "Product Not Found",
-    };
-  }
-
-  const { product } = data;
-
+  const data = await getProductAndMoreProducts(slug, false);
+  const product = data?.product;
+  if (!product) return { title: "Бүтээгдэхүүн олдсонгүй — InnoLab" };
+  const image = firstImage(product);
   return {
-    title: product.title,
+    title: `${product.title} — InnoLab дэлгүүр`,
     openGraph: {
       title: product.title,
-      description: product.title,
-      type: "article",
-      images: [
-        {
-          url: product.coverImage?.url || "/innolab_logo.svg",
-          alt: product.title,
-        },
-      ],
+      type: "website",
+      images: image ? [{ url: img(image, 1200)!, alt: product.title }] : undefined,
     },
   };
 }
 
-export async function generateStaticParams() {
-  const products = await getAllProducts(true);
-
-  if (!products || products.length === 0) {
-    return [{ slug: "placeholder" }];
-  }
-
-  return products.map((product: any) => ({
-    slug: product.slug,
-  }));
-}
-
-const ProductPage = async ({ params }: Props) => {
+export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
+  const data = await getProductAndMoreProducts(slug, false);
+  const product = data?.product;
+  if (!product) notFound();
 
-  if (slug === "placeholder") {
-    return <div></div>;
-  }
-
-  const data = await getProductAndMoreProducts(slug, true);
-
-  if (!data?.product) {
-    notFound();
-  }
-
-  const { product } = data;
+  const images: string[] = (product.imageCollection?.items ?? [])
+    .map((item: any) => img(item?.url, 1600))
+    .filter(Boolean);
+  const others: any[] = data.moreProducts ?? [];
+  const discount =
+    product.originalPrice && product.price && product.originalPrice > product.price
+      ? Math.round((1 - product.price / product.originalPrice) * 100)
+      : 0;
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8 md:px-6 lg:px-8">
-      <article className="overflow-hidden rounded-lg bg-white p-6 shadow-xl md:p-8 lg:p-10">
-        <h1 className="mb-6 text-center text-3xl font-extrabold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
-          {product.title}
-        </h1>
-        <p className="mt-auto p-4 pt-2 text-xl font-semibold text-gray-400">
-          Үнэ:{" "}
-          {product.originalPrice && product.originalPrice !== product.price && (
-            <span className="line-through">
-              {formatPrice(product.originalPrice)}₮
-            </span>
-          )}
-          <span> </span>
-          <span className="text-black">{formatPrice(product.price)}₮</span> (НӨАТ
-          ороогүй)
-        </p>
-        {product.imageCollection?.items?.[0]?.url && (
-          <div className="mb-8 md:mb-10 lg:mb-12">
-            <img
-              src={product.imageCollection.items[0].url}
-              alt={product.title}
-              className="h-80 w-full rounded-lg object-cover shadow-md md:h-96 lg:h-[500px]"
-            />
+    <>
+      <LandingEffects />
+      <LandingNav cta={{ href: Facebook_CHAT_URL, label: "Захиалах" }} />
+
+      {/* ============ PRODUCT ============ */}
+      <section className="pt-28 sm:pt-36 pb-20 sm:pb-28">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10">
+          <nav className="flex items-center gap-2 text-sm text-black/40 mb-8" aria-label="Breadcrumb" data-reveal="">
+            <a href="/products" className="hover:text-black transition-colors">Дэлгүүр</a>
+            <span aria-hidden="true">/</span>
+            <span className="text-black/60 truncate">{product.title}</span>
+          </nav>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div className="lg:col-span-7" data-reveal="">
+              <Gallery images={images} title={product.title} />
+            </div>
+
+            <aside className="lg:col-span-5 lg:sticky lg:top-28" data-reveal="" style={{ transitionDelay: "120ms" }}>
+              <div className="rounded-2xl bg-[#1E4D33] text-white p-7 sm:p-9 shadow-2xl shadow-[#1E4D33]/30">
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {product.new && (
+                    <span className="text-xs font-medium bg-[#42A85D] text-black rounded-full px-3 py-1">Шинэ</span>
+                  )}
+                  {discount > 0 && (
+                    <span className="text-xs font-medium border border-white/25 text-white/80 rounded-full px-3 py-1">−{discount}%</span>
+                  )}
+                </div>
+                <h1 className={`${DISPLAY} text-3xl sm:text-4xl leading-[1.1] font-light tracking-tighter`}>
+                  <Words text={product.title} />
+                </h1>
+
+                {product.price > 0 && (
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    {discount > 0 && (
+                      <p className="text-base text-white/40 line-through mb-1">{formatPrice(product.originalPrice)}₮</p>
+                    )}
+                    <p className={`${DISPLAY} text-4xl sm:text-5xl font-light tracking-tighter`}>{formatPrice(product.price)}₮</p>
+                    <p className="text-sm text-white/40 mt-2">НӨАТ ороогүй</p>
+                  </div>
+                )}
+
+                <div className="mt-8 space-y-3">
+                  {product.qpay && (
+                    <a href={product.qpay} target="_blank" rel="noopener noreferrer" className="group w-full inline-flex items-center justify-center gap-2.5 bg-[#42A85D] hover:bg-[#4FBC6B] active:scale-95 text-black font-medium text-base px-6 py-3.5 rounded-full transition-all duration-300">
+                      QPay-ээр төлөх
+                      <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
+                  )}
+                  <a href={Facebook_CHAT_URL} target="_blank" rel="noopener noreferrer" className="group w-full inline-flex items-center justify-center gap-2.5 bg-white hover:bg-[#E4EFDA] active:scale-95 text-[#1E4D33] font-medium text-base px-6 py-3.5 rounded-full transition-all duration-300">
+                    Facebook chat-аар захиалах
+                    <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                  <a href={`tel:${PHONE}`} className="w-full inline-flex items-center justify-center gap-2 border border-white/25 hover:border-white text-white font-medium text-base px-6 py-3.5 rounded-full transition-colors duration-300">
+                    +976 {PHONE}
+                  </a>
+                </div>
+
+                <p className="mt-6 text-sm text-white/50 leading-relaxed">
+                  Бидний үйл ажиллагааг дэмжин худалдан авалт хийсэнд баярлалаа.
+                </p>
+              </div>
+            </aside>
           </div>
-        )}
-
-        {/* Product Content (Markdown) */}
-        <div className="prose prose-lg mx-auto mb-8 text-gray-700 leading-relaxed">
-          <Markdown content={product.content} />
         </div>
+      </section>
 
-        {/* Date */}
-        <div className="mx-auto mt-6 max-w-2xl border-t border-gray-200 pt-4 text-right text-sm text-gray-500">
-          {product.date && <Date dateString={product.date} />}
-        </div>
-      </article>
+      {/* ============ DESCRIPTION ============ */}
+      {product.content?.json && (
+        <section className="bg-white border-y border-black/5 py-20 sm:py-28">
+          <div className="max-w-3xl mx-auto px-6 sm:px-10">
+            <div className="mb-12" data-reveal="">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#1E4D33] font-medium mb-6">Дэлгэрэнгүй</p>
+              <h2 className={`${DISPLAY} text-4xl sm:text-5xl font-light tracking-tighter`}>
+                <Words text="Бүтээгдэхүүний" />
+                <em className={SERIF}>
+                  <Words text="тухай" start={1} />
+                </em>
+              </h2>
+            </div>
+            <RichContent content={product.content} />
+          </div>
+        </section>
+      )}
 
-      <hr className="my-16 border-t border-gray-300 md:my-20" />
-    </div>
+      {/* ============ MORE PRODUCTS ============ */}
+      {others.length > 0 && (
+        <section className="bg-[#1E4D33] py-24 sm:py-32 relative">
+          <div className="max-w-7xl mx-auto px-6 sm:px-10">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12" data-reveal="">
+              <h2 className={`${DISPLAY} text-4xl sm:text-5xl font-light tracking-tighter text-white`}>
+                <Words text="Бусад" />
+                <em className={SERIF}>
+                  <Words text="бүтээгдэхүүн" start={1} />
+                </em>
+              </h2>
+              <a href="/products" className="group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors">
+                Дэлгүүр
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+            <div data-reveal="">
+              {others.map((other, i) => (
+                <a
+                  key={other.slug}
+                  href={`/products/${other.slug}`}
+                  className={`group flex items-center gap-5 border-t ${i === others.length - 1 ? "border-b" : ""} border-white/10 py-6 sm:py-8 hover:border-[#42A85D]/50 transition-colors duration-500`}
+                  data-preview={img(firstImage(other), 600)}
+                >
+                  {firstImage(other) && (
+                    <img src={img(firstImage(other), 200)} alt="" className="lg:hidden w-16 h-16 rounded-lg object-cover flex-shrink-0 bg-white" />
+                  )}
+                  <span className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6">
+                    <span className={`${DISPLAY} text-xl sm:text-3xl text-white/80 group-hover:text-white group-hover:translate-x-2 transition-all duration-500 font-light tracking-tighter`}>
+                      {other.title}
+                    </span>
+                    <span className="text-sm sm:text-base text-white/50 group-hover:text-[#42A85D] transition-colors duration-500 sm:text-right">
+                      <Price price={other.price} originalPrice={other.originalPrice} tone="light" />
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div id="cursor-preview" className="hidden lg:block fixed z-40 pointer-events-none w-56 aspect-[4/3] rounded-lg overflow-hidden opacity-0 scale-90 transition-all duration-300 ease-out shadow-2xl shadow-black/50 bg-white">
+            <img id="cursor-preview-img" src={img(firstImage(others[0]), 600)} alt="" className="w-full h-full object-cover" />
+          </div>
+        </section>
+      )}
+
+      <LandingFooter />
+    </>
   );
-};
-
-export default ProductPage;
+}

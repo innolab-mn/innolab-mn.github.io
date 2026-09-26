@@ -158,6 +158,18 @@ const COURSES_GRAPHQL_FIELDS = `
   price
   originalPrice
 `;
+const PROJECTS_GRAPHQL_FIELDS = `
+  slug
+  title
+  clientName
+  imageCollection(limit: 1) {
+    items {
+      url
+    }
+  }
+  date
+  new
+`;
 
 async function fetchGraphQL(query: string, preview = false): Promise<any> {
   return fetch(
@@ -361,4 +373,17 @@ export async function getCourseAndMoreCourses(
     course: extractCourse(entry),
     moreCourses: extractCourseEntries(entries),
   };
+}
+export async function getAllProjects(isDraftMode: boolean): Promise<any[]> {
+  const entries = await fetchGraphQL(
+    `query {
+      projectCollection(where: { slug_exists: true }, order: date_DESC) {
+        items {
+          ${PROJECTS_GRAPHQL_FIELDS}
+        }
+      }
+    }`,
+    isDraftMode,
+  );
+  return entries?.data?.projectCollection?.items;
 }
