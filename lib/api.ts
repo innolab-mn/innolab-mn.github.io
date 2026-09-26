@@ -187,7 +187,18 @@ async function fetchGraphQL(query: string, preview = false): Promise<any> {
       body: JSON.stringify({ query }),
       next: { tags: ["posts"] },
     },
-  ).then((response) => response.json());
+  )
+    .then((response) => response.json())
+    .then((json) => {
+      // Fail the build with Contentful's own message (e.g. a bad access token)
+      // instead of letting pages silently render with no data.
+      if (!json?.data && json?.errors?.length) {
+        const token = preview ? "CONTENTFUL_PREVIEW_ACCESS_TOKEN" : "CONTENTFUL_ACCESS_TOKEN";
+        const messages = json.errors.map((e: any) => e.message).join("; ");
+        throw new Error(`Contentful request failed (using ${token}): ${messages}`);
+      }
+      return json;
+    });
 }
 
 function extractPost(fetchResponse: any): any {
@@ -253,7 +264,6 @@ export async function getAllProducts(isDraftMode: boolean): Promise<any[]> {
     }`,
     isDraftMode,
   );
-  console.log("entries", entries);
   return extractProductEntries(entries);
 }
 
@@ -268,7 +278,6 @@ export async function getAllCourses(isDraftMode: boolean): Promise<any[]> {
     }`,
     isDraftMode,
   );
-  console.log("entries", entries);
   return extractCourseEntries(entries);
 }
 
