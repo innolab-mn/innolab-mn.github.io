@@ -4,7 +4,10 @@ import { getAllCourses, getAllPosts, getAllProducts, getAllProjects } from "@/li
 import { Facebook_CHAT_URL } from "@/lib/constants";
 import LandingEffects from "@/app/_components/landing-effects";
 import PostCard from "@/app/_components/post-card";
-import { ArrowUpRight, DISPLAY, LandingFooter, LandingNav, MODULUS_URL, PHONE, Price, SERIF, Words, firstImage, img } from "@/app/_components/ui";
+import { ArrowUpRight, DISPLAY, LandingFooter, LandingNav, MODULUS_URL, PHONE, Price, SERIF, Words, firstImage, formatDate, img } from "@/app/_components/ui";
+
+// Contentful `subType` value that marks a post as a highlight.
+const HIGHLIGHT_SUB_TYPE = 1;
 
 export const dynamic = "force-static";
 
@@ -21,7 +24,8 @@ export default async function LandingPage() {
     getAllProducts(false),
     getAllPosts(false),
   ]);
-  const latestPosts = posts.slice(0, 3);
+  const highlights = posts.filter((p: any) => p.subType === HIGHLIGHT_SUB_TYPE).slice(0, 3);
+  const latestPosts = posts.filter((p: any) => p.subType !== HIGHLIGHT_SUB_TYPE).slice(0, 3);
 
   // Project photos are only used as imagery; the page has no projects section.
   const featured = projects.filter((p: any) => firstImage(p)).slice(0, 2);
@@ -90,6 +94,93 @@ export default async function LandingPage() {
           </p>
         </div>
       </header>
+
+      {/* ============ HIGHLIGHTS ============ */}
+      {highlights.length > 0 && (
+        <section id="highlights" className="relative overflow-hidden bg-[#12281A] text-white py-24 sm:py-32 scroll-mt-16">
+          <div className="absolute -top-40 -right-40 w-[36rem] h-[36rem] rounded-full bg-[#42A85D]/20 blur-3xl pointer-events-none" aria-hidden="true" />
+          <div className="absolute -bottom-48 -left-40 w-[30rem] h-[30rem] rounded-full bg-[#42A85D]/10 blur-3xl pointer-events-none" aria-hidden="true" />
+
+          <div className="relative max-w-7xl mx-auto px-6 sm:px-10">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12" data-reveal="">
+              <div>
+                <p className="inline-flex items-center gap-2.5 text-xs uppercase tracking-[0.25em] text-[#42A85D] font-medium mb-6">
+                  <span className="relative flex w-2 h-2">
+                    <span className="absolute inset-0 rounded-full bg-[#42A85D] animate-ping opacity-75" />
+                    <span className="relative w-2 h-2 rounded-full bg-[#42A85D]" />
+                  </span>
+                  Онцлох
+                </p>
+                <h2 className={`${DISPLAY} text-4xl sm:text-6xl font-light tracking-tighter`}>
+                  <Words text="Онцлох" />
+                  <em className={`${SERIF} text-[#42A85D]`}>
+                    <Words text="мэдээ" start={1} />
+                  </em>
+                </h2>
+              </div>
+              <p className="text-base text-white/50 max-w-sm">InnoLab-ийн онцлох үйл явдал, амжилтууд.</p>
+            </div>
+
+            <div className={`grid grid-cols-1 gap-6 ${highlights.length > 1 ? "lg:grid-cols-2" : ""}`}>
+              {highlights.map((post: any, i: number) => {
+                const lead = i === 0;
+                return (
+                  <a
+                    key={post.slug}
+                    href={`/posts/${post.slug}`}
+                    className={`group relative block overflow-hidden rounded-3xl bg-[#1E4D33] ring-1 ring-white/10 hover:ring-[#42A85D]/60 shadow-2xl shadow-black/40 transition-all duration-500 ${
+                      lead ? `aspect-[4/5] sm:aspect-[16/10] lg:aspect-[21/9] ${highlights.length > 1 ? "lg:col-span-2" : ""}` : "aspect-[4/5] sm:aspect-[16/10]"
+                    }`}
+                    data-reveal=""
+                    style={{ transitionDelay: `${i * 100}ms` }}
+                  >
+                    {post.coverImage?.url && (
+                      <img
+                        src={img(post.coverImage.url, lead ? 2000 : 1200)}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1200ms] ease-out"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+
+                    <div className={`absolute inset-x-0 bottom-0 p-6 ${lead ? "sm:p-10 lg:p-14" : "sm:p-8"}`}>
+                      <div className="flex flex-wrap items-center gap-3 mb-4 sm:mb-5">
+                        <span className="inline-flex items-center gap-1.5 bg-[#42A85D] text-[#12281A] text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
+                            <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6-4.9-4.5 6.6-.8z" />
+                          </svg>
+                          Онцлох
+                        </span>
+                        <span className="text-xs sm:text-sm text-white/70">
+                          <time dateTime={post.date}>{formatDate(post.date)}</time>
+                          {post.author?.name && <span> · {post.author.name}</span>}
+                        </span>
+                      </div>
+                      <h3
+                        className={`${DISPLAY} font-light tracking-tighter leading-[1.05] max-w-3xl ${
+                          lead ? "text-3xl sm:text-5xl lg:text-6xl" : "text-2xl sm:text-3xl"
+                        }`}
+                      >
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className={`mt-4 text-white/75 leading-relaxed max-w-2xl ${lead ? "text-base sm:text-lg line-clamp-3" : "text-base line-clamp-2"}`}>
+                          {post.excerpt}
+                        </p>
+                      )}
+                      <span className="mt-6 sm:mt-8 inline-flex items-center gap-2.5 bg-white text-[#12281A] group-hover:bg-[#42A85D] font-medium text-sm sm:text-base px-6 sm:px-7 py-3 sm:py-3.5 rounded-full transition-colors duration-300 shadow-xl shadow-black/30">
+                        Дэлгэрэнгүй унших
+                        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </span>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ============ ABOUT ============ */}
       <section id="about" className="bg-[#E4EFDA] text-black py-24 sm:py-36 scroll-mt-16">

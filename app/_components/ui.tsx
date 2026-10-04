@@ -45,15 +45,8 @@ export function ArrowUpRight({ className = "w-4 h-4" }: { className?: string }) 
   );
 }
 
-export function LogoDots() {
-  const tones = ["bg-[#42A85D]", "bg-black/70", "bg-black/30", "bg-black/70", "bg-black/30", "bg-black/70", "bg-black/30", "bg-black/70", "bg-[#42A85D]"];
-  return (
-    <span className="grid grid-cols-3 gap-[2.5px]" aria-hidden="true">
-      {tones.map((tone, i) => (
-        <span key={i} className={`w-1 h-1 rounded-full ${tone}`} />
-      ))}
-    </span>
-  );
+export function LogoMark() {
+  return <img src="/favicon.svg" alt="" aria-hidden="true" className="w-6 h-6 shrink-0" />;
 }
 
 export function Price({ price, originalPrice, tone = "dark" }: { price?: number; originalPrice?: number; tone?: "dark" | "light" }) {
@@ -76,7 +69,7 @@ export function LandingNav({ home = "/", cta = { href: "/#contact", label: "Хо
     <nav className="fixed left-1/2 -translate-x-1/2 top-4 sm:top-7 z-50">
       <div className="flex items-center gap-1 bg-white/90 backdrop-blur-md rounded-full pl-4 pr-1.5 py-1.5 border border-black/10 shadow-xl shadow-black/10">
         <a href={home} className="flex items-center gap-2.5 pr-3 sm:pr-4">
-          <LogoDots />
+          <LogoMark />
           <span className={`${DISPLAY} font-semibold text-sm tracking-tight whitespace-nowrap`}>InnoLab</span>
         </a>
         <div className="hidden md:flex items-center gap-1 text-sm text-black/60">
@@ -99,7 +92,7 @@ export function LandingFooter() {
     <footer className="border-t border-black/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
-          <LogoDots />
+          <LogoMark />
           <span className={`${DISPLAY} font-semibold text-sm tracking-tight`}>InnoLab</span>
         </div>
         <div className="flex flex-wrap gap-x-7 gap-y-2 text-sm text-black/50">

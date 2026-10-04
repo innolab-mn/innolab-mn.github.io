@@ -41,6 +41,7 @@ const POST_GRAPHQL_FIELDS = `
 const POSTS_GRAPHQL_FIELDS = `
   slug
   title
+  subType
   coverImage {
     url
   }
