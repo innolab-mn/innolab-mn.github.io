@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
-    "start": "npx serve@latest out",
+    "check": "tsc --noEmit && node scripts/check-export.mjs",
+    "start": "node scripts/preview.mjs",
     "setup": "node ./lib/setup.js"
   },
   "dependencies": {

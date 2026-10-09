@@ -193,11 +193,21 @@ async function fetchGraphQL(query: string, preview = false): Promise<any> {
     .then((json) => {
       // Fail the build with Contentful's own message (e.g. a bad access token)
       // instead of letting pages silently render with no data.
-      if (!json?.data && json?.errors?.length) {
-        const token = preview ? "CONTENTFUL_PREVIEW_ACCESS_TOKEN" : "CONTENTFUL_ACCESS_TOKEN";
-        const messages = json.errors.map((e: any) => e.message).join("; ");
-        throw new Error(`Contentful request failed (using ${token}): ${messages}`);
+      // Unpublished linked authors/assets are nullable CMS relationships. Keep
+      // the usable entry while still failing on authentication/schema errors.
+      const fatalErrors = json?.errors?.filter(
+        (error: any) =>
+          error.extensions?.contentful?.code !== "UNRESOLVABLE_LINK",
+      );
+      if (fatalErrors?.length) {
+        const token = preview
+          ? "CONTENTFUL_PREVIEW_ACCESS_TOKEN"
+          : "CONTENTFUL_ACCESS_TOKEN";
+        throw new Error(
+          `Contentful request failed. Check ${token} and the published content model.`,
+        );
       }
+      if (!json?.data) throw new Error("Contentful returned no content data.");
       return json;
     });
 }
@@ -215,15 +225,15 @@ function extractCourse(fetchResponse: any): any {
 }
 
 function extractPostEntries(fetchResponse: any): any[] {
-  return fetchResponse?.data?.postCollection?.items;
+  return (fetchResponse?.data?.postCollection?.items ?? []).filter(Boolean);
 }
 
 function extractProductEntries(fetchResponse: any): any[] {
-  return fetchResponse?.data?.productCollection?.items;
+  return (fetchResponse?.data?.productCollection?.items ?? []).filter(Boolean);
 }
 
 function extractCourseEntries(fetchResponse: any): any[] {
-  return fetchResponse?.data?.courseCollection?.items;
+  return (fetchResponse?.data?.courseCollection?.items ?? []).filter(Boolean);
 }
 
 export async function getPreviewPostBySlug(slug: string | null): Promise<any> {
@@ -350,7 +360,6 @@ export async function getProductAndMoreProducts(
   };
 }
 
-
 export async function getCourseAndMoreCourses(
   slug: string,
   preview: boolean,
@@ -395,5 +404,14 @@ export async function getAllProjects(isDraftMode: boolean): Promise<any[]> {
     }`,
     isDraftMode,
   );
-  return entries?.data?.projectCollection?.items;
+  return (entries?.data?.projectCollection?.items ?? []).filter(Boolean);
+}
+
+export async function getProjectBySlug(slug: string): Promise<any> {
+  const entry = await fetchGraphQL(`query {
+    projectCollection(where: { slug: ${JSON.stringify(slug)} }, limit: 1) {
+      items { ${PRODUCT_GRAPHQL_FIELDS} clientName }
+    }
+  }`);
+  return entry?.data?.projectCollection?.items?.[0];
 }

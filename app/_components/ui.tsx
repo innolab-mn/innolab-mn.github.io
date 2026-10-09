@@ -1,108 +1,269 @@
-import { Facebook_URL, Youtube_URL } from "@/lib/constants";
+import { Facebook_URL, Youtube_URL, Facebook_CHAT_URL } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
-
 export const MODULUS_URL = "https://modulus.hotolarch.com";
 export const PHONE = "86001161";
-
 export const DISPLAY = "font-[family-name:var(--font-landing-display)]";
-export const SERIF = "font-[family-name:var(--font-landing-serif)] italic font-normal";
+export const SERIF = "font-normal";
 
-// Resize Contentful images through its Images API; formats it can't transform are left as-is.
 export function img(url: string | undefined, width: number) {
   if (!url) return undefined;
-  return /\.(png|jpe?g|webp)$/i.test(url) ? `${url}?w=${width}&fm=webp&q=80` : url;
+  try {
+    const source = new URL(url);
+    if (
+      source.hostname === "images.ctfassets.net" &&
+      /\.(png|jpe?g|webp|avif)$/i.test(source.pathname)
+    ) {
+      source.searchParams.set("w", String(width));
+      source.searchParams.set("fm", "webp");
+      source.searchParams.set("q", "80");
+      return source.toString();
+    }
+  } catch {
+    return url;
+  }
+  return url;
 }
-
 export function firstImage(entry: any): string | undefined {
-  return entry?.imageCollection?.items?.[0]?.url;
+  return entry?.imageCollection?.items?.find((item: any) => item?.url)?.url;
 }
-
-// Contentful dates carry a local offset; reading the calendar part avoids timezone shifts.
 export function formatDate(date?: string) {
   return date ? date.slice(0, 10).replace(/-/g, ".") : "";
 }
-
-// Splits text into word spans that blur in once their [data-reveal] ancestor scrolls into view.
-export function Words({ text, start = 0 }: { text: string; start?: number }) {
-  return (
-    <>
-      {text.split(" ").map((word, i) => (
-        <span key={i}>
-          <span className="word-reveal" style={{ transitionDelay: `${(start + i) * 45}ms` }}>
-            {word}
-          </span>{" "}
-        </span>
-      ))}
-    </>
-  );
+export function Words({ text }: { text: string; start?: number }) {
+  return <>{text}</>;
 }
-
-export function ArrowUpRight({ className = "w-4 h-4" }: { className?: string }) {
+export function ArrowUpRight({ className = "arrow" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
       <path d="M7 17 17 7M7 7h10v10" />
     </svg>
   );
 }
-
-export function LogoMark() {
-  return <img src="/favicon.svg" alt="" aria-hidden="true" className="w-6 h-6 shrink-0" />;
-}
-
-export function Price({ price, originalPrice, tone = "dark" }: { price?: number; originalPrice?: number; tone?: "dark" | "light" }) {
-  if (!price) return null;
-  const muted = tone === "dark" ? "text-black/40" : "text-white/40";
+export function Price({
+  price,
+  originalPrice,
+}: {
+  price?: number;
+  originalPrice?: number;
+  tone?: "dark" | "light";
+}) {
+  if (price == null || price <= 0) return <span>Үнэ лавлах</span>;
   return (
-    <span className="whitespace-nowrap">
-      {originalPrice && originalPrice !== price && (
-        <span className={`line-through mr-2 ${muted}`}>{formatPrice(originalPrice)}₮</span>
-      )}
+    <span>
+      {originalPrice && originalPrice > price ? (
+        <del className="muted" style={{ fontSize: ".8em", marginRight: 8 }}>
+          {formatPrice(originalPrice)}₮
+        </del>
+      ) : null}
       {formatPrice(price)}₮
     </span>
   );
 }
-
-// `home` is "#top" on the landing page itself so the logo scrolls instead of reloading.
-export function LandingNav({ home = "/", cta = { href: "/#contact", label: "Холбогдох" } }: { home?: string; cta?: { href: string; label: string } }) {
-  const link = "px-3 py-1.5 rounded-full hover:text-black hover:bg-black/5 transition-colors duration-300";
+export function Action({
+  href,
+  children,
+  secondary = false,
+  external = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  secondary?: boolean;
+  external?: boolean;
+}) {
   return (
-    <nav className="fixed left-1/2 -translate-x-1/2 top-4 sm:top-7 z-50">
-      <div className="flex items-center gap-1 bg-white/90 backdrop-blur-md rounded-full pl-4 pr-1.5 py-1.5 border border-black/10 shadow-xl shadow-black/10">
-        <a href={home} className="flex items-center gap-2.5 pr-3 sm:pr-4">
-          <LogoMark />
-          <span className={`${DISPLAY} font-semibold text-sm tracking-tight whitespace-nowrap`}>InnoLab</span>
-        </a>
-        <div className="hidden md:flex items-center gap-1 text-sm text-black/60">
-          <a href="/#about" className={link}>Бидний тухай</a>
-          <a href="/courses" className={link}>Сургалт</a>
-          <a href="/products" className={link}>Дэлгүүр</a>
-          <a href="/posts" className={link}>Блог</a>
-        </div>
-        <a href={cta.href} className="ml-1 sm:ml-2 bg-[#1E4D33] hover:bg-[#2A6647] active:scale-95 text-white text-sm font-medium px-4 sm:px-5 py-2 rounded-full transition-all duration-300 whitespace-nowrap shadow-lg shadow-[#1E4D33]/30">
-          {cta.label}
-        </a>
-      </div>
-    </nav>
+    <a
+      className={`button${secondary ? " button-outline" : ""}`}
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {children}
+      <ArrowUpRight />
+    </a>
   );
 }
-
-export function LandingFooter() {
-  const link = "hover:text-black transition-colors duration-300";
+export function TextLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
-    <footer className="border-t border-black/10">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-2.5">
-          <LogoMark />
-          <span className={`${DISPLAY} font-semibold text-sm tracking-tight`}>InnoLab</span>
+    <a className="text-link" href={href}>
+      {children}
+      <ArrowUpRight />
+    </a>
+  );
+}
+export function PageHeader({
+  label,
+  title,
+  intro,
+  back,
+  actions,
+}: {
+  label: string;
+  title: string;
+  intro?: string;
+  back?: { href: string; label: string };
+  actions?: React.ReactNode;
+}) {
+  return (
+    <header className="page-header">
+      <div className="container">
+        {back && (
+          <nav className="breadcrumbs" aria-label="Хуудасны зам">
+            <a href="/">Нүүр</a>
+            <span aria-hidden="true">/</span>
+            <a href={back.href}>{back.label}</a>
+          </nav>
+        )}
+        <p className="eyebrow">{label}</p>
+        <h1>{title}</h1>
+        {intro && <p className="lead">{intro}</p>}
+        {actions && <div className="actions">{actions}</div>}
+      </div>
+    </header>
+  );
+}
+export function EmptyState({
+  title = "Мэдээлэл удахгүй нэмэгдэнэ.",
+  text = "Дэлгэрэнгүй мэдээллийг бидэнтэй холбогдож аваарай.",
+}: {
+  title?: string;
+  text?: string;
+}) {
+  return (
+    <div className="empty-state">
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <div className="actions">
+        <Action href="/contact">Холбогдох</Action>
+      </div>
+    </div>
+  );
+}
+export function JoinPanel() {
+  return (
+    <section id="contact" className="section container">
+      <div className="join-panel">
+        <div>
+          <p className="eyebrow">Дараагийн алхам</p>
+          <h2>
+            Таны дараагийн бүтээл
+            <br />
+            эндээс эхэлнэ.
+          </h2>
+          <p>
+            Суралцах, турших, эсвэл санаагаа бодит болгох — хамтдаа эхэлцгээе.
+          </p>
         </div>
-        <div className="flex flex-wrap gap-x-7 gap-y-2 text-sm text-black/50">
-          <a href="/courses" className={link}>Сургалт</a>
-          <a href="/products" className={link}>Дэлгүүр</a>
-          <a href="/posts" className={link}>Блог</a>
-          <a href={Facebook_URL} target="_blank" rel="noopener noreferrer" className={link}>Facebook</a>
-          <a href={Youtube_URL} target="_blank" rel="noopener noreferrer" className={link}>YouTube</a>
+        <div className="actions">
+          <Action href="/contact">Хамтдаа бүтээе</Action>
         </div>
-        <p className="text-xs text-black/30">© {new Date().getFullYear()} InnoLab</p>
+      </div>
+    </section>
+  );
+}
+export function LandingFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div>
+            <a href="/" className="brand">
+              <img src="/favicon.svg" alt="" width="33" height="33" />
+              <span className="brand-name">
+                InnoLab<span className="brand-note">Innovation Laboratory</span>
+              </span>
+            </a>
+            <p>
+              Санаанаас бодит биет хүртэлх аялал.
+              <br />
+              Технологид дуртай залуусын клуб.
+            </p>
+          </div>
+          <div>
+            <h3>СУРАЛЦАХ & БҮТЭЭХ</h3>
+            <ul>
+              <li>
+                <a href="/courses">Сургалт</a>
+              </li>
+              <li>
+                <a href="/projects">Төслүүд</a>
+              </li>
+              <li>
+                <a href="/services">Үйлчилгээ</a>
+              </li>
+              <li>
+                <a href="/products">Дэлгүүр</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3>МАНАЙ КЛУБ</h3>
+            <ul>
+              <li>
+                <a href="/about">Бидний тухай</a>
+              </li>
+              <li>
+                <a href="/activities">Үйл ажиллагаа</a>
+              </li>
+              <li>
+                <a href="/posts">Мэдээ, тэмдэглэл</a>
+              </li>
+              <li>
+                <a href="/contact">Холбогдох</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3>ХОЛБООТОЙ БАЙЯ</h3>
+            <ul>
+              <li>
+                <a href={`tel:+976${PHONE}`}>+976 {PHONE}</a>
+              </li>
+              <li>
+                <a
+                  href={Facebook_CHAT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Messenger ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={Facebook_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Facebook ↗
+                </a>
+              </li>
+              <li>
+                <a href={Youtube_URL} target="_blank" rel="noopener noreferrer">
+                  YouTube ↗
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>
+            © {new Date().getFullYear()} InnoLab. Улаанбаатар, Монгол.
+          </span>
+          <span>Суралц. Турш. Бүтээ.</span>
+        </div>
       </div>
     </footer>
   );
