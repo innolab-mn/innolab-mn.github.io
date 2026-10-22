@@ -4,6 +4,9 @@
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
     "check": "tsc --noEmit && node scripts/check-export.mjs",
+    "check:membership": "node scripts/check-membership.mjs",
+    "check:emails": "node scripts/check-email-templates.mjs",
+    "build:emails": "node scripts/build-email-templates.mjs",
     "start": "node scripts/preview.mjs",
     "setup": "node ./lib/setup.js"
   },
@@ -11,6 +14,7 @@
     "@contentful/rich-text-react-renderer": "^15.17.1",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/vercel-nextjs-toolkit": "latest",
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/typography": "0.5.9",
     "@types/node": "^20.5.0",
     "@types/react": "^18.2.20",
@@ -29,6 +33,7 @@
     "uuid": "^11.1.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.11",
     "cross-env": "^10.1.0"
   }
 }

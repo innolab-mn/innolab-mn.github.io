@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light">
+<style>@media only screen and (max-width:600px){.email-outer{padding:20px 12px!important}.email-header{padding:26px 24px 24px!important}.email-content{padding:28px 24px!important}.email-footer{padding:22px 24px!important}.email-title{font-size:30px!important}}</style>
+</head><body style="margin:0;padding:0;background:#eaf0e5;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eaf0e5;border-collapse:collapse;"><tr><td class="email-outer" align="center" style="padding:40px 16px;">
+<!--[if mso]><table role="presentation" width="600" cellspacing="0" cellpadding="0"><tr><td><![endif]-->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border:1px solid #d6e0d0;border-top:5px solid #315d43;border-collapse:separate;border-spacing:0;border-radius:6px;"><tr><td>
+{{ if or (eq .RedirectTo "https://innolab.mn/en/members") (eq .RedirectTo "https://www.innolab.mn/en/members") (eq .RedirectTo "http://localhost:3000/en/members") (eq .RedirectTo "http://127.0.0.1:3000/en/members") }}
+<div lang="en">
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#f3f5ef;">Here is the sign-in link requested for your InnoLab account. Use the button below to continue.</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<tr><td class="email-header" style="padding:32px 36px 28px;background:#f1f5eb;border-bottom:1px solid #dce5d6;">
+<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;"><tr>
+<td width="58" style="vertical-align:middle;padding-right:14px;"><img src="https://innolab.mn/android-chrome-192x192.png" alt="" width="48" height="48" style="display:block;width:48px;height:48px;border:0;"></td>
+<td style="vertical-align:middle;"><a href="{{ .SiteURL }}" style="color:#193d2d;text-decoration:none;font-size:28px;font-weight:bold;letter-spacing:-1px;">InnoLab</a><div style="font-size:9px;line-height:1.6;letter-spacing:1.5px;text-transform:uppercase;color:#536a58;">Innovation Laboratory</div></td>
+</tr></table>
+</td></tr>
+<tr><td class="email-content" style="padding:36px;background:#ffffff;">
+<p style="margin:0 0 18px;font-size:11px;font-weight:bold;line-height:1.6;letter-spacing:1.5px;color:#456c4d;">INNOLAB / MEMBERS</p>
+<h1 class="email-title" style="margin:0 0 22px;font-size:36px;line-height:1.2;font-weight:bold;letter-spacing:-1px;color:#193d2d;">Sign in to InnoLab.</h1>
+<p style="margin:0 0 28px;font-size:16px;line-height:1.8;color:#42564a;">Here is the sign-in link requested for your InnoLab account. Use the button below to continue.</p>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="background:#315d43;border-radius:5px;mso-padding-alt:18px;"><a href="{{ .ConfirmationURL }}" style="display:block;padding:18px;color:#ffffff;font-size:15px;line-height:1.5;font-weight:bold;text-align:center;text-decoration:none;border-radius:5px;">Sign in to InnoLab &rarr;</a></td></tr></table>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:30px;"><tr><td style="background:#f5f7f1;border-left:3px solid #b4cb89;padding:18px 20px;"><p style="margin:0 0 7px;font-size:12px;font-weight:bold;line-height:1.6;color:#315d43;">A link just for you</p><p style="margin:0;font-size:13px;line-height:1.85;color:#42564a;">This link can be used once. Keep it private. If you didn't request it, ignore this email.</p></td></tr></table>
+</td></tr><tr><td class="email-footer" style="padding:22px 36px 26px;background:#f8f9f5;border-top:1px solid #e1e7dc;">
+<p style="margin:0 0 8px;font-size:11px;line-height:1.8;color:#6b786e;">This email is about your InnoLab member account.</p>
+<a href="{{ .SiteURL }}" style="font-size:12px;line-height:1.6;color:#315d43;text-decoration:underline;">innolab.mn</a>
+</td></tr></table>
+</div>
+{{ else }}
+<div lang="mn">
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#f3f5ef;">Таны InnoLab бүртгэлд нэвтрэх холбоосыг илгээлээ. Доорх товчоор нэвтэрнэ үү.</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<tr><td class="email-header" style="padding:32px 36px 28px;background:#f1f5eb;border-bottom:1px solid #dce5d6;">
+<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;"><tr>
+<td width="58" style="vertical-align:middle;padding-right:14px;"><img src="https://innolab.mn/android-chrome-192x192.png" alt="" width="48" height="48" style="display:block;width:48px;height:48px;border:0;"></td>
+<td style="vertical-align:middle;"><a href="{{ .SiteURL }}" style="color:#193d2d;text-decoration:none;font-size:28px;font-weight:bold;letter-spacing:-1px;">InnoLab</a><div style="font-size:9px;line-height:1.6;letter-spacing:1.5px;text-transform:uppercase;color:#536a58;">Innovation Laboratory</div></td>
+</tr></table>
+</td></tr>
+<tr><td class="email-content" style="padding:36px;background:#ffffff;">
+<p style="margin:0 0 18px;font-size:11px;font-weight:bold;line-height:1.6;letter-spacing:1.5px;color:#456c4d;">INNOLAB / ГИШҮҮД</p>
+<h1 class="email-title" style="margin:0 0 22px;font-size:36px;line-height:1.2;font-weight:bold;letter-spacing:-1px;color:#193d2d;">InnoLab-д нэвтрэх</h1>
+<p style="margin:0 0 28px;font-size:16px;line-height:1.8;color:#42564a;">Таны InnoLab бүртгэлд нэвтрэх холбоосыг илгээлээ. Доорх товчоор нэвтэрнэ үү.</p>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="background:#315d43;border-radius:5px;mso-padding-alt:18px;"><a href="{{ .ConfirmationURL }}" style="display:block;padding:18px;color:#ffffff;font-size:15px;line-height:1.5;font-weight:bold;text-align:center;text-decoration:none;border-radius:5px;">InnoLab-д нэвтрэх &rarr;</a></td></tr></table>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:30px;"><tr><td style="background:#f5f7f1;border-left:3px solid #b4cb89;padding:18px 20px;"><p style="margin:0 0 7px;font-size:12px;font-weight:bold;line-height:1.6;color:#315d43;">Зөвхөн танд зориулсан холбоос</p><p style="margin:0;font-size:13px;line-height:1.85;color:#42564a;">Энэ холбоос нэг удаа ашиглагдана. Бусдад бүү дамжуулаарай. Та нэвтрэх хүсэлт гаргаагүй бол энэ имэйлийг үл тооно уу.</p></td></tr></table>
+</td></tr><tr><td class="email-footer" style="padding:22px 36px 26px;background:#f8f9f5;border-top:1px solid #e1e7dc;">
+<p style="margin:0 0 8px;font-size:11px;line-height:1.8;color:#6b786e;">Энэ имэйл таны InnoLab-ийн гишүүний бүртгэлтэй холбоотой.</p>
+<a href="{{ .SiteURL }}" style="font-size:12px;line-height:1.6;color:#315d43;text-decoration:underline;">innolab.mn</a>
+</td></tr></table>
+</div>
+{{ end }}
+</td></tr></table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td></tr></table>
+</body></html>

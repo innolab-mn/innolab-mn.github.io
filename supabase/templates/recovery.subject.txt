@@ -1,0 +1,1 @@
+InnoLab — {{if eq .RedirectTo "https://innolab.mn/en/reset-password" "https://www.innolab.mn/en/reset-password" "http://localhost:3000/en/reset-password" "http://127.0.0.1:3000/en/reset-password"}}Reset your password{{else}}Нууц үгээ сэргээгээрэй{{end}}

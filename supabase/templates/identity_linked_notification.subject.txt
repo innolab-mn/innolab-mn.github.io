@@ -1,0 +1,1 @@
+InnoLab — {{ if eq .Data.locale "en" }}Sign-in method linked{{ else }}Нэвтрэх арга нэмэгдлээ{{ end }}

@@ -1,0 +1,1 @@
+InnoLab — {{ if eq .Data.locale "en" }}Email address changed{{ else }}Имэйл хаяг өөрчлөгдлөө{{ end }}

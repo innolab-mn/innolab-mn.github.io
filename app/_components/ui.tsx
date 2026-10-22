@@ -1,10 +1,10 @@
+import { type Locale, translator, localeHref } from "@/lib/i18n";
 import { Facebook_URL, Youtube_URL, Facebook_CHAT_URL } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
 export const MODULUS_URL = "https://modulus.hotolarch.com";
 export const PHONE = "86001161";
 export const DISPLAY = "font-[family-name:var(--font-landing-display)]";
 export const SERIF = "font-normal";
-
 export function img(url: string | undefined, width: number) {
   if (!url) return undefined;
   try {
@@ -51,12 +51,16 @@ export function ArrowUpRight({ className = "arrow" }: { className?: string }) {
 export function Price({
   price,
   originalPrice,
+  locale = "mn",
 }: {
   price?: number;
   originalPrice?: number;
   tone?: "dark" | "light";
+} & {
+  locale?: Locale;
 }) {
-  if (price == null || price <= 0) return <span>Үнэ лавлах</span>;
+  const t = translator(locale);
+  if (price == null || price <= 0) return <span>{t("Үнэ лавлах")}</span>;
   return (
     <span>
       {originalPrice && originalPrice > price ? (
@@ -73,16 +77,20 @@ export function Action({
   children,
   secondary = false,
   external = false,
+  locale = "mn",
 }: {
   href: string;
   children: React.ReactNode;
   secondary?: boolean;
   external?: boolean;
+} & {
+  locale?: Locale;
 }) {
+  const t = translator(locale);
   return (
     <a
       className={`button${secondary ? " button-outline" : ""}`}
-      href={href}
+      href={localeHref(href, locale)}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
       {children}
@@ -93,12 +101,16 @@ export function Action({
 export function TextLink({
   href,
   children,
+  locale = "mn",
 }: {
   href: string;
   children: React.ReactNode;
+} & {
+  locale?: Locale;
 }) {
+  const t = translator(locale);
   return (
-    <a className="text-link" href={href}>
+    <a className="text-link" href={localeHref(href, locale)}>
       {children}
       <ArrowUpRight />
     </a>
@@ -110,26 +122,33 @@ export function PageHeader({
   intro,
   back,
   actions,
+  locale = "mn",
 }: {
   label: string;
   title: string;
   intro?: string;
-  back?: { href: string; label: string };
+  back?: {
+    href: string;
+    label: string;
+  };
   actions?: React.ReactNode;
+} & {
+  locale?: Locale;
 }) {
+  const t = translator(locale);
   return (
     <header className="page-header">
       <div className="container">
         {back && (
-          <nav className="breadcrumbs" aria-label="Хуудасны зам">
-            <a href="/">Нүүр</a>
+          <nav className="breadcrumbs" aria-label={t("Хуудасны зам")}>
+            <a href={localeHref("/", locale)}>{t("Нүүр")}</a>
             <span aria-hidden="true">/</span>
-            <a href={back.href}>{back.label}</a>
+            <a href={localeHref(back.href, locale)}>{t(back.label)}</a>
           </nav>
         )}
-        <p className="eyebrow">{label}</p>
-        <h1>{title}</h1>
-        {intro && <p className="lead">{intro}</p>}
+        <p className="eyebrow">{t(label)}</p>
+        <h1>{t(title)}</h1>
+        {intro && <p className="lead">{t(intro)}</p>}
         {actions && <div className="actions">{actions}</div>}
       </div>
     </header>
@@ -138,103 +157,134 @@ export function PageHeader({
 export function EmptyState({
   title = "Мэдээлэл удахгүй нэмэгдэнэ.",
   text = "Дэлгэрэнгүй мэдээллийг бидэнтэй холбогдож аваарай.",
+  locale = "mn",
 }: {
   title?: string;
   text?: string;
+} & {
+  locale?: Locale;
 }) {
+  const t = translator(locale);
   return (
     <div className="empty-state">
-      <h2>{title}</h2>
-      <p>{text}</p>
+      <h2>{t(title)}</h2>
+      <p>{t(text)}</p>
       <div className="actions">
-        <Action href="/contact">Холбогдох</Action>
+        <Action href="/contact" locale={locale}>
+          {t("Холбогдох")}
+        </Action>
       </div>
     </div>
   );
 }
-export function JoinPanel() {
+export function JoinPanel({
+  locale = "mn",
+}: {
+  locale?: Locale;
+} = {}) {
+  const t = translator(locale);
   return (
     <section id="contact" className="section container">
       <div className="join-panel">
         <div>
-          <p className="eyebrow">Дараагийн алхам</p>
+          <p className="eyebrow">{t("Дараагийн алхам")}</p>
           <h2>
-            Таны дараагийн бүтээл
+            {t("Таны дараагийн бүтээл")}
             <br />
-            эндээс эхэлнэ.
+            {t("эндээс эхэлнэ.")}
           </h2>
           <p>
-            Суралцах, турших, эсвэл санаагаа бодит болгох — хамтдаа эхэлцгээе.
+            {t(
+              "Суралцах, турших, эсвэл санаагаа бодит болгох — хамтдаа эхэлцгээе.",
+            )}
           </p>
         </div>
         <div className="actions">
-          <Action href="/contact">Хамтдаа бүтээе</Action>
+          <Action href="/contact" locale={locale}>
+            {t("Хамтдаа бүтээе")}
+          </Action>
         </div>
       </div>
     </section>
   );
 }
-export function LandingFooter() {
+export function LandingFooter({
+  locale = "mn",
+}: {
+  locale?: Locale;
+} = {}) {
+  const t = translator(locale);
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="footer-grid">
           <div>
-            <a href="/" className="brand">
+            <a href={localeHref("/", locale)} className="brand">
               <img src="/favicon.svg" alt="" width="33" height="33" />
               <span className="brand-name">
                 InnoLab<span className="brand-note">Innovation Laboratory</span>
               </span>
             </a>
             <p>
-              Санаанаас бодит биет хүртэлх аялал.
+              {t("Санаанаас бодит биет хүртэлх аялал.")}
               <br />
-              Технологид дуртай залуусын клуб.
+              {t("Технологид дуртай залуусын клуб.")}
             </p>
           </div>
           <div>
-            <h3>СУРАЛЦАХ & БҮТЭЭХ</h3>
+            <h3>{t("СУРАЛЦАХ & БҮТЭЭХ")}</h3>
             <ul>
               <li>
-                <a href="/courses">Сургалт</a>
+                <a href={localeHref("/courses", locale)}>{t("Сургалт")}</a>
               </li>
               <li>
-                <a href="/projects">Төслүүд</a>
+                <a href={localeHref("/projects", locale)}>{t("Төслүүд")}</a>
               </li>
               <li>
-                <a href="/services">Үйлчилгээ</a>
+                <a href={localeHref("/services", locale)}>{t("Үйлчилгээ")}</a>
               </li>
               <li>
-                <a href="/products">Дэлгүүр</a>
+                <a href={localeHref("/products", locale)}>{t("Дэлгүүр")}</a>
               </li>
             </ul>
           </div>
           <div>
-            <h3>МАНАЙ КЛУБ</h3>
+            <h3>{t("МАНАЙ КЛУБ")}</h3>
             <ul>
               <li>
-                <a href="/about">Бидний тухай</a>
+                <a href={localeHref("/members", locale)}>
+                  {t("Гишүүний булан")}
+                </a>
               </li>
               <li>
-                <a href="/activities">Үйл ажиллагаа</a>
+                <a href={localeHref("/about", locale)}>{t("Бидний тухай")}</a>
               </li>
               <li>
-                <a href="/posts">Мэдээ, тэмдэглэл</a>
+                <a href={localeHref("/activities", locale)}>
+                  {t("Үйл ажиллагаа")}
+                </a>
               </li>
               <li>
-                <a href="/contact">Холбогдох</a>
+                <a href={localeHref("/posts", locale)}>
+                  {t("Мэдээ, тэмдэглэл")}
+                </a>
+              </li>
+              <li>
+                <a href={localeHref("/contact", locale)}>{t("Холбогдох")}</a>
               </li>
             </ul>
           </div>
           <div>
-            <h3>ХОЛБООТОЙ БАЙЯ</h3>
+            <h3>{t("ХОЛБООТОЙ БАЙЯ")}</h3>
             <ul>
               <li>
-                <a href={`tel:+976${PHONE}`}>+976 {PHONE}</a>
+                <a href={localeHref(`tel:+976${PHONE}`, locale)}>
+                  +976 {PHONE}
+                </a>
               </li>
               <li>
                 <a
-                  href={Facebook_CHAT_URL}
+                  href={localeHref(Facebook_CHAT_URL, locale)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -243,7 +293,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a
-                  href={Facebook_URL}
+                  href={localeHref(Facebook_URL, locale)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -251,7 +301,11 @@ export function LandingFooter() {
                 </a>
               </li>
               <li>
-                <a href={Youtube_URL} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={localeHref(Youtube_URL, locale)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   YouTube ↗
                 </a>
               </li>
@@ -260,9 +314,9 @@ export function LandingFooter() {
         </div>
         <div className="footer-bottom">
           <span>
-            © {new Date().getFullYear()} InnoLab. Улаанбаатар, Монгол.
+            © {new Date().getFullYear()} {t("InnoLab. Улаанбаатар, Монгол.")}
           </span>
-          <span>Суралц. Турш. Бүтээ.</span>
+          <span>{t("Суралц. Турш. Бүтээ.")}</span>
         </div>
       </div>
     </footer>

@@ -1,0 +1,1 @@
+InnoLab — {{ if eq .Data.locale "en" }}Phone number changed{{ else }}Утасны дугаар өөрчлөгдлөө{{ end }}

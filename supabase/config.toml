@@ -1,0 +1,65 @@
+project_id = "innolab-members"
+
+# Login starts before a user has a session. The handler verifies the password
+# through Supabase Auth and applies its own database-backed request limits.
+[functions.username-login]
+verify_jwt = false
+
+[auth.email.template.confirmation]
+subject = 'InnoLab — {{if eq .RedirectTo "https://innolab.mn/en/members" "https://www.innolab.mn/en/members" "http://localhost:3000/en/members" "http://127.0.0.1:3000/en/members"}}Confirm your email{{else}}Имэйлээ баталгаажуулаарай{{end}}'
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = 'InnoLab — {{if eq .RedirectTo "https://innolab.mn/en/reset-password" "https://www.innolab.mn/en/reset-password" "http://localhost:3000/en/reset-password" "http://127.0.0.1:3000/en/reset-password"}}Reset your password{{else}}Нууц үгээ сэргээгээрэй{{end}}'
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.invite]
+subject = "InnoLab — {{if eq .RedirectTo \"https://innolab.mn/en/members\" \"https://www.innolab.mn/en/members\" \"http://localhost:3000/en/members\" \"http://127.0.0.1:3000/en/members\"}}You're invited to InnoLab{{else}}InnoLab-д нэгдэх урилга{{end}}"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.magic_link]
+subject = "InnoLab — {{if eq .RedirectTo \"https://innolab.mn/en/members\" \"https://www.innolab.mn/en/members\" \"http://localhost:3000/en/members\" \"http://127.0.0.1:3000/en/members\"}}Your sign-in link{{else}}Нэвтрэх холбоос{{end}}"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.email_change]
+subject = "InnoLab — {{if eq .RedirectTo \"https://innolab.mn/en/members\" \"https://www.innolab.mn/en/members\" \"http://localhost:3000/en/members\" \"http://127.0.0.1:3000/en/members\"}}Confirm your email change{{else}}Имэйл хаягийн өөрчлөлтөө баталгаажуулна уу{{end}}"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.reauthentication]
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Your verification code{{ else }}Баталгаажуулах код{{ end }} — {{ .Token }}"
+content_path = "./supabase/templates/reauthentication.html"
+
+[auth.email.notification.password_changed]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Password changed{{ else }}Нууц үг өөрчлөгдлөө{{ end }}"
+content_path = "./supabase/templates/password_changed_notification.html"
+
+[auth.email.notification.email_changed]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Email address changed{{ else }}Имэйл хаяг өөрчлөгдлөө{{ end }}"
+content_path = "./supabase/templates/email_changed_notification.html"
+
+[auth.email.notification.phone_changed]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Phone number changed{{ else }}Утасны дугаар өөрчлөгдлөө{{ end }}"
+content_path = "./supabase/templates/phone_changed_notification.html"
+
+[auth.email.notification.identity_linked]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Sign-in method linked{{ else }}Нэвтрэх арга нэмэгдлээ{{ end }}"
+content_path = "./supabase/templates/identity_linked_notification.html"
+
+[auth.email.notification.identity_unlinked]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Sign-in method removed{{ else }}Нэвтрэх арга салгагдлаа{{ end }}"
+content_path = "./supabase/templates/identity_unlinked_notification.html"
+
+[auth.email.notification.mfa_factor_enrolled]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Verification method added{{ else }}Баталгаажуулах арга нэмэгдлээ{{ end }}"
+content_path = "./supabase/templates/mfa_factor_enrolled_notification.html"
+
+[auth.email.notification.mfa_factor_unenrolled]
+enabled = false
+subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Verification method removed{{ else }}Баталгаажуулах арга хасагдлаа{{ end }}"
+content_path = "./supabase/templates/mfa_factor_unenrolled_notification.html"

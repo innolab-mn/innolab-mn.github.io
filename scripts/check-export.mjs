@@ -28,8 +28,11 @@ for (const [file, html] of pages) {
       .replace(/(?:index)?\.html$/, "");
   if ((html.match(/<h1[\s>]/g) || []).length !== 1)
     errors.push(`${route}: expected one h1`);
-  if (!html.includes('lang="mn"'))
-    errors.push(`${route}: missing Mongolian language`);
+  const expectedLanguage = /^\/en(?:\/|$)/.test(route) ? "en" : "mn";
+  if (!new RegExp(`<html[^>]*lang="${expectedLanguage}"`).test(html))
+    errors.push(`${route}: expected document language ${expectedLanguage}`);
+  if (!html.includes("innolab-theme"))
+    errors.push(`${route}: missing theme initialization`);
   for (const match of html.matchAll(/<img\b[^>]*>/g)) {
     if (!/\balt="/.test(match[0]))
       errors.push(`${route}: image missing alt attribute`);

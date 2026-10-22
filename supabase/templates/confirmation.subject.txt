@@ -1,0 +1,1 @@
+InnoLab — {{if eq .RedirectTo "https://innolab.mn/en/members" "https://www.innolab.mn/en/members" "http://localhost:3000/en/members" "http://127.0.0.1:3000/en/members"}}Confirm your email{{else}}Имэйлээ баталгаажуулаарай{{end}}
