@@ -67,3 +67,7 @@ content_path = "./supabase/templates/mfa_factor_enrolled_notification.html"
 enabled = false
 subject = "InnoLab — {{ if eq .Data.locale \"en\" }}Verification method removed{{ else }}Баталгаажуулах арга хасагдлаа{{ end }}"
 content_path = "./supabase/templates/mfa_factor_unenrolled_notification.html"
+
+# Auth session and current database role are verified by the handler.
+[functions.trigger-build]
+verify_jwt = false

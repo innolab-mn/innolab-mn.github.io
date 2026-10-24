@@ -12,11 +12,10 @@ const port = Number(process.argv[2] || 3002);
 const origin = `http://localhost:${port}`;
 const captchaMock = process.argv.includes("--captcha-mock");
 const captchaRequests = [];
-const shopMock=process.argv.includes('--shop-mock');
-let fixtureRole='superadmin';
-const fixtureOrders=[];
-let fixtureBuildPhase=0;
-const fixtureBank={bank_name:'TEST BANK — LOCAL FIXTURE',account_number:'TEST-ACCOUNT-ONLY',account_name:'Test Maker'};
+const shopMock = process.argv.includes('--shop-mock');
+let fixtureRole = 'superadmin';
+const fixtureOrders = [];
+const fixtureBank = { bank_name: 'TEST BANK — LOCAL FIXTURE', account_number: 'TEST-ACCOUNT-ONLY', account_name: 'Test Maker' };
 const env = await readFile(".env.local", "utf8");
 const remote = env.match(/^NEXT_PUBLIC_SUPABASE_URL=(.+)$/m)?.[1].trim();
 if (!remote) throw new Error("Build with the public Supabase URL first.");
@@ -29,36 +28,26 @@ http.createServer(async (req, res) => {
   const url = new URL(req.url, origin);
   const json = (status, value) => { res.writeHead(status, { "content-type": "application/json", "cache-control": "no-store" }); res.end(JSON.stringify(value)); };
   try {
-    if(shopMock&&url.pathname==='/functions/v1/trigger-build'){
-      if(req.headers.authorization!==`Bearer ${token}`)return json(401,{error:'sign_in_required'});
-      if(!['admin','superadmin'].includes(fixtureRole))return json(403,{error:'staff_required'});
-      if(req.method==='POST'){
-        if(fixtureBuildPhase>0&&fixtureBuildPhase<3)return json(409,{error:'already_running',run:{id:101,status:'in_progress',conclusion:null,url:'https://github.com/innolab-mn/innolab-mn.github.io/actions/workflows/nextjs.yml'}});
-        fixtureBuildPhase=1;return json(202,{status:'queued',previousRunId:100});
-      }
-      if(fixtureBuildPhase>0)fixtureBuildPhase=Math.min(3,fixtureBuildPhase+1);
-      return json(200,{run:{id:fixtureBuildPhase?101:100,status:fixtureBuildPhase===2?'in_progress':'completed',conclusion:fixtureBuildPhase===2?null:'success',url:'https://github.com/innolab-mn/innolab-mn.github.io/actions/workflows/nextjs.yml'}});
+    if (shopMock && url.pathname === '/__fixture/shop') {
+      if (['member', 'admin', 'superadmin'].includes(url.searchParams.get('role'))) fixtureRole = url.searchParams.get('role');
+      res.writeHead(200, { 'content-type': 'text/html' }); res.end(`<h1>Local shop test fixture</h1><p>Mock data only. No real orders or accounts.</p><p>Role: ${fixtureRole}</p><a href="/products">Shop as guest</a><br><a href="/en/login">Sign in with synthetic test credentials</a>`); return;
     }
-    if(shopMock&&url.pathname==='/__fixture/shop'){
-      if(['member','admin','superadmin'].includes(url.searchParams.get('role')))fixtureRole=url.searchParams.get('role');
-      res.writeHead(200,{'content-type':'text/html'});res.end(`<h1>Local shop test fixture</h1><p>Mock data only. No real orders or accounts.</p><p>Role: ${fixtureRole}</p><a href="/products">Shop as guest</a><br><a href="/en/login">Sign in with synthetic test credentials</a>`);return;
-    }
-    if(shopMock&&url.pathname.startsWith('/rest/v1/')&&url.pathname!=='/rest/v1/profiles'){
-      let raw='';for await(const chunk of req)raw+=chunk;const input=JSON.parse(raw||'{}');
-      if(url.pathname.endsWith('/rpc/member_role'))return json(200,fixtureRole);
-      if(url.pathname.endsWith('/member_contacts'))return json(200,req.method==='GET'?{phone:'99112233',address:'Test address, Ulaanbaatar'}:null);
-      if(url.pathname.endsWith('/shop_payment_settings'))return json(200,fixtureBank);
-      if(url.pathname.endsWith('/rpc/place_shop_order')){
-        const previous=fixtureOrders.find(x=>x.id===input.request_id);if(previous)return json(200,{id:previous.id,total:previous.total});
-        const order={id:input.request_id,customer_name:input.customer_name,phone:input.customer_phone,address:input.customer_address,items:input.cart.map(x=>({...x,title:'Local fixture item'})),total:input.cart.reduce((s,x)=>s+x.price*x.quantity,0),status:'pending_payment',created_at:new Date().toISOString()};fixtureOrders.push(order);return json(200,{id:order.id,total:order.total});
+    if (shopMock && url.pathname.startsWith('/rest/v1/') && url.pathname !== '/rest/v1/profiles') {
+      let raw = ''; for await (const chunk of req) raw += chunk; const input = JSON.parse(raw || '{}');
+      if (url.pathname.endsWith('/rpc/member_role')) return json(200, fixtureRole);
+      if (url.pathname.endsWith('/member_contacts')) return json(200, req.method === 'GET' ? { phone: '99112233', address: 'Test address, Ulaanbaatar' } : null);
+      if (url.pathname.endsWith('/shop_payment_settings')) return json(200, fixtureBank);
+      if (url.pathname.endsWith('/rpc/place_shop_order')) {
+        const previous = fixtureOrders.find(x => x.id === input.request_id); if (previous) return json(200, { id: previous.id, total: previous.total });
+        const order = { id: input.request_id, customer_name: input.customer_name, phone: input.customer_phone, address: input.customer_address, items: input.cart.map(x => ({ ...x, title: 'Local fixture item' })), total: input.cart.reduce((s, x) => s + x.price * x.quantity, 0), status: 'pending_payment', created_at: new Date().toISOString() }; fixtureOrders.push(order); return json(200, { id: order.id, total: order.total });
       }
-      if(url.pathname.endsWith('/shop_orders'))return json(200,fixtureOrders);
-      if(url.pathname.endsWith('/rpc/admin_members'))return json(200,[{id:user.id,username:'fixture_maker',first_name:'Test',last_name:'Maker',email:user.email,phone:'99112233',address:'Local test address',role:fixtureRole,created_at:user.created_at}]);
-      if(url.pathname.endsWith('/rpc/admin_order_status')){const order=fixtureOrders.find(x=>x.id===input.order_id);if(order)order.status=input.new_status;return json(200,null);}
-      if(url.pathname.endsWith('/rpc/admin_audit'))return json(200,[]);
-      if(url.pathname.endsWith('/rpc/admin_save_bank')){Object.assign(fixtureBank,{bank_name:input.bank,account_number:input.account,account_name:input.holder});return json(200,null);}
-      if(url.pathname.endsWith('/rpc/admin_set_role'))return json(200,null);
-      return json(404,{message:'Unknown local shop fixture route'});
+      if (url.pathname.endsWith('/shop_orders')) return json(200, fixtureOrders);
+      if (url.pathname.endsWith('/rpc/admin_members')) return json(200, [{ id: user.id, username: 'fixture_maker', first_name: 'Test', last_name: 'Maker', email: user.email, phone: '99112233', address: 'Local test address', role: fixtureRole, created_at: user.created_at }]);
+      if (url.pathname.endsWith('/rpc/admin_order_status')) { const order = fixtureOrders.find(x => x.id === input.order_id); if (order) order.status = input.new_status; return json(200, null); }
+      if (url.pathname.endsWith('/rpc/admin_audit')) return json(200, []);
+      if (url.pathname.endsWith('/rpc/admin_save_bank')) { Object.assign(fixtureBank, { bank_name: input.bank, account_number: input.account, account_name: input.holder }); return json(200, null); }
+      if (url.pathname.endsWith('/rpc/admin_set_role')) return json(200, null);
+      return json(404, { message: 'Unknown local shop fixture route' });
     }
     if (captchaMock && url.pathname === "/__fixture/captcha-status") return json(200, captchaRequests);
     if (captchaMock && url.pathname === "/__fixture/turnstile.js") {
@@ -118,9 +107,9 @@ http.createServer(async (req, res) => {
       if (url.pathname === "/auth/v1/user" && req.headers.authorization === `Bearer ${token}`) return json(200, user);
       return json(401, { message: "Fixture session missing", code: "session_not_found" });
     }
-    if ((captchaMock || shopMock) && url.pathname === "/functions/v1/username-login") {
+    if (captchaMock && url.pathname === "/functions/v1/username-login") {
       let raw = ""; for await (const chunk of req) raw += chunk;
-      const valid = !captchaMock || JSON.parse(raw || "{}").captchaToken === "fixture-valid-token";
+      const valid = JSON.parse(raw || "{}").captchaToken === "fixture-valid-token";
       captchaRequests.push({ kind: "username-login", verified: valid });
       return valid ? json(200, session) : json(400, { error: "captcha_failed" });
     }

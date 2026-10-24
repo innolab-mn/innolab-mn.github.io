@@ -89,7 +89,7 @@ export default function MemberDashboard({ locale }: { locale: Locale }) {
         </button>
       </header>
       {signOutError && <p className="auth-error-summary" role="alert">{copy.signOutError}</p>}
-      <MemberShop member={profile} locale={locale}/>
+      <MemberShop member={profile} locale={locale} />
       <div className="member-content">
         <div className="member-main">
           <h2>{copy.nextSteps}</h2>
