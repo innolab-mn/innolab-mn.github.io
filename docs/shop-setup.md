@@ -13,6 +13,9 @@ server-priced orders, bank settings and an audit trail. Apply it after the
 existing membership migration, then `catalog-seed.sql`, then `shop-bootstrap.sql`.
 The bootstrap targets only the existing confirmed account identified by the private
 SQL session setting `innolab.bootstrap_email`. Do not commit the owner's email.
+Set `innolab.bank_account` privately in the same SQL session; bank account numbers
+are read from that setting rather than embedded in public source. The account
+update migration uses the same private setting.
 It configures the bank details supplied by the owner. It never creates an Auth account.
 
 Everyone defaults to member. Signup metadata cannot grant staff rights. Admins

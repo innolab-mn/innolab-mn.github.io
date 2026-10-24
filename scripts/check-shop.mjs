@@ -15,6 +15,7 @@ assert.equal((await as('authenticated',ids[1],'select public.member_role() as ro
 await assert.rejects(as('authenticated',ids[1],"select public.admin_members()"),/forbidden/);
 await assert.rejects(as('authenticated',ids[1],"select public.admin_set_role($1,'superadmin')",[ids[1]]),/forbidden/);
 await db.query("select set_config('innolab.bootstrap_email',$1,false)",['owner@example.test']);
+await db.query("select set_config('innolab.bank_account',$1,false)",['TEST-ACCOUNT']);
 await db.exec(await readFile(new URL('../supabase/shop-bootstrap.sql',import.meta.url),'utf8'));
 await as('authenticated',ids[0],"select public.admin_set_role($1,'admin')",[ids[2]]);
 await assert.rejects(as('authenticated',ids[2],"select public.admin_set_role($1,'admin')",[ids[1]]),/forbidden/);
