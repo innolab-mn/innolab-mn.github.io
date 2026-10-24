@@ -4,7 +4,9 @@ Database status (2026-10-24): the migration, four priced Contentful products,
 owner superadmin assignment and supplied bank details have been applied to
 `ajniokginnpuhttfjhcz`. Public API checks confirm catalog/payment reads succeed
 and anonymous order reads are denied. The catalog-sync GitHub secret is still
-required for automatic future price updates.
+required for automatic future price updates. The workflow edit is prepared
+locally, but the current GitHub credential cannot publish workflow changes;
+the deployed workflow remains unchanged until that edit is applied separately.
 
 `202610240001_shop_roles.sql` adds protected roles, private delivery contacts,
 server-priced orders, bank settings and an audit trail. Apply it after the
