@@ -9,7 +9,8 @@
     "build:emails": "node scripts/build-email-templates.mjs",
     "start": "node scripts/preview.mjs",
     "setup": "node ./lib/setup.js",
-    "check:shop": "node scripts/check-shop.mjs"
+    "check:shop": "node scripts/check-shop.mjs",
+    "check:build-control": "node scripts/check-build-control.mjs"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.17.1",
