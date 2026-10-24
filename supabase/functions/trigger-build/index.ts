@@ -28,12 +28,12 @@ Deno.serve(async (request: Request) => {
     if (!url || !key || !serviceKey) return reply(503, { error: 'not_configured' });
     const client = createClient(url, key, { global: { headers: { Authorization: authorization } }, auth: { persistSession: false, autoRefreshToken: false } });
     // getUser verifies the token with Auth; neither JWT metadata nor the request
-    // body can grant superadmin privileges. The role is read fresh from PostgreSQL.
+    // body can grant build privileges. The role is read fresh from PostgreSQL.
     const { data: auth, error: authError } = await client.auth.getUser(jwt);
     if (authError || !auth.user) return reply(401, { error: 'sign_in_required' });
     const { data: role, error: roleError } = await client.rpc('member_role');
     if (roleError) return reply(503, { error: 'unavailable' });
-    if (role !== 'superadmin') return reply(403, { error: 'superadmin_required' });
+    if (role !== 'admin' && role !== 'superadmin') return reply(403, { error: 'staff_required' });
     const token = Deno.env.get('GITHUB_ACTIONS_TOKEN')?.trim();
     if (!token) return reply(503, { error: 'github_not_configured' });
     const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };

@@ -1,9 +1,9 @@
-# Direct superadmin build and deploy
+# Direct admin and superadmin build and deploy
 
 The build button calls the trigger-build Supabase Edge Function. The website
-remains a static Next.js export. Only superadmins see the button, and the server
+remains a static Next.js export. Admins and superadmins see the button, and the server
 independently verifies Auth.getUser and the current database member_role on every
-request. Signup metadata and client-supplied role/repository/ref cannot grant access.
+request. Members are denied. Signup metadata and client-supplied role/repository/ref cannot grant access.
 
 Configure GITHUB_ACTIONS_TOKEN in Supabase Edge Functions Secrets. Use a
 fine-grained token scoped to innolab-mn/innolab-mn.github.io with Actions: read and

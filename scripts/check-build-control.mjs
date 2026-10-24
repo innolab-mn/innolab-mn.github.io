@@ -25,7 +25,11 @@ function fixture(overrides = {}) {
     ...(method === 'POST' ? { body: JSON.stringify({ role: 'superadmin', ref: 'malicious-branch', repository: 'other/repo' }) } : {}),
   })) };
 }
-for (const role of ['member', 'admin']) { const f = fixture({ role }); assert.equal((await f.request()).status, 403); assert.equal(f.calls.length, 0); }
+for (const role of ['member', 'owner', '', null]) { const f = fixture({ role }); assert.equal((await f.request()).status, 403); assert.equal(f.calls.length, 0); }
+for (const role of ['admin','superadmin']) {
+  const f=fixture({role});assert.equal((await f.request()).status,202);assert.equal(f.calls.length,2);
+  const view=fixture({role});assert.equal((await view.request('GET')).status,200);assert.equal(view.limits.length,0);
+}
 for (const auth of [null, 'expired-session']) { const f = fixture(); assert.equal((await f.request('POST', auth)).status, 401); assert.equal(f.calls.length, 0); }
 for (const condition of [{ authError: true }, { roleError: true }, { token: '' }]) { const f = fixture(condition); assert.ok([401, 503].includes((await f.request()).status)); assert.equal(f.calls.length, 0); }
 const origin = fixture(); assert.equal((await origin.request('POST', 'valid-session', 'https://untrusted.example')).status, 403); assert.equal(origin.calls.length, 0);
@@ -40,4 +44,4 @@ const failure = fixture({ dispatchOk: false }); const error = await failure.requ
 const success = fixture(); const queued = await success.request(); assert.equal(queued.status, 202); assert.equal(queued.headers.get('cache-control'), 'no-store'); assert.equal((await queued.json()).status, 'queued');
 assert.equal(success.calls[1].options.body, '{"ref":"main"}'); assert.equal(success.calls[1].url, 'https://api.github.com/repos/innolab-mn/innolab-mn.github.io/actions/workflows/nextjs.yml/dispatches');
 assert.equal(success.authCalls[0].authorization, 'Bearer valid-session'); assert.equal(success.limits[0].args.bucket, 'build:global');
-console.log('PASS build control: verified sessions, current superadmin role, fixed destination, CORS, secret isolation, shared limit, active-run guard, 204 dispatch, sanitized errors/status.');
+console.log('PASS build control: admin/superadmin dispatch and status, member/unknown-role denial, verified sessions, fixed destination, CORS, secret isolation, shared limit, active-run guard, 204 dispatch, sanitized errors/status.');
