@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { type Locale, translator, localeHref } from "@/lib/i18n";
 import Preferences from "./preferences";
 import MemberAccess from "./member-access";
+import { CartLink } from './cart-controls';
 const links = [
   ["/courses", "Сургалт"],
   ["/projects", "Төслүүд"],
@@ -98,9 +99,10 @@ export default function Navigation({
             {t("Хамтдаа бүтээе")} <span aria-hidden="true">↗</span>
           </a>
           <MemberAccess locale={locale} />
+          <CartLink locale={locale}/>
           <Preferences locale={locale} notFound={notFound} />
           <details className="mobile-menu">
-            <summary>
+            <summary aria-label={t('Цэс')}>
               <span className="menu-label">{t("Цэс")}</span>{" "}
               <span aria-hidden="true">☰</span>
             </summary>

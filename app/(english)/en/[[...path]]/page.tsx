@@ -17,6 +17,8 @@ import * as Register from "@/app/_pages/register";
 import * as Members from "@/app/_pages/members";
 import * as ForgotPassword from "@/app/_pages/forgot-password";
 import * as ResetPassword from "@/app/_pages/reset-password";
+import * as Cart from '@/app/_pages/cart';
+import * as Admin from '@/app/_pages/admin';
 import { translatedMetadata } from "@/lib/i18n";
 
 export const dynamic = "force-static";
@@ -34,6 +36,8 @@ const sections: Record<string, any> = {
   login: Login,
   register: Register,
   members: Members,
+  cart: Cart,
+  admin: Admin,
   "forgot-password": ForgotPassword,
   "reset-password": ResetPassword,
 };

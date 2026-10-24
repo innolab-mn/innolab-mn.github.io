@@ -14,6 +14,7 @@ import {
 import { ProductCard } from "@/app/_components/cards";
 import RichContent from "@/app/_components/rich-content";
 import Gallery from "@/app/_components/product-gallery";
+import { AddToCart } from '@/app/_components/cart-controls';
 export const dynamic = "force-static";
 type Props = {
   params: Promise<{
@@ -101,7 +102,7 @@ export default async function ProductDetail({
               <dd>{t("Арга, хугацааг тохиролцоно.")}</dd>
             </div>
           </dl>
-          <p>
+          {Number(product.price)>0 ? <><AddToCart product={{slug:product.slug,title:product.title,price:Number(product.price),image:product.imageCollection?.items?.[0]?.url}} locale={locale}/><p>{locale==='en'?'Pay by bank transfer at checkout. Availability and delivery are confirmed separately.':'Сагсаа шалгаад дансаар төлнө. Бэлэн эсэх болон хүргэлтийг тусад нь баталгаажуулна.'}</p></> : <><p>
             {t(
               "Үнэд НӨАТ ороогүй. Бүтээгдэхүүний нэрийг Messenger-ээр илгээж захиалгаа тодруулаарай.",
             )}
@@ -109,11 +110,7 @@ export default async function ProductDetail({
           <Action href={Facebook_CHAT_URL} external locale={locale}>
             {t("Messenger-ээр захиалах")}
           </Action>
-          {product.qpay && (
-            <Action href={product.qpay} external secondary locale={locale}>
-              {t("QPay-ээр төлөх")}
-            </Action>
-          )}
+          </>}
           <Action href={`tel:+976${PHONE}`} secondary locale={locale}>
             +976 {PHONE}
           </Action>

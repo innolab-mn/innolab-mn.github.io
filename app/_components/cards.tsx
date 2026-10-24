@@ -1,6 +1,7 @@
 import { type Locale, translator, localeHref } from "@/lib/i18n";
 import { ArrowUpRight, firstImage, img, Price, formatDate } from "./ui";
 import { courseInfo, productCategory } from "@/lib/course-info";
+import { AddToCart } from './cart-controls';
 export function CourseCard({
   course,
   index = 0,
@@ -97,10 +98,8 @@ export function ProductCard({
 }) {
   const t = translator(locale);
   return (
-    <a
-      href={localeHref(`/products/${product.slug}`, locale)}
-      className="shop-card"
-    >
+    <article className="shop-card">
+    <a href={localeHref(`/products/${product.slug}`, locale)}>
       <figure>
         {firstImage(product) && (
           <img
@@ -126,6 +125,8 @@ export function ProductCard({
         {t("— дэлгэрэнгүй")}
       </span>
     </a>
+    <AddToCart product={{slug:product.slug,title:product.title,price:Number(product.price),image:firstImage(product)}} locale={locale}/>
+    </article>
   );
 }
 export function NewsRow({

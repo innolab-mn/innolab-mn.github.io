@@ -353,5 +353,7 @@
   "Имэйлээр нууц үг сэргээх холбоос аваарай.": "Request a password reset link by email.",
   "Баталгаажуулсан сэргээх холбоосоор шинэ нууц үг тохируулаарай.": "Choose a new password using your verified recovery link.",
   "InnoLab гишүүний бүртгэлдээ нэвтрээрэй.": "Sign in to your InnoLab member account.",
-  "InnoLab-ийн гишүүний бүртгэл үүсгэх маягт.": "Create your InnoLab member account."
+  "InnoLab-ийн гишүүний бүртгэл үүсгэх маягт.": "Create your InnoLab member account.",
+  "Сагс — InnoLab": "Cart — InnoLab",
+  "Удирдлага — InnoLab": "Administration — InnoLab"
 }
