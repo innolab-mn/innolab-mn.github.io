@@ -1,10 +1,15 @@
-export const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
+const configuredSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
+// Preserve existing deployments when the flag is absent. An explicit false
+// disables all three Auth widgets and token requirements without deleting the key.
+export const turnstileSiteKey = process.env.NEXT_PUBLIC_CAPTCHA_ENABLED?.trim().toLowerCase() === "false"
+  ? ""
+  : configuredSiteKey;
 
 export type TurnstileApi = {
   ready: (callback: () => void) => void;
   render: (container: HTMLElement, options: {
     sitekey: string; theme: "light" | "dark"; language: "en" | "auto";
-    size: "flexible"; action: "login" | "register" | "forgot";
+    size: "flexible" | "compact"; action: "login" | "register" | "forgot";
     "response-field": false; callback: (token: string) => void;
     "expired-callback": () => void; "error-callback": () => void;
     "timeout-callback": () => void;
@@ -37,12 +42,11 @@ export function loadTurnstile(): Promise<TurnstileApi> {
     script.onerror = fail;
     script.onload = () => {
       if (!window.turnstile) return fail();
-      window.turnstile.ready(() => {
-        if (finished || !window.turnstile) return;
-        finished = true;
-        clearTimeout(timeout);
-        resolve(window.turnstile);
-      });
+      // Explicit rendering is available once the asynchronous script has loaded.
+      if (finished) return;
+      finished = true;
+      clearTimeout(timeout);
+      resolve(window.turnstile);
     };
     document.head.appendChild(script);
   });

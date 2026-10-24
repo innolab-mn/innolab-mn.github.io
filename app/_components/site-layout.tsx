@@ -3,6 +3,7 @@ import { themeBootstrap } from "@/lib/theme";
 import "@/app/globals.css";
 import "@/app/_components/landing.css";
 import "@/app/_components/members.css";
+import '@/app/_components/shop.css';
 import { Inter } from "next/font/google";
 import GoogleAnalytics from "@/app/googleAnalytics";
 import Navigation from "./navigation";

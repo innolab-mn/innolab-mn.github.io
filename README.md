@@ -70,6 +70,9 @@ must be valid. Do not commit credentials.
   See [membership setup](docs/supabase-setup.md).
 
 Next.js also supports `npm run build -- --webpack` as an alternative compiler.
+Turnstile activation and safe deployment order are documented in
+[Turnstile setup](docs/turnstile-setup.md). Run `npm run check:turnstile` for
+the loader checks; membership checks also cover CAPTCHA token forwarding.
 The existing GitHub Pages deployment workflow and Contentful webhook remain intact.
 
 ## Design and content
@@ -108,3 +111,9 @@ entries with prices are shown first, and unpriced entries remain available.
 - Analytics requires `NEXT_PUBLIC_GA_MEASUREMENT_ID`, which is absent locally.
 
 No CMS content or production deployment is changed by the redesign.
+
+## Member roles and bank-transfer orders
+
+See [shop setup](docs/shop-setup.md) for role boundaries, database setup,
+bank transfer operations and Contentful catalog synchronization.
+Run `npm run check:shop` for PostgreSQL permission and order validation tests.

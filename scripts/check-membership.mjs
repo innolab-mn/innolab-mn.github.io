@@ -53,6 +53,7 @@ try {
   const code = ts.transpileModule(source.replace(/^import[^\r\n]*\r?\n/, ""), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
   let handler;
   let failDatabase = false;
+  let captchaRequired = false;
   const authCalls = [];
   vm.runInNewContext(code, {
     exports: {}, Request, Response, TextEncoder, TextDecoder, Uint8Array, crypto: webcrypto,
@@ -67,6 +68,9 @@ try {
       },
     } : { auth: { signInWithPassword: async input => {
       authCalls.push(input);
+      if (captchaRequired && input.options?.captchaToken !== "fixture-valid-token") return {
+        data: { session: null }, error: { status: 400, code: "captcha_failed" },
+      };
       if (input.email === "alice@example.test" && input.password === "Test-only-password!1") return {
         data: { session: { access_token: "test-access", refresh_token: "test-refresh" } }, error: null,
       };
@@ -96,6 +100,22 @@ try {
   assert.equal((await handler(request({ username: "maker_one", password: "Test-only-password!1" }))).status, 503, "database errors fail closed");
   failDatabase = false;
   await db.exec("truncate private.member_login_limits");
+  captchaRequired = true;
+  response = await handler(request({ username: "maker_one", password: "Test-only-password!1" }));
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).error, "captcha_failed", "missing CAPTCHA must not create a session");
+  response = await handler(request({ username: "missing", password: "Test-only-password!1", captchaToken: "bad-token" }));
+  assert.equal((await response.json()).error, "captcha_failed", "CAPTCHA error must not reveal account existence");
+  response = await handler(request({ username: "maker_one", password: "Test-only-password!1", captchaToken: "fixture-valid-token" }));
+  assert.equal(response.status, 200);
+  assert.equal(authCalls.at(-1).options.captchaToken, "fixture-valid-token", "Auth must receive the browser token");
+  const beforeMalformed = authCalls.length;
+  for (const captchaToken of [null, {}, "", "x".repeat(2049)]) {
+    assert.equal((await handler(request({ username: "maker_one", password: "Test-only-password!1", captchaToken }))).status, 400);
+  }
+  assert.equal(authCalls.length, beforeMalformed, "malformed CAPTCHA tokens must be rejected before Auth");
+  captchaRequired = false;
+  await db.exec("truncate private.member_login_limits");
   for (let index = 0; index < 10; index++) assert.equal((await handler(request({ username: "maker_one", password: "Wrong-password!" }))).status, 400);
   response = await handler(request({ username: "maker_one", password: "Test-only-password!1" }, { headers: { origin: "http://localhost:3000", "content-type": "application/json", "x-forwarded-for": "192.0.2.99" } }));
   assert.equal(response.status, 429, "IP spoofing does not bypass username limit");
@@ -107,7 +127,7 @@ const browserSource = await readFile(new URL("../lib/supabase.ts", import.meta.u
 const browserCode = ts.transpileModule(browserSource.replace(/^import[^\r\n]*\r?\n/gm, ""), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;
-function browserModule(enabled, status = 200) {
+function browserModule(enabled, status = 200, errorCode = "generic") {
   const calls = [];
   const sessions = [];
   const recoveryRequests = [];
@@ -119,12 +139,12 @@ function browserModule(enabled, status = 200) {
       NEXT_PUBLIC_SUPABASE_URL: "https://test.supabase.co", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-public-key" } },
     createClient: () => ({ auth: {
       onAuthStateChange: () => {},
-      resetPasswordForEmail: async (email, options) => { recoveryRequests.push({ email, options }); return { error: status === 200 ? null : { status } }; },
+      resetPasswordForEmail: async (email, options) => { recoveryRequests.push({ email, options }); return { error: status === 200 ? null : { status, code: errorCode } }; },
       setSession: async value => { sessions.push(value); return { error: null }; },
     } }),
     fetch: async (url, options) => {
       calls.push({ url, ...options });
-      return new Response(JSON.stringify(status === 200 ? { access_token: "test-access", refresh_token: "test-refresh" } : { error: "generic" }), { status });
+      return new Response(JSON.stringify(status === 200 ? { access_token: "test-access", refresh_token: "test-refresh" } : { error: errorCode }), { status });
     },
   });
   return { api: exported, calls, sessions, recoveryRequests };
@@ -146,12 +166,22 @@ for (const [status, message] of [[400, "invalid_login"], [429, "rate_limited"], 
   assert.equal(test.sessions.length, 0);
 }
 console.log("PASS browser adapter: setup gate, canonical usernames, credential destination, SDK session handling and error mapping");
+const captchaLogin = browserModule(true);
+await captchaLogin.api.loginWithUsername("maker_one", "Test-only-password!1", "fixture-valid-token");
+assert.equal(JSON.parse(captchaLogin.calls[0].body).captchaToken, "fixture-valid-token");
+const failedCaptcha = browserModule(true, 400, "captcha_failed");
+await assert.rejects(failedCaptcha.api.loginWithUsername("maker_one", "Test-only-password!1", "expired"), /captcha_failed/);
+assert.equal(failedCaptcha.sessions.length, 0);
 
 await enabled.api.requestPasswordReset(" maker@example.test ", "en");
 await enabled.api.requestPasswordReset("maker@example.test", "mn");
 assert.equal(enabled.recoveryRequests[0].email, "maker@example.test");
 assert.equal(enabled.recoveryRequests[0].options.redirectTo, "http://localhost:3000/en/reset-password");
 assert.equal(enabled.recoveryRequests[1].options.redirectTo, "http://localhost:3000/reset-password");
+await enabled.api.requestPasswordReset("maker@example.test", "mn", "fixture-reset-token");
+assert.equal(enabled.recoveryRequests[2].options.captchaToken, "fixture-reset-token");
+await assert.rejects(failedCaptcha.api.requestPasswordReset("maker@example.test", "mn", "expired"), /captcha_failed/);
+console.log("PASS CAPTCHA: bounded tokens, login proxy forwarding, Auth rejection without a session, and recovery token forwarding");
 await assert.rejects(disabled.api.requestPasswordReset("maker@example.test", "en"), /not_configured/);
 await assert.rejects(browserModule(true, 429).api.requestPasswordReset("maker@example.test", "en"), /rate_limited/);
 

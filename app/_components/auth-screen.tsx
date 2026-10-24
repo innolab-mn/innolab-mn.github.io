@@ -233,7 +233,7 @@ export default function AuthScreen({
             )}
             {!isForgot && field("password")}
             {mode === "login" && <a className="auth-forgot" href={localeHref("/forgot-password", locale)}>{copy.forgotPassword}</a>}
-            {turnstileSiteKey && <Turnstile locale={locale} action={mode} reset={captchaReset} onToken={setCaptchaToken} />}
+            {membershipConfigured && turnstileSiteKey && <Turnstile locale={locale} action={mode} reset={captchaReset} onToken={setCaptchaToken} />}
             <button
               className="button auth-submit"
               type="submit"

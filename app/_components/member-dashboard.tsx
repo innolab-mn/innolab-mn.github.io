@@ -5,6 +5,7 @@ import { memberCopy } from "@/lib/member-copy";
 import { getSupabase, membershipConfigured } from "@/lib/supabase";
 import { useMember } from "./use-member";
 import { ArrowUpRight } from "./ui";
+import MemberShop from './member-shop';
 
 export default function MemberDashboard({ locale }: { locale: Locale }) {
   const copy = memberCopy(locale);
@@ -88,6 +89,7 @@ export default function MemberDashboard({ locale }: { locale: Locale }) {
         </button>
       </header>
       {signOutError && <p className="auth-error-summary" role="alert">{copy.signOutError}</p>}
+      <MemberShop member={profile} locale={locale}/>
       <div className="member-content">
         <div className="member-main">
           <h2>{copy.nextSteps}</h2>
@@ -157,7 +159,7 @@ export default function MemberDashboard({ locale }: { locale: Locale }) {
           <div className="member-avatar" aria-hidden="true">
             {Array.from(name)[0]?.toLocaleUpperCase(locale) || "M"}
           </div>
-          <span className="member-badge">{copy.memberBadge}</span>
+          <span className="member-badge">{profile.role === 'member' ? copy.memberBadge : profile.role}</span>
           <h2>{copy.profile}</h2>
           <dl className="facts">
             {[

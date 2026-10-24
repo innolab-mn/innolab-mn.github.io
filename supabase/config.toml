@@ -5,6 +5,10 @@ project_id = "innolab-members"
 [functions.username-login]
 verify_jwt = false
 
+# Auth.getUser + current database superadmin role are verified in the handler.
+[functions.trigger-build]
+verify_jwt = false
+
 [auth.email.template.confirmation]
 subject = 'InnoLab — {{if eq .RedirectTo "https://innolab.mn/en/members" "https://www.innolab.mn/en/members" "http://localhost:3000/en/members" "http://127.0.0.1:3000/en/members"}}Confirm your email{{else}}Имэйлээ баталгаажуулаарай{{end}}'
 content_path = "./supabase/templates/confirmation.html"

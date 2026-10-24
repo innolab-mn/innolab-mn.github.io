@@ -24,6 +24,10 @@ jobs:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_MEMBERSHIP_ENABLED: ${{ vars.NEXT_PUBLIC_MEMBERSHIP_ENABLED }}
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+      NEXT_PUBLIC_CAPTCHA_ENABLED: ${{ vars.NEXT_PUBLIC_CAPTCHA_ENABLED }}
+      NEXT_PUBLIC_SHOP_BANK_NAME: ${{ secrets.NEXT_PUBLIC_SHOP_BANK_NAME }}
+      NEXT_PUBLIC_SHOP_BANK_ACCOUNT: ${{ secrets.NEXT_PUBLIC_SHOP_BANK_ACCOUNT }}
+      NEXT_PUBLIC_SHOP_BANK_HOLDER: ${{ secrets.NEXT_PUBLIC_SHOP_BANK_HOLDER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,6 +43,11 @@ jobs:
       - name: Build static site
         run: |
           npm run build
+
+      - name: Synchronize shop prices from Contentful
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/sync-shop-catalog.mjs
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

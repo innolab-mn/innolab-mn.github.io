@@ -46,9 +46,9 @@ export default async function ProductsPage({
         <div className="container">
           <p className="eyebrow">{t("Захиалга")}</p>
           <div className="section-heading">
-            <h2>{t("Сонго. Холбогд. Тохиролц.")}</h2>
-            <Action href={Facebook_CHAT_URL} external locale={locale}>
-              {t("Захиалга лавлах")}
+            <h2>{locale==='en'?'Choose. Add to cart. Order.':'Сонго. Сагсал. Захиал.'}</h2>
+            <Action href="/cart" locale={locale}>
+              {locale==='en'?'View cart':'Сагс харах'}
             </Action>
           </div>
           <div className="learning-path">
@@ -60,8 +60,8 @@ export default async function ProductsPage({
               ],
               [
                 "02",
-                t("Захиалгаа тодруулах"),
-                t("Messenger эсвэл утсаар бэлэн эсэх, төлбөрөө лавлаарай."),
+                locale==='en'?'Order by bank transfer':'Дансаар төлж захиалах',
+                locale==='en'?'Add priced products to your cart and enter your contact details.':'Үнэтэй барааг сагсанд нэмээд нэр, утас, хаягаа бөглөөрэй.',
               ],
               [
                 "03",
