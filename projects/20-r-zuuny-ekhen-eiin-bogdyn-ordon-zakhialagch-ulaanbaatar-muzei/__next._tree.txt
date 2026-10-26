@@ -1,6 +1,6 @@
-:HL["/_next/static/chunks/0e7dl3eqrabyi.css","style"]
+:HL["/_next/static/chunks/0yz86liz0g0vy.css","style"]
 :HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/9c72aa0f40e4eef8-s.p.1y4-pdgsjb-pw.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/favicon.svg","image"]
 :HL["https://images.ctfassets.net/mjimfx86z1sb/6hhue7HKnUR3E9jijRjjD/7a52abb12cf8c4b87d30a3d2de822e43/photo_2026-08-21_17-05-52.jpg?w=1400&fm=webp&q=80","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4184,"slots":{"children":{"name":"(mongolian)","param":null,"prefetchHints":4148,"slots":{"children":{"name":"projects","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"20-r-zuuny-ekhen-eiin-bogdyn-ordon-zakhialagch-ulaanbaatar-muzei","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"p4qF1ouKSH-pRFpPgccfg"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4184,"slots":{"children":{"name":"(mongolian)","param":null,"prefetchHints":4148,"slots":{"children":{"name":"projects","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"20-r-zuuny-ekhen-eiin-bogdyn-ordon-zakhialagch-ulaanbaatar-muzei","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"SpaMB3Sceeif4GiHnmEHq"}
