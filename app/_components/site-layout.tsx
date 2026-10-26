@@ -4,10 +4,12 @@ import "@/app/globals.css";
 import "@/app/_components/landing.css";
 import "@/app/_components/members.css";
 import '@/app/_components/shop.css';
+import '@/app/_components/interface.css';
 import { Inter } from "next/font/google";
 import GoogleAnalytics from "@/app/googleAnalytics";
 import Navigation from "./navigation";
 import { LandingFooter } from "./ui";
+import EventDecoration from '@/decoration';
 const body = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-landing-body",
@@ -42,6 +44,7 @@ export default function SiteLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
       <body>
+        <EventDecoration />
         <Navigation locale={locale} notFound={notFound} />
         <main id="main-content" tabIndex={-1}>
           {children}

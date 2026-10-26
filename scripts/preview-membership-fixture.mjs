@@ -107,9 +107,9 @@ http.createServer(async (req, res) => {
       if (url.pathname === "/auth/v1/user" && req.headers.authorization === `Bearer ${token}`) return json(200, user);
       return json(401, { message: "Fixture session missing", code: "session_not_found" });
     }
-    if (captchaMock && url.pathname === "/functions/v1/username-login") {
+    if ((captchaMock || shopMock) && url.pathname === "/functions/v1/username-login") {
       let raw = ""; for await (const chunk of req) raw += chunk;
-      const valid = JSON.parse(raw || "{}").captchaToken === "fixture-valid-token";
+      const valid = !captchaMock || JSON.parse(raw || "{}").captchaToken === "fixture-valid-token";
       captchaRequests.push({ kind: "username-login", verified: valid });
       return valid ? json(200, session) : json(400, { error: "captcha_failed" });
     }

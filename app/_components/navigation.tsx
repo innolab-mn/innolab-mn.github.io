@@ -5,6 +5,7 @@ import { type Locale, translator, localeHref } from "@/lib/i18n";
 import Preferences from "./preferences";
 import MemberAccess from "./member-access";
 import { CartLink } from './cart-controls';
+import { useMember } from './use-member';
 const links = [
   ["/courses", "Сургалт"],
   ["/projects", "Төслүүд"],
@@ -25,6 +26,7 @@ export default function Navigation({
   notFound?: boolean;
 }) {
   const t = translator(locale);
+  const { member } = useMember();
   const pathname = usePathname().replace(/^\/en(?=\/|$)/, "") || "/";
   const nav = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -89,31 +91,26 @@ export default function Navigation({
           <div className="desktop-nav">
             {links.map(link)}
             <details className="nav-more">
-              <summary>
+              <summary className={clubLinks.some(([href]) => pathname === href || pathname.startsWith(href + '/')) ? 'is-current' : undefined}>
                 {t("Клуб")} <span aria-hidden="true">⌄</span>
               </summary>
-              <div className="nav-dropdown">{clubLinks.map(link)}</div>
+              <div className="nav-dropdown"><p className="nav-group-label">{locale === 'en' ? 'Explore the club' : 'Клубтэй танилцах'}</p>{clubLinks.map(link)}{link(['/contact', 'Холбогдох'])}</div>
             </details>
           </div>
-          <a className="button nav-join" href={localeHref("/contact", locale)}>
-            {t("Хамтдаа бүтээе")} <span aria-hidden="true">↗</span>
-          </a>
-          <MemberAccess locale={locale} />
+          <div className="header-tools">
           <CartLink locale={locale}/>
           <Preferences locale={locale} notFound={notFound} />
+          <MemberAccess locale={locale} />
+          </div>
           <details className="mobile-menu">
             <summary aria-label={t('Цэс')}>
-              <span className="menu-label">{t("Цэс")}</span>{" "}
-              <span aria-hidden="true">☰</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span className="sr-only">{t("Цэс")}</span>
             </summary>
             <div className="mobile-links">
-              {[
-                ["/login", "Нэвтрэх"],
-                ["/register", "Бүртгүүлэх"],
-                ...links,
-                ...clubLinks,
-                ["/contact", "Холбогдох"],
-              ].map(link)}
+              <p className="nav-group-label">{locale === 'en' ? 'Learn. Build. Belong.' : 'Суралц. Бүтээ. Нэгд.'}</p>
+              <div className="mobile-primary-links">{links.map(link)}</div>
+              <div className="mobile-secondary-links">{clubLinks.map(link)}{link(['/contact', 'Холбогдох'])}</div>
+              <div className="mobile-account-links">{member ? <>{link(['/members', 'Гишүүний булан'])}{member.role !== 'member' && <a href={localeHref('/admin', locale)}>{locale === 'en' ? 'Administration' : 'Удирдлага'} ↗</a>}</> : <>{link(['/login', 'Нэвтрэх'])}{link(['/register', 'Бүртгүүлэх'])}</>}</div>
             </div>
           </details>
         </nav>

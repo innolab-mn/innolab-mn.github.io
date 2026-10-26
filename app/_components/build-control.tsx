@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from 'react';
 import { getSupabase } from '@/lib/supabase';
+import { Notice } from './feedback';
 import type { Locale } from '@/lib/i18n';
 const workflowUrl = 'https://github.com/innolab-mn/innolab-mn.github.io/actions/workflows/nextjs.yml';
 type Run = { id: number; status: string; conclusion: string | null; url: string };
@@ -35,6 +36,6 @@ export default function BuildControl({ locale }: { locale: Locale }) {
     <p className="eyebrow">GITHUB ACTIONS / MAIN</p><h2 id="build-control-title">{en ? 'Build & publish website' : 'Сайт build хийж нийтлэх'}</h2>
     <p>{en ? 'Build the latest main branch and publish it to innolab.mn. Admins and superadmins can start a build.' : 'Main branch-ийн сүүлийн кодоор build хийж innolab.mn дээр нийтэлнэ. Admin болон superadmin эхлүүлэх эрхтэй.'}</p>
     <div className="actions"><button className="button" disabled={busy || queued || Boolean(run && run.status !== 'completed')} onClick={() => void request('POST')}>{busy ? (en ? 'Please wait…' : 'Түр хүлээнэ үү…') : (en ? 'Build & deploy' : 'Build / Нийтлэх')} ↗</button><button className="button button-outline" disabled={busy} onClick={() => void request('GET')}>{en ? 'Check status' : 'Төлөв шалгах'}</button><a className="text-link" href={run?.url || workflowUrl} target="_blank" rel="noopener noreferrer">{en ? 'Detailed logs' : 'Дэлгэрэнгүй log'} ↗</a></div>
-    <p role="status" aria-live="polite">{message}</p>{run && <p role="status">{en ? 'Latest build' : 'Сүүлийн build'} #{run.id}: {run.status === 'completed' ? result : (en ? 'Queued / running' : 'Хүлээгдэж байна / ажиллаж байна')}</p>}{error && <p className="auth-error-summary" role="alert">{error}</p>}
+    <div aria-live="polite">{message && <Notice>{message}</Notice>}</div>{run && <p role="status">{en ? 'Latest build' : 'Сүүлийн build'} #{run.id}: {run.status === 'completed' ? result : (en ? 'Queued / running' : 'Хүлээгдэж байна / ажиллаж байна')}</p>}{error && <Notice tone="error">{error}</Notice>}
   </section>;
 }

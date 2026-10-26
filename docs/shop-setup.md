@@ -20,12 +20,8 @@ It configures the bank details supplied by the owner. It never creates an Auth a
 
 Everyone defaults to member. Signup metadata cannot grant staff rights. Admins
 can read members and orders and advance order states. Only superadmins can change
-<<<<<<< HEAD
-roles. After the environment transition, bank details are managed only through
-Next.js build configuration. The last superadmin cannot demote themselves. Private
-=======
-roles or bank details. The last superadmin cannot demote themselves. Private
->>>>>>> 8d5138c2acef83f8eda7c19bc34d36d63fb0e3bd
+roles. Bank details are managed only through Next.js build configuration.
+The last superadmin cannot demote themselves. Private
 roles are checked in PostgreSQL on every protected call, not trusted from browser
 state or a JWT role claim. Staff changes are recorded in a private audit table.
 
@@ -57,3 +53,27 @@ from existing published data.
 Validation: `npm run check:shop` tests SQL permissions, metadata privilege
 escalation, last-superadmin protection, privacy, price tampering, guest ordering,
 retry idempotency, rate limits, state transitions and auditing against PostgreSQL.
+
+## Static bank configuration
+
+Checkout and the read-only administration payment panel use `lib/payment-settings.ts`.
+They never read or write bank details in Supabase and have no database fallback.
+Set these in `.env.local` for local builds and GitHub Actions repository secrets for deployment:
+
+- `NEXT_PUBLIC_SHOP_BANK_NAME`
+- `NEXT_PUBLIC_SHOP_BANK_ACCOUNT`
+- `NEXT_PUBLIC_SHOP_BANK_HOLDER`
+
+The existing workflow passes all three to Next.js. Rebuild after changing any value.
+These are public payment instructions embedded in the static website, even when
+stored as GitHub secrets. Do not put private credentials in these variables.
+Missing values disable checkout and show a contact link rather than a retry button.
+
+After the environment-configured frontend is deployed, apply
+`supabase/migrations/202610240003_bank_environment.sql` once. It clears legacy bank
+values, revokes the old bank-save RPC and makes ordering depend only on an enabled
+flag. It preserves existing orders, server-side price checks and role protections.
+Do not re-run the legacy bank bootstrap or account-update SQL after this transition.
+The migration file being present locally does not confirm it has been applied remotely.
+
+Run `node scripts/check-payment-settings.mjs` to check environment configuration.

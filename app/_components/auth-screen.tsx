@@ -5,6 +5,7 @@ import { memberCopy } from "@/lib/member-copy";
 import { getSupabase, loginWithUsername, membershipConfigured, requestPasswordReset } from "@/lib/supabase";
 import AuthField, { type AuthFieldName } from "./auth-field";
 import AuthSuccess from "./auth-success";
+import { Notice } from "./feedback";
 import { ArrowUpRight } from "./ui";
 import Turnstile from "./turnstile";
 import { turnstileSiteKey } from "@/lib/turnstile";
@@ -195,14 +196,15 @@ export default function AuthScreen({
         </div>
       </aside>
       <div className="auth-panel">
+        {!isForgot && <nav className="auth-mode-nav" aria-label={locale === 'en' ? 'Account access' : 'Гишүүний бүртгэл'}><a href={localeHref('/login', locale)} aria-current={!isRegister ? 'page' : undefined}>{copy.signIn}</a><a href={localeHref('/register', locale)} aria-current={isRegister ? 'page' : undefined}>{copy.register}</a></nav>}
         <p className="eyebrow">{copy.eyebrow}</p>
         <h1>{isForgot ? copy.forgotTitle : isRegister ? copy.registerTitle : copy.loginTitle}</h1>
         <p className="auth-intro">
           {isForgot ? copy.forgotIntro : isRegister ? copy.registerIntro : copy.loginIntro}
         </p>
-        {!membershipConfigured && <div className="auth-status-note" role="status"><p>{copy.setupPending}</p></div>}
+        {!membershipConfigured && <Notice>{copy.setupPending}</Notice>}
         {success && <AuthSuccess locale={locale} kind={isForgot ? "recovery-email" : "registration"} email={values.email.trim()} onEdit={() => { setSuccess(false); setServerError(""); requestAnimationFrame(() => form.current?.querySelector<HTMLInputElement>("#auth-email")?.focus()); }} /> }
-        {serverError && <p className="auth-error-summary" role="alert">{serverError}</p>}
+        {serverError && <Notice tone="error">{serverError}</Notice>}
         {!success && <form
           ref={form}
           onSubmit={submit}
@@ -211,9 +213,7 @@ export default function AuthScreen({
           aria-busy={busy}
         >
           {Object.values(errors).some(Boolean) && (
-            <p className="auth-error-summary" role="alert">
-              {copy.errorTitle}
-            </p>
+            <Notice tone="error">{copy.errorTitle}</Notice>
           )}
           <fieldset className="auth-fields" disabled={!hydrated || busy || !membershipConfigured}>
             <legend className="sr-only">

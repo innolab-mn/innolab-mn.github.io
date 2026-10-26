@@ -51,14 +51,11 @@ assert.ok((await as('authenticated',ids[2],'select * from public.admin_audit()')
 await assert.rejects(as('authenticated',ids[1],'select * from public.admin_audit()'),/forbidden/);
 for(let n=3;n<=5;n++)await as('anon',null,sql,args(makeId(n)));
 await assert.rejects(as('anon',null,sql,args(makeId(6))),/rate_limited/);
-<<<<<<< HEAD
 await db.exec(await readFile(new URL('../supabase/migrations/202610240003_bank_environment.sql',import.meta.url),'utf8'));
 const bankRow=(await db.query('select * from public.shop_payment_settings')).rows[0];
 assert.equal(bankRow.bank_name,'');assert.equal(bankRow.account_number,'');assert.equal(bankRow.account_name,'');assert.equal(bankRow.enabled,true);
 await assert.rejects(as('authenticated',ids[0],"select public.admin_save_bank('Test bank','TEST-ACCOUNT','Test holder')"),/permission denied/);
 const afterMove=args(makeId(7));afterMove[2]='88112233';
 assert.equal((await as('anon',null,sql,afterMove)).rows[0].receipt.total,50000,'orders still work after bank values move out of the database');
-=======
->>>>>>> 8d5138c2acef83f8eda7c19bc34d36d63fb0e3bd
-console.log('PASS shop: metadata cannot grant roles; staff-only member records; superadmin-only roles/bank; last-superadmin protection; private contacts and orders; authoritative prices; guest checkout; idempotency; limits; payment transitions; audit.');
+console.log('PASS shop: metadata cannot grant roles; staff-only member records; superadmin-only roles; environment migration clears bank values and revokes writes; last-superadmin protection; private contacts and orders; authoritative prices; guest checkout; idempotency; limits; payment transitions; audit.');
 await db.close();
