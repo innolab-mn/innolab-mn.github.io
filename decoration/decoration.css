@@ -1,17 +1,19 @@
-/* Static artwork, isolated from content and all pointer/keyboard interaction. */
+/* Corner artwork stays outside document flow and never intercepts page controls. */
 .event-decoration { position: fixed; inset: 0; z-index: 4; pointer-events: none; user-select: none; overflow: hidden; }
 .event-decoration svg { position: absolute; }
-.event-decoration[data-event-decoration="halloween"] { --web-color: #68775f; --pumpkin-orange: #e99b45; --pumpkin-line: #a15a2c; --halloween-metal: #354e40; --halloween-cream: #fff3d9; --halloween-gold: #cf933c; --halloween-wire: #8caa6d; }
-:root[data-theme="dark"] .event-decoration[data-event-decoration="halloween"] { --web-color: #b8c7a5; --pumpkin-orange: #efaa55; --pumpkin-line: #a16635; --halloween-metal: #506d57; --halloween-cream: #e1e8d2; --halloween-gold: #d9ac60; --halloween-wire: #afc780; }
+.event-decoration[data-event-decoration="halloween"] { --web-color: #68775f; --pumpkin-orange: #e99b45; --pumpkin-line: #a15a2c; --halloween-metal: #354e40; --halloween-cream: #fff3d9; --halloween-gold: #cf933c; --halloween-wire: #8caa6d; --halloween-ink: #46593e; }
+:root[data-theme="dark"] .event-decoration[data-event-decoration="halloween"] { --web-color: #b8c7a5; --pumpkin-orange: #efaa55; --pumpkin-line: #a16635; --halloween-metal: #506d57; --halloween-cream: #e1e8d2; --halloween-gold: #d9ac60; --halloween-wire: #afc780; --halloween-ink: #d6dfc6; }
+.halloween-scene { position: absolute; inset: 0; }
 .event-decoration .halloween-web { top: 80px; width: 155px; height: 173px; left: 0; }
 .event-decoration .halloween-web-lines { stroke: var(--web-color); stroke-width: 1.1; opacity: .3; }
 .event-decoration .halloween-circuit-traces { stroke: var(--halloween-gold); stroke-width: 1.5; opacity: .55; }
-.event-decoration .halloween-thread { stroke: var(--web-color); stroke-width: 1; opacity: .55; }
-.event-decoration .halloween-chip-spider { stroke: var(--halloween-metal); stroke-width: 2; }
+.event-decoration .halloween-thread { stroke: var(--web-color); stroke-width: 1; opacity: .55; transform-box: fill-box; transform-origin: center top; animation: halloween-thread 7s -2s ease-in-out infinite; }
+.event-decoration .halloween-chip-spider { stroke: var(--halloween-metal); stroke-width: 2; animation: halloween-spider 7s -2s ease-in-out infinite; }
 .event-decoration .halloween-chip-spider rect { fill: var(--halloween-metal); }
 .event-decoration .halloween-spider-eye { fill: var(--halloween-gold); stroke: none; }
 .event-decoration .halloween-night { top: 80px; right: 0; width: 184px; height: 154px; }
 .event-decoration .halloween-moon { fill: var(--halloween-gold); opacity: .45; }
+.event-decoration .halloween-moon-marks { stroke: var(--halloween-cream); stroke-width: 1.5; opacity: .7; }
 .event-decoration .halloween-bat { fill: var(--halloween-metal); opacity: .65; }
 .event-decoration .halloween-bat-small { opacity: .4; }
 .event-decoration .halloween-wing-trace { fill: none; stroke: var(--halloween-wire); stroke-width: 1.2; }
@@ -25,30 +27,65 @@
 .event-decoration .pumpkin-ribs { stroke: var(--pumpkin-line); stroke-width: 1.3; opacity: .45; }
 .event-decoration .pumpkin-stem { fill: #6f8246; stroke: #455932; stroke-width: 1.5; }
 .event-decoration .pumpkin-leaf { fill: #8b9f5b; }
+.event-decoration .pumpkin-vine { stroke: #6f8246; stroke-width: 1.5; }
+.event-decoration .pumpkin-highlight { stroke: #ffdba0; stroke-width: 2.5; opacity: .8; }
+.event-decoration .pumpkin-lens-shine { stroke: #e9e8bc; stroke-width: 1.5; }
+.event-decoration .pumpkin-copper-wire { stroke: #986133; stroke-width: 1.8; }
+.event-decoration .pumpkin-gear { fill: #d9cb8c; stroke: #6a5e33; stroke-width: 1; }
+.event-decoration .pumpkin-gear circle { fill: #826243; }
 .event-decoration .pumpkin-headband { stroke: #455932; stroke-width: 6; }
 .event-decoration .pumpkin-goggles { fill: #354535; stroke: #c0ba7a; stroke-width: 2; }
-.event-decoration .pumpkin-eye { fill: #fbd36f; }
+.event-decoration .pumpkin-eye { fill: #fbd36f; transform-box: fill-box; transform-origin: center; animation: halloween-blink 5.6s -1s ease-in-out infinite; }
 .event-decoration .pumpkin-face { fill: #543622; }
 .event-decoration .pumpkin-antenna { stroke: var(--halloween-metal); stroke-width: 3; }
 .event-decoration .pumpkin-led { fill: #b7d879; stroke: var(--halloween-metal); stroke-width: 2; }
 .event-decoration .pumpkin-screws { stroke: var(--pumpkin-line); stroke-width: 1.6; }
 .event-decoration .halloween-ghost { width: 82px; height: 117px; right: 4px; bottom: 18px; opacity: .85; }
+.event-decoration .ghost-float { transform-box: fill-box; transform-origin: center; animation: halloween-ghost 6.8s -1.5s ease-in-out infinite; }
 .event-decoration .ghost-body { fill: var(--halloween-cream); stroke: #a9b49b; stroke-width: 1.6; }
 .event-decoration .ghost-tail, .event-decoration .ghost-pins { stroke: var(--halloween-metal); stroke-width: 1.8; }
 .event-decoration .ghost-seam { stroke: #fffdf2; stroke-width: 3; }
 .event-decoration .ghost-visor, .event-decoration .ghost-chip { fill: var(--halloween-metal); }
 .event-decoration .ghost-eyes { stroke: #d7edab; stroke-width: 4; }
 .event-decoration .ghost-code { stroke: #d7edab; stroke-width: 1.5; }
+.event-decoration .ghost-stitches { stroke: #8a9c7f; stroke-width: 1; }
+.event-decoration .ghost-lens-shine { stroke: #a8c89d; stroke-width: 1.5; }
+@keyframes halloween-spider { 0%, 100% { transform: translateY(-16px); } 50% { transform: translateY(12px); } }
+@keyframes halloween-thread { 0%, 100% { transform: scaleY(.742); } 50% { transform: scaleY(1.194); } }
+@keyframes halloween-ghost {
+  0%, 100% { transform: translate(-2px, 0) rotate(-4deg); opacity: .8; }
+  50% { transform: translate(2px, -9px) rotate(4deg); opacity: 1; }
+}
+@keyframes halloween-blink {
+  0%, 69%, 77%, 100% { transform: scaleY(1); opacity: 1; }
+  72%, 74% { transform: scaleY(.08); opacity: .6; }
+}
+/* Native checkbox pauses all loops without JavaScript or a runtime server. */
+.event-decoration .decoration-motion-toggle { position: absolute; right: 8px; bottom: 142px; width: 30px; height: 30px; margin: 0; opacity: 0; pointer-events: none; }
+.event-decoration .decoration-motion-control { position: absolute; right: 8px; bottom: 142px; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #82937540; border-radius: 50%; color: var(--halloween-ink); background: var(--surface-raised, #fafbf6); pointer-events: auto; cursor: pointer; z-index: 1; }
+.event-decoration .decoration-motion-control svg { position: static; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.event-decoration .decoration-play-icon { display: none; }
+.decoration-motion-toggle:focus-visible + .decoration-motion-control { outline: 2px solid var(--halloween-ink); outline-offset: 3px; }
+.decoration-motion-toggle:checked + .decoration-motion-control .decoration-pause-icon { display: none; }
+.decoration-motion-toggle:checked + .decoration-motion-control .decoration-play-icon { display: initial; }
+.event-decoration .decoration-motion-toggle:checked ~ .halloween-scene * { animation-play-state: paused; }
 @media (max-width: 1000px) {
   .event-decoration .halloween-web { width: 105px; height: 117px; }
   .event-decoration .halloween-night { width: 125px; height: 104px; }
   .event-decoration .halloween-pumpkin { width: 102px; height: 101px; }
   .event-decoration .halloween-ghost { width: 62px; height: 88px; right: 0; }
+  .event-decoration .decoration-motion-toggle, .event-decoration .decoration-motion-control { bottom: 112px; }
 }
 @media (max-width: 600px) {
-  .event-decoration .halloween-web { top: 72px; width: 70px; height: 78px; }
+  /* Tuck the web behind the header so its moving spider stays above the intro. */
+  .event-decoration .halloween-web { top: 40px; width: 70px; height: 78px; opacity: .8; }
   .event-decoration .halloween-night { top: 72px; width: 85px; height: 71px; opacity: .75; }
-  .event-decoration .halloween-pumpkin { width: 66px; height: 66px; left: 0; bottom: 4px; opacity: .85; }
-  .event-decoration .halloween-ghost { display: none; }
+  .event-decoration .halloween-pumpkin { width: 76px; height: 75px; left: 0; bottom: 4px; opacity: .8; }
+  .event-decoration .halloween-ghost { width: 48px; height: 68px; right: 0; bottom: 8px; opacity: .7; }
+  .event-decoration .decoration-motion-toggle, .event-decoration .decoration-motion-control { right: 4px; bottom: 80px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .event-decoration .halloween-scene * { animation: none; }
+  .event-decoration .decoration-motion-toggle, .event-decoration .decoration-motion-control { display: none; }
 }
 @media print { .event-decoration { display: none; } }

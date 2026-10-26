@@ -44,8 +44,8 @@ export default function SiteLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
       <body>
-        <EventDecoration />
         <Navigation locale={locale} notFound={notFound} />
+        <EventDecoration locale={locale} />
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>
