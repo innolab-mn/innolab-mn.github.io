@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="actions.css">
   <link rel="stylesheet" href="exercise.css">
   <link rel="stylesheet" href="reading.css">
+  <link rel="stylesheet" href="shooter.css">
+  <link rel="stylesheet" href="profiles.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -24,16 +26,18 @@
       <a href="#home" data-view="home"><span>⌂</span> Миний аялал</a>
       <a href="#alphabet" data-view="alphabet"><span>Аа</span> Үсгийн дүрс <b>35</b></a>
       <a href="#actions" data-view="actions"><span>↗</span> Үйл үг</a>
+      <a href="#shooter" data-view="shooter"><span>✦</span> Одон харваа</a>
       <a href="#reading" data-view="reading"><span>◷</span> Уншлага <b>60</b></a>
       <a href="#words" data-view="words"><span>▦</span> Үгийн сан <b id="word-count">20</b></a>
       <a href="#models" data-view="models"><span>◇</span> 3D ертөнц</a>
+      <a href="#profiles" data-view="profiles"><span>☺</span> Профайл</a>
       <a href="#settings" data-view="settings"><span>⚙</span> Тохиргоо</a>
     </nav>
     <div class="sidebar-note"><span class="note-star">✦</span><strong>Бага багаар,<br>өдөр бүр.</strong><p>Үг бүр нэг шинэ ертөнц!</p><div class="note-dots">● ● ● ● ●</div></div>
     <div class="sidebar-footer"><span class="green-dot"></span> Тоглоод, сураад, өсөөрэй</div>
   </aside>
   <div class="main-shell">
-    <header class="topbar"><div>Сайн уу, бяцхан уншигч! <span>☀</span></div><div class="top-actions"><span class="stars-counter">✦ <b id="total-stars">0</b> од</span><button id="sound-toggle" class="icon-button" aria-label="Дууг хаах" aria-pressed="true">♫</button><span class="avatar" aria-label="Бяцхан уншигч">Б</span></div></header>
+    <header class="topbar"><div id="profile-greeting">Сайн уу, бяцхан уншигч! ☀</div><div class="top-actions"><span class="stars-counter">✦ <b id="total-stars">0</b> од</span><button id="sound-toggle" class="icon-button" aria-label="Дууг хаах" aria-pressed="true">♫</button><a href="#profiles" class="profile-switch" aria-label="Хүүхдийн профайл сонгох"><span id="profile-label">🐣 Миний профайл</span></a></div></header>
     <main id="main" tabindex="-1"></main>
     <footer class="page-footer"><span>Хүүхэд бүр өөрийн хурдаар сурдаг.</span><span>Монгол үг · Том мөрөөдөл <span class="footer-heart">♡</span></span></footer>
   </div>

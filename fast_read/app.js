@@ -1,6 +1,9 @@
+import { renderProfiles, updateProfileHeader } from './profiles-ui.js';
+import { profileStorage } from './profiles-store.js';
 import { renderAlphabet, resetAlphabet } from './alphabet.js';
 import { renderActions, resetActions } from './actions.js';
 import { renderReading, pauseReading, resetReading } from './reading.js';
+import { renderShooter, leaveShooter, resetShooter } from './shooter.js';
 const $ = (selector, root = document) => root.querySelector(selector);
 const main = $('#main');
 const gameDialog = $('#game-dialog');
@@ -22,7 +25,7 @@ let audioContext;
 let toastTimer;
 let questionTicker;
 try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  const saved = JSON.parse(profileStorage.getItem(STORAGE_KEY));
   if (saved && typeof saved === 'object') {
     progress.sound = saved.sound !== false;
     if ([0, 15, 30, 60].includes(saved.questionSeconds)) progress.questionSeconds = saved.questionSeconds;
@@ -36,12 +39,13 @@ try {
 } catch { /* Private browsing or damaged storage: start with an empty profile. */ }
 
 function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
+  try { profileStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
   catch { toast('Ахиц хадгалагдсангүй. Энэ удаагийн тоглоомоо үргэлжлүүлж болно.'); }
   updateHeader();
 }
 function totalStars() { return Object.values(progress.completed).reduce((sum, n) => sum + n, 0); }
 function updateHeader() {
+  updateProfileHeader();
   $('#total-stars').textContent = totalStars();
   const sound = $('#sound-toggle');
   sound.textContent = progress.sound ? '♫' : '♪';
@@ -118,13 +122,13 @@ function timeExpired() {
 }
 function renderSettings() {
   main.innerHTML = `<div class="eyebrow" style="margin-top:28px">ӨӨРИЙН ХУРДААР СУРЪЯ</div><h1 class="page-title">Миний тохиргоо</h1><p class="page-subtitle">Бяцхан уншигчдаа тохируулан тоглоомоо бэлдээрэй. Сонголт бүр автоматаар хадгалагдана.</p><section class="settings-card" aria-labelledby="timer-setting-title"><div class="setting-heading"><span class="stat-icon">◷</span><div><h2 id="timer-setting-title">Асуултын хугацаа</h2><p>Зураг, үгээ харгалзуулах нэг асуултын хугацаа.</p></div></div><fieldset class="time-options"><legend class="sr-only">Асуултын хугацааг сонгох</legend>${[{value:15,title:'15 секунд',text:'Хурдан сэтгэж тоглоё'},{value:30,title:'30 секунд',text:'Тайван ажиглаад олъё'},{value:60,title:'60 секунд',text:'Бодох хугацаа хангалттай'},{value:0,title:'Хугацаагүй',text:'Яаралгүй хамтдаа суръя'}].map(option => `<label class="time-option"><input type="radio" name="question-seconds" value="${option.value}" ${progress.questionSeconds === option.value ? 'checked' : ''}><span><strong>${option.title}</strong><small>${option.text}</small></span></label>`).join('')}</fieldset><div class="setting-note">☀ Хугацаа дуусахад зөв хариултыг харуулна. Дараагийн асуултад товч дарж шилжинэ.</div></section><section class="settings-card"><div class="setting-row"><div><h2>Дууны эффект</h2><p>Зөв, буруу хариултад богино хөг эгшиглэнэ.</p></div><button id="settings-sound" class="toggle" role="switch" aria-label="Дууны эффект" aria-checked="${progress.sound}"><span></span></button></div></section><section class="settings-card"><div class="setting-row"><div><h2>Шинээр эхлэх</h2><p>Танил болсон үг, од болон нээгдсэн түвшнүүдийг эхнээс нь эхлүүлнэ.</p></div><button id="reset-ask" class="secondary-button">Ахиц арилгах</button></div><div id="reset-confirmation" class="reset-confirmation" hidden><p>Бүх од, сурсан үгийн ахицыг энэ төхөөрөмжөөс арилгах уу?</p><button id="reset-cancel" class="secondary-button">Болих</button> <button id="reset-progress" class="danger-button">Тийм, шинээр эхэлье</button></div></section><a class="primary-button" href="#home">Тоглоом руу буцах →</a>`;
-  $('#reset-confirmation p').textContent = 'Бүх тоглоомын ахиц болон уншлагын түүх, хурд, ойлголтын үр дүнг энэ төхөөрөмжөөс арилгах уу?';
-  $('#reset-ask').closest('.setting-row').querySelector('p').textContent = 'Үг, үсэг, үйл үгийн ахиц болон уншлагын түүхийг хамтад нь шинээр эхлүүлнэ.';
+  $('#reset-confirmation p').textContent = 'Одоогийн профайлын бүх тоглоомын ахиц болон уншлагын түүхийг арилгах уу? Бусад хүүхдийн ахиц хэвээр үлдэнэ.';
+  $('#reset-ask').closest('.setting-row').querySelector('p').textContent = 'Зөвхөн одоогийн хүүхдийн үг, үсэг, үйл үг, одон харваа болон уншлагын ахицыг шинээр эхлүүлнэ.';
   main.querySelectorAll('[name="question-seconds"]').forEach(input => input.onchange = () => { progress.questionSeconds = Number(input.value); save(); toast('Асуултын хугацаа хадгалагдлаа.'); });
   $('#settings-sound').onclick = () => { progress.sound = !progress.sound; save(); $('#settings-sound').setAttribute('aria-checked', String(progress.sound)); if (progress.sound) chime(true); };
   $('#reset-ask').onclick = () => { $('#reset-confirmation').hidden = false; $('#reset-cancel').focus(); };
   $('#reset-cancel').onclick = () => { $('#reset-confirmation').hidden = true; $('#reset-ask').focus(); };
-  $('#reset-progress').onclick = () => { progress.completed = {}; progress.learned = []; progress.storyChoices = {}; resetAlphabet(); resetActions(); resetReading(); save(); renderSettings(); toast('Шинэ аялалд бэлэн боллоо!'); };
+  $('#reset-progress').onclick = () => { progress.completed = {}; progress.learned = []; progress.storyChoices = {}; resetAlphabet(); resetActions(); resetReading(); resetShooter(); save(); renderSettings(); toast('Шинэ аялалд бэлэн боллоо!'); };
 }
 function chapter(id) { return story.chapters.find(item => item.id === id); }
 function storyFrame(id, content) {
@@ -279,12 +283,13 @@ function finishGame() {
 function route() {
   const view = location.hash.slice(1) || 'home';
   if(view!=='reading')pauseReading();
-  document.title = view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Бяцхан Борын номын аялал';
+  if(view!=='shooter')leaveShooter();
+  document.title = view === 'profiles' ? 'fast_read — Хүүхдийн профайлууд' : view === 'shooter' ? 'fast_read — Үсгийн одон харваа' : view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Бяцхан Борын номын аялал';
   document.querySelectorAll('[data-view]').forEach(link => {
     link.classList.toggle('active', link.dataset.view === view);
     if (link.dataset.view === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
-  if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else renderHome();
+  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter(words,{main,chime,toast}); else renderHome();
   window.scrollTo(0, 0);
 }
 gameDialog.addEventListener('close', () => { stopClock(); session = null; route(); });

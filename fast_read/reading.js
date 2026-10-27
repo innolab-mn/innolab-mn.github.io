@@ -1,3 +1,4 @@
+import { profileStorage } from './profiles-store.js';
 import { countWords, wordsPerMinute, readingSummary, quizScore, MIN_READING_MS } from './reading-logic.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-reading-v1';
@@ -5,11 +6,11 @@ let state={records:[],fontSize:21};
 let library,libraryPromise,hooks,main,session=null,ticker;
 let category='all',scope='all';
 try{
-  const saved=JSON.parse(localStorage.getItem(KEY));
+  const saved=JSON.parse(profileStorage.getItem(KEY));
   if(Array.isArray(saved?.records))state.records=saved.records.filter(record=>typeof record.passageId==='string'&&Number.isFinite(record.words)&&record.words>0&&Number.isFinite(record.elapsedMs)&&record.elapsedMs>=0&&Number.isInteger(record.correct)&&record.correct>=0&&record.correct<=5&&record.totalQuestions===5);
   if([18,21,24].includes(saved?.fontSize))state.fontSize=saved.fontSize;
 }catch{/* An empty local profile works without storage. */}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch{hooks?.toast('Уншлагын ахицыг хадгалж чадсангүй. Энэ удаагийн үр дүнгээ харж болно.');}}
+function save(){try{profileStorage.setItem(KEY,JSON.stringify(state));}catch{hooks?.toast('Уншлагын ахицыг хадгалж чадсангүй. Энэ удаагийн үр дүнгээ харж болно.');}}
 function shuffle(items){const result=[...items];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
 function duration(ms){const seconds=Math.floor(ms/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
 function speed(value){return value===null?'—':Math.round(value);}
