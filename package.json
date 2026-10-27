@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "dev:fast_read": "node scripts/preview-fast-read.mjs",
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
     "check": "tsc --noEmit && node scripts/check-export.mjs",

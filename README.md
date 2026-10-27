@@ -1,5 +1,33 @@
 # InnoLab — Innovation Laboratory
 
+## fast_read — Монгол хүүхдийн унших тоглоом
+
+Open `/read_fast` in Next.js (or `/read_fast#reading` for the reading library).
+The lightweight route in `app/(fast-read)/read_fast/` displays the existing
+standalone game full-screen, without the main site's navigation. Section links
+stay in sync with the outer URL. It exports to `out/read_fast.html` for GitHub
+Pages; game files remain in `out/fast_read/`. No extra build step is needed.
+
+`public/fast_read/` is an independent, buildless static game with 20 Mongolian
+words, original SVG illustrations, three progressive touch games linked by Bor's
+story with branching choices, configurable timers, locally saved progress, and
+a bundled glTF/GLB viewer. A separate alphabet game at `/fast_read/#alphabet`
+includes 35 Mongolian letters in separate 25/4/6-letter learning sections,
+four fonts including handwriting, 140 illustrated images, and three recognition
+modes. Early exercises exclude difficult letters from both prompts and answers.
+The `/fast_read/#actions` section teaches 12 daily verbs, builds three- and
+four-word sentences by touch, and checks sentence comprehension using pictures.
+Shared exercise layouts reserve feedback and next-button space to prevent
+scroll jumps after answers.
+The `/fast_read/#reading` library adds 60 original Mongolian stories for age nine
+(236–293 words each), 300 explained comprehension questions, an active-reading
+timer with pause, weighted words-per-minute averages, and locally saved history.
+Source stories live in `content/fast_read/readings/`; rebuild with
+`node scripts/build-reading-library.mjs` after edits.
+Run `npm run dev:fast_read` and open
+http://127.0.0.1:4173/. Static exports include it at `/fast_read/`.
+See [fast_read documentation](public/fast_read/README.md) for adding words and models.
+
 ## Supabase membership
 
 `/login`, `/register`, and `/members` (and their `/en` equivalents) integrate with

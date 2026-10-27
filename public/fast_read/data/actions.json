@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "actions": [
+    {
+      "id": "walk",
+      "verb": "Алхах",
+      "present": "алхаж",
+      "subject": "Хүү",
+      "object": null,
+      "hint": "Нэг хөлөө нөгөөгийнхөө өмнө тавиад тайван алхъя.",
+      "image": "assets/actions/walk.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "алхаж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "run",
+      "verb": "Гүйх",
+      "present": "гүйж",
+      "subject": "Охин",
+      "object": null,
+      "hint": "Хөлөө хурдан хөдөлгөөд гүйж байна.",
+      "image": "assets/actions/run.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "гүйж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "jump",
+      "verb": "Үсрэх",
+      "present": "үсэрч",
+      "subject": "Хүү",
+      "object": null,
+      "hint": "Хоёр хөлөөрөө газраас хөндийрч үсэрье.",
+      "image": "assets/actions/jump.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "үсэрч",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "sit",
+      "verb": "Суух",
+      "present": "сууж",
+      "subject": "Охин",
+      "object": null,
+      "hint": "Сандал дээр сууж байна.",
+      "image": "assets/actions/sit.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "сууж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "sleep",
+      "verb": "Унтах",
+      "present": "унтаж",
+      "subject": "Хүү",
+      "object": null,
+      "hint": "Нүдээ аниад тайван унтаж байна.",
+      "image": "assets/actions/sleep.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "унтаж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "eat",
+      "verb": "Идэх",
+      "present": "идэж",
+      "subject": "Охин",
+      "object": "алим",
+      "hint": "Амтат алимаа идэж байна.",
+      "image": "assets/actions/eat.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "идэж",
+          "байна."
+        ],
+        "long": [
+          "Охин",
+          "алим",
+          "идэж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "drink",
+      "verb": "Уух",
+      "present": "ууж",
+      "subject": "Хүү",
+      "object": "ус",
+      "hint": "Аяганаас ус ууж байна.",
+      "image": "assets/actions/drink.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "ууж",
+          "байна."
+        ],
+        "long": [
+          "Хүү",
+          "ус",
+          "ууж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "read",
+      "verb": "Унших",
+      "present": "уншиж",
+      "subject": "Охин",
+      "object": "ном",
+      "hint": "Номоо дэлгээд уншиж байна.",
+      "image": "assets/actions/read.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "уншиж",
+          "байна."
+        ],
+        "long": [
+          "Охин",
+          "ном",
+          "уншиж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "draw",
+      "verb": "Зурах",
+      "present": "зурж",
+      "subject": "Хүү",
+      "object": "нар",
+      "hint": "Харандаагаар нар зурж байна.",
+      "image": "assets/actions/draw.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "зурж",
+          "байна."
+        ],
+        "long": [
+          "Хүү",
+          "нар",
+          "зурж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "laugh",
+      "verb": "Инээх",
+      "present": "инээж",
+      "subject": "Охин",
+      "object": null,
+      "hint": "Найзтайгаа хөгжилтэй инээе.",
+      "image": "assets/actions/laugh.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "инээж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "wash",
+      "verb": "Угаах",
+      "present": "угааж",
+      "subject": "Хүү",
+      "object": "гараа",
+      "hint": "Усаар гараа угааж байна.",
+      "image": "assets/actions/wash.svg",
+      "sentences": {
+        "short": [
+          "Хүү",
+          "угааж",
+          "байна."
+        ],
+        "long": [
+          "Хүү",
+          "гараа",
+          "угааж",
+          "байна."
+        ]
+      }
+    },
+    {
+      "id": "play",
+      "verb": "Тоглох",
+      "present": "тоглож",
+      "subject": "Охин",
+      "object": "бөмбөгөөр",
+      "hint": "Найзтайгаа бөмбөгөөр тоглож байна.",
+      "image": "assets/actions/play.svg",
+      "sentences": {
+        "short": [
+          "Охин",
+          "тоглож",
+          "байна."
+        ],
+        "long": [
+          "Охин",
+          "бөмбөгөөр",
+          "тоглож",
+          "байна."
+        ]
+      }
+    }
+  ]
+}

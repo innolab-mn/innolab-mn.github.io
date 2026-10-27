@@ -1,0 +1,183 @@
+[
+  {
+    "id": "dad",
+    "text": "Аав",
+    "category": "family",
+    "categoryLabel": "Гэр бүл",
+    "sentence": "Аав ном уншиж байна.",
+    "color": "#fdf1e7",
+    "image": "assets/images/dad.svg"
+  },
+  {
+    "id": "mom",
+    "text": "Ээж",
+    "category": "family",
+    "categoryLabel": "Гэр бүл",
+    "sentence": "Ээж инээмсэглэж байна.",
+    "color": "#fdf1e7",
+    "image": "assets/images/mom.svg"
+  },
+  {
+    "id": "boy",
+    "text": "Хүү",
+    "category": "family",
+    "categoryLabel": "Гэр бүл",
+    "sentence": "Хүү бөмбөгөөр тоглож байна.",
+    "color": "#fdf1e7",
+    "image": "assets/images/boy.svg"
+  },
+  {
+    "id": "girl",
+    "text": "Охин",
+    "category": "family",
+    "categoryLabel": "Гэр бүл",
+    "sentence": "Охин ном уншиж байна.",
+    "color": "#fdf1e7",
+    "image": "assets/images/girl.svg"
+  },
+  {
+    "id": "dog",
+    "text": "Нохой",
+    "category": "animals",
+    "categoryLabel": "Амьтад",
+    "sentence": "Нохой бол бидний найз.",
+    "color": "#fcf0df",
+    "image": "assets/images/dog.svg"
+  },
+  {
+    "id": "cat",
+    "text": "Муур",
+    "category": "animals",
+    "categoryLabel": "Амьтад",
+    "sentence": "Муур зөөлөн үстэй.",
+    "color": "#fcf0df",
+    "image": "assets/images/cat.svg"
+  },
+  {
+    "id": "bird",
+    "text": "Шувуу",
+    "category": "animals",
+    "categoryLabel": "Амьтад",
+    "sentence": "Шувуу тэнгэрт нисэж байна.",
+    "color": "#fcf0df",
+    "image": "assets/images/bird.svg"
+  },
+  {
+    "id": "sun",
+    "text": "Нар",
+    "category": "nature",
+    "categoryLabel": "Байгаль",
+    "sentence": "Нар дулаахан илчээ түгээнэ.",
+    "color": "#edf4e8",
+    "image": "assets/images/sun.svg"
+  },
+  {
+    "id": "moon",
+    "text": "Сар",
+    "category": "nature",
+    "categoryLabel": "Байгаль",
+    "sentence": "Сар шөнө гэрэлтэнэ.",
+    "color": "#edf4e8",
+    "image": "assets/images/moon.svg"
+  },
+  {
+    "id": "tree",
+    "text": "Мод",
+    "category": "nature",
+    "categoryLabel": "Байгаль",
+    "sentence": "Мод ногоон навчтай.",
+    "color": "#edf4e8",
+    "image": "assets/images/tree.svg"
+  },
+  {
+    "id": "flower",
+    "text": "Цэцэг",
+    "category": "nature",
+    "categoryLabel": "Байгаль",
+    "sentence": "Цэцэг гоё дэлбээтэй.",
+    "color": "#edf4e8",
+    "image": "assets/images/flower.svg"
+  },
+  {
+    "id": "water",
+    "text": "Ус",
+    "category": "food",
+    "categoryLabel": "Идэх, уух",
+    "sentence": "Ус уугаарай.",
+    "color": "#fff4e3",
+    "image": "assets/images/water.svg"
+  },
+  {
+    "id": "milk",
+    "text": "Сүү",
+    "category": "food",
+    "categoryLabel": "Идэх, уух",
+    "sentence": "Сүү цагаан өнгөтэй.",
+    "color": "#fff4e3",
+    "image": "assets/images/milk.svg"
+  },
+  {
+    "id": "bread",
+    "text": "Талх",
+    "category": "food",
+    "categoryLabel": "Идэх, уух",
+    "sentence": "Талх амттай.",
+    "color": "#fff4e3",
+    "image": "assets/images/bread.svg"
+  },
+  {
+    "id": "apple",
+    "text": "Алим",
+    "category": "food",
+    "categoryLabel": "Идэх, уух",
+    "sentence": "Алим модонд ургана.",
+    "color": "#fff4e3",
+    "image": "assets/images/apple.svg"
+  },
+  {
+    "id": "home",
+    "text": "Байшин",
+    "category": "things",
+    "categoryLabel": "Бидний эргэн тойрон",
+    "sentence": "Байшин хаалга, цонхтой.",
+    "color": "#edf0fa",
+    "image": "assets/images/home.svg"
+  },
+  {
+    "id": "ger",
+    "text": "Гэр",
+    "category": "things",
+    "categoryLabel": "Бидний эргэн тойрон",
+    "sentence": "Монгол гэр дугуй хэлбэртэй.",
+    "color": "#edf0fa",
+    "image": "assets/images/ger.svg"
+  },
+  {
+    "id": "book",
+    "text": "Ном",
+    "category": "things",
+    "categoryLabel": "Бидний эргэн тойрон",
+    "sentence": "Ном олон зурагтай.",
+    "color": "#edf0fa",
+    "image": "assets/images/book.svg"
+  },
+  {
+    "id": "ball",
+    "text": "Бөмбөг",
+    "category": "things",
+    "categoryLabel": "Бидний эргэн тойрон",
+    "sentence": "Бөмбөг бөөрөнхий.",
+    "color": "#edf0fa",
+    "image": "assets/images/ball.svg",
+    "model": "assets/models/ball.gltf"
+  },
+  {
+    "id": "car",
+    "text": "Машин",
+    "category": "things",
+    "categoryLabel": "Бидний эргэн тойрон",
+    "sentence": "Машин замаар явж байна.",
+    "color": "#edf0fa",
+    "image": "assets/images/car.svg"
+  }
+]

@@ -1,0 +1,1296 @@
+{
+  "version": 1,
+  "fonts": [
+    {
+      "id": "nunito",
+      "label": "Зөөлөн",
+      "family": "FastReadSoft",
+      "sourceFamily": "Nunito",
+      "file": "vendor/fonts/FastReadSoft.ttf"
+    },
+    {
+      "id": "comfortaa",
+      "label": "Бөөрөнхий",
+      "family": "FastReadRound",
+      "sourceFamily": "Comfortaa",
+      "file": "vendor/fonts/FastReadRound.ttf"
+    },
+    {
+      "id": "serif",
+      "label": "Уламжлалт",
+      "family": "FastReadSerif",
+      "sourceFamily": "NotoSerif",
+      "file": "vendor/fonts/FastReadSerif.ttf"
+    },
+    {
+      "id": "handwritten",
+      "label": "Бичмэл",
+      "family": "FastReadHandwritten",
+      "sourceFamily": "Caveat",
+      "file": "vendor/fonts/FastReadHandwritten.ttf"
+    }
+  ],
+  "source": "https://toli.gov.mn/r",
+  "letters": [
+    {
+      "id": "a",
+      "order": 1,
+      "upper": "А",
+      "lower": "а",
+      "word": "Алим",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Алим гэдэг үг А үсгээр эхэлнэ.",
+      "color": "#dd7e73",
+      "motif": "apple",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/a-nunito.svg",
+          "upper": "assets/alphabet/a-nunito-plain.svg",
+          "lower": "assets/alphabet/a-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/a-comfortaa.svg",
+          "upper": "assets/alphabet/a-comfortaa-plain.svg",
+          "lower": "assets/alphabet/a-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/a-serif.svg",
+          "upper": "assets/alphabet/a-serif-plain.svg",
+          "lower": "assets/alphabet/a-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/a-handwritten.svg",
+          "upper": "assets/alphabet/a-handwritten-plain.svg",
+          "lower": "assets/alphabet/a-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "b",
+      "order": 2,
+      "upper": "Б",
+      "lower": "б",
+      "word": "Бөмбөг",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Бөмбөг гэдэг үг Б үсгээр эхэлнэ.",
+      "color": "#769dd2",
+      "motif": "ball",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/b-nunito.svg",
+          "upper": "assets/alphabet/b-nunito-plain.svg",
+          "lower": "assets/alphabet/b-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/b-comfortaa.svg",
+          "upper": "assets/alphabet/b-comfortaa-plain.svg",
+          "lower": "assets/alphabet/b-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/b-serif.svg",
+          "upper": "assets/alphabet/b-serif-plain.svg",
+          "lower": "assets/alphabet/b-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/b-handwritten.svg",
+          "upper": "assets/alphabet/b-handwritten-plain.svg",
+          "lower": "assets/alphabet/b-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "v",
+      "order": 3,
+      "upper": "В",
+      "lower": "в",
+      "word": "Автобус",
+      "highlightIndex": 1,
+      "usage": "inside",
+      "lesson": "context",
+      "kind": "consonant",
+      "note": "Автобус гэдэг үгийн дунд в байна. Хамтдаа тэр үсгийг олъё.",
+      "color": "#d5ac69",
+      "motif": "bus",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/v-nunito.svg",
+          "upper": "assets/alphabet/v-nunito-plain.svg",
+          "lower": "assets/alphabet/v-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/v-comfortaa.svg",
+          "upper": "assets/alphabet/v-comfortaa-plain.svg",
+          "lower": "assets/alphabet/v-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/v-serif.svg",
+          "upper": "assets/alphabet/v-serif-plain.svg",
+          "lower": "assets/alphabet/v-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/v-handwritten.svg",
+          "upper": "assets/alphabet/v-handwritten-plain.svg",
+          "lower": "assets/alphabet/v-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "g",
+      "order": 4,
+      "upper": "Г",
+      "lower": "г",
+      "word": "Гэр",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Гэр гэдэг үг Г үсгээр эхэлнэ.",
+      "color": "#c4a17d",
+      "motif": "ger",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/g-nunito.svg",
+          "upper": "assets/alphabet/g-nunito-plain.svg",
+          "lower": "assets/alphabet/g-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/g-comfortaa.svg",
+          "upper": "assets/alphabet/g-comfortaa-plain.svg",
+          "lower": "assets/alphabet/g-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/g-serif.svg",
+          "upper": "assets/alphabet/g-serif-plain.svg",
+          "lower": "assets/alphabet/g-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/g-handwritten.svg",
+          "upper": "assets/alphabet/g-handwritten-plain.svg",
+          "lower": "assets/alphabet/g-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "d",
+      "order": 5,
+      "upper": "Д",
+      "lower": "д",
+      "word": "Дугуй",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Дугуй гэдэг үг Д үсгээр эхэлнэ.",
+      "color": "#83b3a3",
+      "motif": "bike",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/d-nunito.svg",
+          "upper": "assets/alphabet/d-nunito-plain.svg",
+          "lower": "assets/alphabet/d-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/d-comfortaa.svg",
+          "upper": "assets/alphabet/d-comfortaa-plain.svg",
+          "lower": "assets/alphabet/d-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/d-serif.svg",
+          "upper": "assets/alphabet/d-serif-plain.svg",
+          "lower": "assets/alphabet/d-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/d-handwritten.svg",
+          "upper": "assets/alphabet/d-handwritten-plain.svg",
+          "lower": "assets/alphabet/d-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "ye",
+      "order": 6,
+      "upper": "Е",
+      "lower": "е",
+      "word": "Есөн",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Есөн гэдэг үг Е үсгээр эхэлнэ.",
+      "color": "#d6ac6c",
+      "motif": "nine",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/ye-nunito.svg",
+          "upper": "assets/alphabet/ye-nunito-plain.svg",
+          "lower": "assets/alphabet/ye-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/ye-comfortaa.svg",
+          "upper": "assets/alphabet/ye-comfortaa-plain.svg",
+          "lower": "assets/alphabet/ye-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/ye-serif.svg",
+          "upper": "assets/alphabet/ye-serif-plain.svg",
+          "lower": "assets/alphabet/ye-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/ye-handwritten.svg",
+          "upper": "assets/alphabet/ye-handwritten-plain.svg",
+          "lower": "assets/alphabet/ye-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "yo",
+      "order": 7,
+      "upper": "Ё",
+      "lower": "ё",
+      "word": "Гоё",
+      "highlightIndex": 2,
+      "usage": "ending",
+      "lesson": "context",
+      "kind": "vowel",
+      "note": "Гоё бэлэг байна! Гоё гэдэг үгийн төгсгөлд ё байна.",
+      "color": "#bd92be",
+      "motif": "gift",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/yo-nunito.svg",
+          "upper": "assets/alphabet/yo-nunito-plain.svg",
+          "lower": "assets/alphabet/yo-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/yo-comfortaa.svg",
+          "upper": "assets/alphabet/yo-comfortaa-plain.svg",
+          "lower": "assets/alphabet/yo-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/yo-serif.svg",
+          "upper": "assets/alphabet/yo-serif-plain.svg",
+          "lower": "assets/alphabet/yo-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/yo-handwritten.svg",
+          "upper": "assets/alphabet/yo-handwritten-plain.svg",
+          "lower": "assets/alphabet/yo-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "zh",
+      "order": 8,
+      "upper": "Ж",
+      "lower": "ж",
+      "word": "Жимс",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Жимс гэдэг үг Ж үсгээр эхэлнэ.",
+      "color": "#a28ab8",
+      "motif": "grapes",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/zh-nunito.svg",
+          "upper": "assets/alphabet/zh-nunito-plain.svg",
+          "lower": "assets/alphabet/zh-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/zh-comfortaa.svg",
+          "upper": "assets/alphabet/zh-comfortaa-plain.svg",
+          "lower": "assets/alphabet/zh-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/zh-serif.svg",
+          "upper": "assets/alphabet/zh-serif-plain.svg",
+          "lower": "assets/alphabet/zh-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/zh-handwritten.svg",
+          "upper": "assets/alphabet/zh-handwritten-plain.svg",
+          "lower": "assets/alphabet/zh-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "z",
+      "order": 9,
+      "upper": "З",
+      "lower": "з",
+      "word": "Загас",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Загас гэдэг үг З үсгээр эхэлнэ.",
+      "color": "#81b5cc",
+      "motif": "fish",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/z-nunito.svg",
+          "upper": "assets/alphabet/z-nunito-plain.svg",
+          "lower": "assets/alphabet/z-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/z-comfortaa.svg",
+          "upper": "assets/alphabet/z-comfortaa-plain.svg",
+          "lower": "assets/alphabet/z-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/z-serif.svg",
+          "upper": "assets/alphabet/z-serif-plain.svg",
+          "lower": "assets/alphabet/z-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/z-handwritten.svg",
+          "upper": "assets/alphabet/z-handwritten-plain.svg",
+          "lower": "assets/alphabet/z-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "i",
+      "order": 10,
+      "upper": "И",
+      "lower": "и",
+      "word": "Интоор",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Интоор гэдэг үг И үсгээр эхэлнэ.",
+      "color": "#d4898c",
+      "motif": "cherry",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/i-nunito.svg",
+          "upper": "assets/alphabet/i-nunito-plain.svg",
+          "lower": "assets/alphabet/i-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/i-comfortaa.svg",
+          "upper": "assets/alphabet/i-comfortaa-plain.svg",
+          "lower": "assets/alphabet/i-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/i-serif.svg",
+          "upper": "assets/alphabet/i-serif-plain.svg",
+          "lower": "assets/alphabet/i-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/i-handwritten.svg",
+          "upper": "assets/alphabet/i-handwritten-plain.svg",
+          "lower": "assets/alphabet/i-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "short-i",
+      "order": 11,
+      "upper": "Й",
+      "lower": "й",
+      "word": "Нохой",
+      "highlightIndex": 4,
+      "usage": "ending",
+      "lesson": "context",
+      "kind": "vowel",
+      "note": "Нохой гэдэг үгийн төгсгөлд й байна.",
+      "color": "#c6ad94",
+      "motif": "dog",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/short-i-nunito.svg",
+          "upper": "assets/alphabet/short-i-nunito-plain.svg",
+          "lower": "assets/alphabet/short-i-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/short-i-comfortaa.svg",
+          "upper": "assets/alphabet/short-i-comfortaa-plain.svg",
+          "lower": "assets/alphabet/short-i-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/short-i-serif.svg",
+          "upper": "assets/alphabet/short-i-serif-plain.svg",
+          "lower": "assets/alphabet/short-i-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/short-i-handwritten.svg",
+          "upper": "assets/alphabet/short-i-handwritten-plain.svg",
+          "lower": "assets/alphabet/short-i-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "k",
+      "order": 12,
+      "upper": "К",
+      "lower": "к",
+      "word": "Кино",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "special",
+      "kind": "consonant",
+      "note": "Кино гэдэг үг К үсгээр эхэлнэ.",
+      "color": "#92a7c6",
+      "motif": "movie",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/k-nunito.svg",
+          "upper": "assets/alphabet/k-nunito-plain.svg",
+          "lower": "assets/alphabet/k-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/k-comfortaa.svg",
+          "upper": "assets/alphabet/k-comfortaa-plain.svg",
+          "lower": "assets/alphabet/k-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/k-serif.svg",
+          "upper": "assets/alphabet/k-serif-plain.svg",
+          "lower": "assets/alphabet/k-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/k-handwritten.svg",
+          "upper": "assets/alphabet/k-handwritten-plain.svg",
+          "lower": "assets/alphabet/k-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "l",
+      "order": 13,
+      "upper": "Л",
+      "lower": "л",
+      "word": "Лууван",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Лууван гэдэг үг Л үсгээр эхэлнэ.",
+      "color": "#dd9b60",
+      "motif": "carrot",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/l-nunito.svg",
+          "upper": "assets/alphabet/l-nunito-plain.svg",
+          "lower": "assets/alphabet/l-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/l-comfortaa.svg",
+          "upper": "assets/alphabet/l-comfortaa-plain.svg",
+          "lower": "assets/alphabet/l-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/l-serif.svg",
+          "upper": "assets/alphabet/l-serif-plain.svg",
+          "lower": "assets/alphabet/l-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/l-handwritten.svg",
+          "upper": "assets/alphabet/l-handwritten-plain.svg",
+          "lower": "assets/alphabet/l-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "m",
+      "order": 14,
+      "upper": "М",
+      "lower": "м",
+      "word": "Мод",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Мод гэдэг үг М үсгээр эхэлнэ.",
+      "color": "#87a67e",
+      "motif": "tree",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/m-nunito.svg",
+          "upper": "assets/alphabet/m-nunito-plain.svg",
+          "lower": "assets/alphabet/m-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/m-comfortaa.svg",
+          "upper": "assets/alphabet/m-comfortaa-plain.svg",
+          "lower": "assets/alphabet/m-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/m-serif.svg",
+          "upper": "assets/alphabet/m-serif-plain.svg",
+          "lower": "assets/alphabet/m-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/m-handwritten.svg",
+          "upper": "assets/alphabet/m-handwritten-plain.svg",
+          "lower": "assets/alphabet/m-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "n",
+      "order": 15,
+      "upper": "Н",
+      "lower": "н",
+      "word": "Нар",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Нар гэдэг үг Н үсгээр эхэлнэ.",
+      "color": "#dfb45e",
+      "motif": "sun",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/n-nunito.svg",
+          "upper": "assets/alphabet/n-nunito-plain.svg",
+          "lower": "assets/alphabet/n-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/n-comfortaa.svg",
+          "upper": "assets/alphabet/n-comfortaa-plain.svg",
+          "lower": "assets/alphabet/n-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/n-serif.svg",
+          "upper": "assets/alphabet/n-serif-plain.svg",
+          "lower": "assets/alphabet/n-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/n-handwritten.svg",
+          "upper": "assets/alphabet/n-handwritten-plain.svg",
+          "lower": "assets/alphabet/n-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "o",
+      "order": 16,
+      "upper": "О",
+      "lower": "о",
+      "word": "Онгоц",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Онгоц гэдэг үг О үсгээр эхэлнэ.",
+      "color": "#83a9c8",
+      "motif": "plane",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/o-nunito.svg",
+          "upper": "assets/alphabet/o-nunito-plain.svg",
+          "lower": "assets/alphabet/o-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/o-comfortaa.svg",
+          "upper": "assets/alphabet/o-comfortaa-plain.svg",
+          "lower": "assets/alphabet/o-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/o-serif.svg",
+          "upper": "assets/alphabet/o-serif-plain.svg",
+          "lower": "assets/alphabet/o-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/o-handwritten.svg",
+          "upper": "assets/alphabet/o-handwritten-plain.svg",
+          "lower": "assets/alphabet/o-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "oe",
+      "order": 17,
+      "upper": "Ө",
+      "lower": "ө",
+      "word": "Өндөг",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Өндөг гэдэг үг Ө үсгээр эхэлнэ.",
+      "color": "#c9b79c",
+      "motif": "egg",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/oe-nunito.svg",
+          "upper": "assets/alphabet/oe-nunito-plain.svg",
+          "lower": "assets/alphabet/oe-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/oe-comfortaa.svg",
+          "upper": "assets/alphabet/oe-comfortaa-plain.svg",
+          "lower": "assets/alphabet/oe-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/oe-serif.svg",
+          "upper": "assets/alphabet/oe-serif-plain.svg",
+          "lower": "assets/alphabet/oe-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/oe-handwritten.svg",
+          "upper": "assets/alphabet/oe-handwritten-plain.svg",
+          "lower": "assets/alphabet/oe-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "p",
+      "order": 18,
+      "upper": "П",
+      "lower": "п",
+      "word": "Панда",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Панда гэдэг үг П үсгээр эхэлнэ.",
+      "color": "#8baf99",
+      "motif": "panda",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/p-nunito.svg",
+          "upper": "assets/alphabet/p-nunito-plain.svg",
+          "lower": "assets/alphabet/p-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/p-comfortaa.svg",
+          "upper": "assets/alphabet/p-comfortaa-plain.svg",
+          "lower": "assets/alphabet/p-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/p-serif.svg",
+          "upper": "assets/alphabet/p-serif-plain.svg",
+          "lower": "assets/alphabet/p-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/p-handwritten.svg",
+          "upper": "assets/alphabet/p-handwritten-plain.svg",
+          "lower": "assets/alphabet/p-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "r",
+      "order": 19,
+      "upper": "Р",
+      "lower": "р",
+      "word": "Робот",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Робот гэдэг үг Р үсгээр эхэлнэ.",
+      "color": "#8fabc0",
+      "motif": "robot",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/r-nunito.svg",
+          "upper": "assets/alphabet/r-nunito-plain.svg",
+          "lower": "assets/alphabet/r-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/r-comfortaa.svg",
+          "upper": "assets/alphabet/r-comfortaa-plain.svg",
+          "lower": "assets/alphabet/r-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/r-serif.svg",
+          "upper": "assets/alphabet/r-serif-plain.svg",
+          "lower": "assets/alphabet/r-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/r-handwritten.svg",
+          "upper": "assets/alphabet/r-handwritten-plain.svg",
+          "lower": "assets/alphabet/r-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "s",
+      "order": 20,
+      "upper": "С",
+      "lower": "с",
+      "word": "Сар",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Сар гэдэг үг С үсгээр эхэлнэ.",
+      "color": "#d8b96c",
+      "motif": "moon",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/s-nunito.svg",
+          "upper": "assets/alphabet/s-nunito-plain.svg",
+          "lower": "assets/alphabet/s-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/s-comfortaa.svg",
+          "upper": "assets/alphabet/s-comfortaa-plain.svg",
+          "lower": "assets/alphabet/s-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/s-serif.svg",
+          "upper": "assets/alphabet/s-serif-plain.svg",
+          "lower": "assets/alphabet/s-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/s-handwritten.svg",
+          "upper": "assets/alphabet/s-handwritten-plain.svg",
+          "lower": "assets/alphabet/s-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "t",
+      "order": 21,
+      "upper": "Т",
+      "lower": "т",
+      "word": "Туулай",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Туулай гэдэг үг Т үсгээр эхэлнэ.",
+      "color": "#c6ad94",
+      "motif": "rabbit",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/t-nunito.svg",
+          "upper": "assets/alphabet/t-nunito-plain.svg",
+          "lower": "assets/alphabet/t-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/t-comfortaa.svg",
+          "upper": "assets/alphabet/t-comfortaa-plain.svg",
+          "lower": "assets/alphabet/t-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/t-serif.svg",
+          "upper": "assets/alphabet/t-serif-plain.svg",
+          "lower": "assets/alphabet/t-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/t-handwritten.svg",
+          "upper": "assets/alphabet/t-handwritten-plain.svg",
+          "lower": "assets/alphabet/t-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "u",
+      "order": 22,
+      "upper": "У",
+      "lower": "у",
+      "word": "Ус",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Ус гэдэг үг У үсгээр эхэлнэ.",
+      "color": "#76b3d2",
+      "motif": "water",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/u-nunito.svg",
+          "upper": "assets/alphabet/u-nunito-plain.svg",
+          "lower": "assets/alphabet/u-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/u-comfortaa.svg",
+          "upper": "assets/alphabet/u-comfortaa-plain.svg",
+          "lower": "assets/alphabet/u-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/u-serif.svg",
+          "upper": "assets/alphabet/u-serif-plain.svg",
+          "lower": "assets/alphabet/u-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/u-handwritten.svg",
+          "upper": "assets/alphabet/u-handwritten-plain.svg",
+          "lower": "assets/alphabet/u-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "ue",
+      "order": 23,
+      "upper": "Ү",
+      "lower": "ү",
+      "word": "Үүл",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Үүл гэдэг үг Ү үсгээр эхэлнэ.",
+      "color": "#aaa6cc",
+      "motif": "cloud",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/ue-nunito.svg",
+          "upper": "assets/alphabet/ue-nunito-plain.svg",
+          "lower": "assets/alphabet/ue-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/ue-comfortaa.svg",
+          "upper": "assets/alphabet/ue-comfortaa-plain.svg",
+          "lower": "assets/alphabet/ue-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/ue-serif.svg",
+          "upper": "assets/alphabet/ue-serif-plain.svg",
+          "lower": "assets/alphabet/ue-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/ue-handwritten.svg",
+          "upper": "assets/alphabet/ue-handwritten-plain.svg",
+          "lower": "assets/alphabet/ue-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "f",
+      "order": 24,
+      "upper": "Ф",
+      "lower": "ф",
+      "word": "Футбол",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "special",
+      "kind": "consonant",
+      "note": "Футбол гэдэг үг Ф үсгээр эхэлнэ.",
+      "color": "#8fae98",
+      "motif": "football",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/f-nunito.svg",
+          "upper": "assets/alphabet/f-nunito-plain.svg",
+          "lower": "assets/alphabet/f-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/f-comfortaa.svg",
+          "upper": "assets/alphabet/f-comfortaa-plain.svg",
+          "lower": "assets/alphabet/f-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/f-serif.svg",
+          "upper": "assets/alphabet/f-serif-plain.svg",
+          "lower": "assets/alphabet/f-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/f-handwritten.svg",
+          "upper": "assets/alphabet/f-handwritten-plain.svg",
+          "lower": "assets/alphabet/f-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "kh",
+      "order": 25,
+      "upper": "Х",
+      "lower": "х",
+      "word": "Хаалга",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Хаалга гэдэг үг Х үсгээр эхэлнэ.",
+      "color": "#b59373",
+      "motif": "door",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/kh-nunito.svg",
+          "upper": "assets/alphabet/kh-nunito-plain.svg",
+          "lower": "assets/alphabet/kh-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/kh-comfortaa.svg",
+          "upper": "assets/alphabet/kh-comfortaa-plain.svg",
+          "lower": "assets/alphabet/kh-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/kh-serif.svg",
+          "upper": "assets/alphabet/kh-serif-plain.svg",
+          "lower": "assets/alphabet/kh-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/kh-handwritten.svg",
+          "upper": "assets/alphabet/kh-handwritten-plain.svg",
+          "lower": "assets/alphabet/kh-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "ts",
+      "order": 26,
+      "upper": "Ц",
+      "lower": "ц",
+      "word": "Цэцэг",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Цэцэг гэдэг үг Ц үсгээр эхэлнэ.",
+      "color": "#91aa7e",
+      "motif": "flower",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/ts-nunito.svg",
+          "upper": "assets/alphabet/ts-nunito-plain.svg",
+          "lower": "assets/alphabet/ts-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/ts-comfortaa.svg",
+          "upper": "assets/alphabet/ts-comfortaa-plain.svg",
+          "lower": "assets/alphabet/ts-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/ts-serif.svg",
+          "upper": "assets/alphabet/ts-serif-plain.svg",
+          "lower": "assets/alphabet/ts-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/ts-handwritten.svg",
+          "upper": "assets/alphabet/ts-handwritten-plain.svg",
+          "lower": "assets/alphabet/ts-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "ch",
+      "order": 27,
+      "upper": "Ч",
+      "lower": "ч",
+      "word": "Чихэр",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Чихэр гэдэг үг Ч үсгээр эхэлнэ.",
+      "color": "#d593a1",
+      "motif": "candy",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/ch-nunito.svg",
+          "upper": "assets/alphabet/ch-nunito-plain.svg",
+          "lower": "assets/alphabet/ch-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/ch-comfortaa.svg",
+          "upper": "assets/alphabet/ch-comfortaa-plain.svg",
+          "lower": "assets/alphabet/ch-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/ch-serif.svg",
+          "upper": "assets/alphabet/ch-serif-plain.svg",
+          "lower": "assets/alphabet/ch-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/ch-handwritten.svg",
+          "upper": "assets/alphabet/ch-handwritten-plain.svg",
+          "lower": "assets/alphabet/ch-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "sh",
+      "order": 28,
+      "upper": "Ш",
+      "lower": "ш",
+      "word": "Шувуу",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "consonant",
+      "note": "Шувуу гэдэг үг Ш үсгээр эхэлнэ.",
+      "color": "#83a4c6",
+      "motif": "bird",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/sh-nunito.svg",
+          "upper": "assets/alphabet/sh-nunito-plain.svg",
+          "lower": "assets/alphabet/sh-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/sh-comfortaa.svg",
+          "upper": "assets/alphabet/sh-comfortaa-plain.svg",
+          "lower": "assets/alphabet/sh-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/sh-serif.svg",
+          "upper": "assets/alphabet/sh-serif-plain.svg",
+          "lower": "assets/alphabet/sh-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/sh-handwritten.svg",
+          "upper": "assets/alphabet/sh-handwritten-plain.svg",
+          "lower": "assets/alphabet/sh-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "shch",
+      "order": 29,
+      "upper": "Щ",
+      "lower": "щ",
+      "word": "Ш → Щ",
+      "highlightIndex": 4,
+      "usage": "shape",
+      "lesson": "special",
+      "kind": "consonant",
+      "note": "Ш ба Щ үсгийг харьцуулъя. Щ үсэг баруун доороо жижиг сүүлтэй. Нэр, танихгүй үг цээжлэх хэрэггүй.",
+      "color": "#a897bc",
+      "motif": "comparison",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/shch-nunito.svg",
+          "upper": "assets/alphabet/shch-nunito-plain.svg",
+          "lower": "assets/alphabet/shch-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/shch-comfortaa.svg",
+          "upper": "assets/alphabet/shch-comfortaa-plain.svg",
+          "lower": "assets/alphabet/shch-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/shch-serif.svg",
+          "upper": "assets/alphabet/shch-serif-plain.svg",
+          "lower": "assets/alphabet/shch-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/shch-handwritten.svg",
+          "upper": "assets/alphabet/shch-handwritten-plain.svg",
+          "lower": "assets/alphabet/shch-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "hard-sign",
+      "order": 30,
+      "upper": "Ъ",
+      "lower": "ъ",
+      "word": "Явъя",
+      "highlightIndex": 2,
+      "usage": "inside",
+      "lesson": "special",
+      "kind": "sign",
+      "note": "Хатуугийн тэмдэг. Явъя гэдэг үгийн дунд ъ байна. Өөрөө авиа илэрхийлэхгүй.",
+      "color": "#c7a272",
+      "motif": "path",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/hard-sign-nunito.svg",
+          "upper": "assets/alphabet/hard-sign-nunito-plain.svg",
+          "lower": "assets/alphabet/hard-sign-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/hard-sign-comfortaa.svg",
+          "upper": "assets/alphabet/hard-sign-comfortaa-plain.svg",
+          "lower": "assets/alphabet/hard-sign-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/hard-sign-serif.svg",
+          "upper": "assets/alphabet/hard-sign-serif-plain.svg",
+          "lower": "assets/alphabet/hard-sign-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/hard-sign-handwritten.svg",
+          "upper": "assets/alphabet/hard-sign-handwritten-plain.svg",
+          "lower": "assets/alphabet/hard-sign-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "y",
+      "order": 31,
+      "upper": "Ы",
+      "lower": "ы",
+      "word": "Нарны",
+      "highlightIndex": 4,
+      "usage": "ending",
+      "lesson": "special",
+      "kind": "vowel",
+      "note": "Нарны гэдэг үгийн төгсгөлд ы байна. Үг энэ үсгээр эхэлдэггүй.",
+      "color": "#d5ad62",
+      "motif": "sun",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/y-nunito.svg",
+          "upper": "assets/alphabet/y-nunito-plain.svg",
+          "lower": "assets/alphabet/y-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/y-comfortaa.svg",
+          "upper": "assets/alphabet/y-comfortaa-plain.svg",
+          "lower": "assets/alphabet/y-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/y-serif.svg",
+          "upper": "assets/alphabet/y-serif-plain.svg",
+          "lower": "assets/alphabet/y-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/y-handwritten.svg",
+          "upper": "assets/alphabet/y-handwritten-plain.svg",
+          "lower": "assets/alphabet/y-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "soft-sign",
+      "order": 32,
+      "upper": "Ь",
+      "lower": "ь",
+      "word": "Морь",
+      "highlightIndex": 3,
+      "usage": "ending",
+      "lesson": "special",
+      "kind": "sign",
+      "note": "Зөөлний тэмдэг. Морь гэдэг үгийн төгсгөлд ь байна. Өөрөө авиа илэрхийлэхгүй.",
+      "color": "#b18b72",
+      "motif": "horse",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/soft-sign-nunito.svg",
+          "upper": "assets/alphabet/soft-sign-nunito-plain.svg",
+          "lower": "assets/alphabet/soft-sign-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/soft-sign-comfortaa.svg",
+          "upper": "assets/alphabet/soft-sign-comfortaa-plain.svg",
+          "lower": "assets/alphabet/soft-sign-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/soft-sign-serif.svg",
+          "upper": "assets/alphabet/soft-sign-serif-plain.svg",
+          "lower": "assets/alphabet/soft-sign-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/soft-sign-handwritten.svg",
+          "upper": "assets/alphabet/soft-sign-handwritten-plain.svg",
+          "lower": "assets/alphabet/soft-sign-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "e",
+      "order": 33,
+      "upper": "Э",
+      "lower": "э",
+      "word": "Эрвээхэй",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Эрвээхэй гэдэг үг Э үсгээр эхэлнэ.",
+      "color": "#aa93c6",
+      "motif": "butterfly",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/e-nunito.svg",
+          "upper": "assets/alphabet/e-nunito-plain.svg",
+          "lower": "assets/alphabet/e-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/e-comfortaa.svg",
+          "upper": "assets/alphabet/e-comfortaa-plain.svg",
+          "lower": "assets/alphabet/e-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/e-serif.svg",
+          "upper": "assets/alphabet/e-serif-plain.svg",
+          "lower": "assets/alphabet/e-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/e-handwritten.svg",
+          "upper": "assets/alphabet/e-handwritten-plain.svg",
+          "lower": "assets/alphabet/e-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "yu",
+      "order": 34,
+      "upper": "Ю",
+      "lower": "ю",
+      "word": "Аюулгүй",
+      "highlightIndex": 1,
+      "usage": "inside",
+      "lesson": "context",
+      "kind": "vowel",
+      "note": "Замын гарцаар том хүнтэй хамт гаръя. Аюулгүй гэдэг үгийн дунд ю байна.",
+      "color": "#88b7b1",
+      "motif": "crossing",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/yu-nunito.svg",
+          "upper": "assets/alphabet/yu-nunito-plain.svg",
+          "lower": "assets/alphabet/yu-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/yu-comfortaa.svg",
+          "upper": "assets/alphabet/yu-comfortaa-plain.svg",
+          "lower": "assets/alphabet/yu-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/yu-serif.svg",
+          "upper": "assets/alphabet/yu-serif-plain.svg",
+          "lower": "assets/alphabet/yu-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/yu-handwritten.svg",
+          "upper": "assets/alphabet/yu-handwritten-plain.svg",
+          "lower": "assets/alphabet/yu-handwritten-lower.svg"
+        }
+      }
+    },
+    {
+      "id": "ya",
+      "order": 35,
+      "upper": "Я",
+      "lower": "я",
+      "word": "Ямаа",
+      "highlightIndex": 0,
+      "usage": "initial",
+      "lesson": "beginner",
+      "kind": "vowel",
+      "note": "Ямаа гэдэг үг Я үсгээр эхэлнэ.",
+      "color": "#b6ad95",
+      "motif": "goat",
+      "variants": {
+        "nunito": {
+          "illustrated": "assets/alphabet/ya-nunito.svg",
+          "upper": "assets/alphabet/ya-nunito-plain.svg",
+          "lower": "assets/alphabet/ya-nunito-lower.svg"
+        },
+        "comfortaa": {
+          "illustrated": "assets/alphabet/ya-comfortaa.svg",
+          "upper": "assets/alphabet/ya-comfortaa-plain.svg",
+          "lower": "assets/alphabet/ya-comfortaa-lower.svg"
+        },
+        "serif": {
+          "illustrated": "assets/alphabet/ya-serif.svg",
+          "upper": "assets/alphabet/ya-serif-plain.svg",
+          "lower": "assets/alphabet/ya-serif-lower.svg"
+        },
+        "handwritten": {
+          "illustrated": "assets/alphabet/ya-handwritten.svg",
+          "upper": "assets/alphabet/ya-handwritten-plain.svg",
+          "lower": "assets/alphabet/ya-handwritten-lower.svg"
+        }
+      }
+    }
+  ]
+}
