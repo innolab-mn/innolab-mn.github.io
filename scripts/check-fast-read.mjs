@@ -3,8 +3,32 @@ import { readFile, access } from 'node:fs/promises';
 import { getLessonLetters, getLetterChoices } from '../public/fast_read/alphabet-lessons.js';
 import { actionPool, sentenceTokens, sentenceIsCorrect, pictureDistractors } from '../public/fast_read/actions-logic.js';
 import { countWords, wordsPerMinute, readingSummary, quizScore } from '../public/fast_read/reading-logic.js';
+import { beginnerWordIds, wordLetters, missingLetterExercise, missingLetterIsCorrect, letterTargets, shooterStars } from '../public/fast_read/shooter-logic.js';
 const root = new URL('../public/fast_read/', import.meta.url);
 const words = JSON.parse(await readFile(new URL('data/words.json', root), 'utf8'));
+assert.deepEqual(wordLetters('Аав'), ['а','а','в']);
+const dadGap = missingLetterExercise('Аав');
+assert.equal(dadGap.masked, 'а*в');
+assert.ok(missingLetterIsCorrect(dadGap, 'а'));
+assert.ok(!missingLetterIsCorrect(dadGap, 'в'));
+assert.ok(!missingLetterIsCorrect(dadGap, 'аа'));
+assert.throws(() => missingLetterExercise('Аав', 3));
+for (const id of beginnerWordIds) assert.ok(words.some(word => word.id === id));
+for (const word of words) {
+  for (let index = 0; index < wordLetters(word.text).length; index++) {
+    const exercise = missingLetterExercise(word.text, index);
+    const targets = letterTargets(exercise.answer, () => 0.4);
+    assert.equal([...exercise.masked].filter(letter => letter === '*').length, 1, 'Exactly one letter is hidden');
+    assert.equal(exercise.masked.replace('*', exercise.answer), wordLetters(word.text).join(''));
+    assert.equal(new Set(targets).size, targets.length);
+    assert.equal(targets.length, 6, 'Six targets fit the mobile board');
+    assert.ok(targets.includes(exercise.answer), `${word.id}: missing letter is shootable`);
+    assert.ok(missingLetterIsCorrect(exercise, exercise.answer));
+    assert.ok(targets.filter(letter => letter !== exercise.answer).every(letter => !missingLetterIsCorrect(exercise, letter)), 'All distractors are wrong');
+  }
+}
+assert.deepEqual([0,1,2,3,20].map(shooterStars), [3,2,2,1,1]);
+for (const file of ['shooter.js','shooter-logic.js','shooter.css']) await access(new URL(file, root));
 assert.ok(words.length >= 20, 'At least 20 starter words are required');
 assert.equal(new Set(words.map(word => word.id)).size, words.length, 'Word IDs must be unique');
 assert.equal(new Set(words.map(word => word.text)).size, words.length, 'Word texts must be unique');
@@ -144,4 +168,4 @@ for (const file of ['index.html','app.js','alphabet.js','alphabet-lessons.js','a
 const html = await readFile(new URL('index.html', root), 'utf8');
 assert.match(html, /lang="mn"/);
 assert.ok(!/(?:src|href)="https?:/.test(html), 'Runtime entry must not depend on a CDN');
-console.log(`fast_read: ${reading.passages.length} readings / 300 explained questions / weighted WPM and quiz scoring; ${words.length} starter words, 25/4/6 letter lessons, ${letterAssets} letter SVGs, 12 verbs, and glTF verified.`);
+console.log(`fast_read: 20 shooter words / one missing letter / immediate answer scoring; ${reading.passages.length} readings / 300 explained questions / weighted WPM and quiz scoring; ${words.length} starter words, 25/4/6 letter lessons, ${letterAssets} letter SVGs, 12 verbs, and glTF verified.`);

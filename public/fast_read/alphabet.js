@@ -1,3 +1,4 @@
+import { profileStorage } from './profiles-store.js';
 import { lessons, getLessonLetters, getLetterChoices } from './alphabet-lessons.js';
 const $ = (selector, root = document) => root.querySelector(selector);
 const KEY = 'fast-read-alphabet-v1';
@@ -13,18 +14,18 @@ let selectedLesson = 'beginner';
 let group = 'all';
 let questionCount = 5;
 try {
-  const saved = JSON.parse(localStorage.getItem(KEY));
+  const saved = JSON.parse(profileStorage.getItem(KEY));
   if (saved && Array.isArray(saved.learned)) state.learned = [...new Set(saved.learned.filter(id => typeof id === 'string'))];
   if (Number.isInteger(saved?.rounds) && saved.rounds >= 0) state.rounds = saved.rounds;
   if (saved?.best && typeof saved.best === 'object') state.best = saved.best;
 } catch { /* A fresh independent alphabet profile is always available. */ }
 function persist() {
-  try { localStorage.setItem(KEY,JSON.stringify(state)); }
+  try { profileStorage.setItem(KEY,JSON.stringify(state)); }
   catch { hooks.toast('Үсгийн ахицыг хадгалж чадсангүй. Тоглоомоо үргэлжлүүлж болно.'); }
 }
 export function resetAlphabet() {
   state = {learned:[],rounds:0,best:{}};
-  try { localStorage.removeItem(KEY); } catch { /* Session reset still works. */ }
+  try { profileStorage.removeItem(KEY); } catch { /* Session reset still works. */ }
 }
 function shuffle(items) {
   const result = [...items];

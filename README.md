@@ -19,6 +19,11 @@ The `/fast_read/#actions` section teaches 12 daily verbs, builds three- and
 four-word sentences by touch, and checks sentence comprehension using pictures.
 Shared exercise layouts reserve feedback and next-button space to prevent
 scroll jumps after answers.
+At `/read_fast#shooter`, children see a word with one letter hidden (for example
+`а*в`) and shoot the missing letter. Correctness is shown immediately after
+one shot; wrong answers can be retried. It supports moving or still targets,
+keyboard controls, 5 or 20 words, and local progress. The standalone preview
+opens the same game at `/#shooter`.
 The `/fast_read/#reading` library adds 60 original Mongolian stories for age nine
 (236–293 words each), 300 explained comprehension questions, an active-reading
 timer with pause, weighted words-per-minute averages, and locally saved history.

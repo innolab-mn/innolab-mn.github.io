@@ -1,3 +1,4 @@
+import { profileStorage } from './profiles-store.js';
 import { actionModes, actionPool, sentenceTokens, sentenceIsCorrect, pictureDistractors } from './actions-logic.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-actions-v1';
@@ -6,13 +7,13 @@ let data,hooks,main,dialog,round,ticker;
 let sentenceLength='short';
 let count=5;
 try{
-  const saved=JSON.parse(localStorage.getItem(KEY));
+  const saved=JSON.parse(profileStorage.getItem(KEY));
   if(Array.isArray(saved?.learned))state.learned=[...new Set(saved.learned.filter(id=>typeof id==='string'))];
   if(Number.isInteger(saved?.rounds)&&saved.rounds>=0)state.rounds=saved.rounds;
   if(saved?.best&&typeof saved.best==='object')state.best=saved.best;
 }catch{/* A new local profile remains playable. */}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch{hooks.toast('Үйл үгийн ахицыг хадгалж чадсангүй. Тоглоомоо үргэлжлүүлээрэй.');}}
-export function resetActions(){state={learned:[],rounds:0,best:{}};try{localStorage.removeItem(KEY);}catch{}}
+function save(){try{profileStorage.setItem(KEY,JSON.stringify(state));}catch{hooks.toast('Үйл үгийн ахицыг хадгалж чадсангүй. Тоглоомоо үргэлжлүүлээрэй.');}}
+export function resetActions(){state={learned:[],rounds:0,best:{}};try{profileStorage.removeItem(KEY);}catch{}}
 function shuffle(items){const result=[...items];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
 function time(seconds){return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
 function stop(){clearInterval(ticker);ticker=undefined;}
