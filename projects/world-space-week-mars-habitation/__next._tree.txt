@@ -1,6 +1,6 @@
-:HL["/_next/static/chunks/0yz86liz0g0vy.css","style"]
+:HL["/_next/static/chunks/08x4lmgje6esp.css","style"]
 :HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/9c72aa0f40e4eef8-s.p.1y4-pdgsjb-pw.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/favicon.svg","image"]
 :HL["https://images.ctfassets.net/mjimfx86z1sb/6AcykOre89Xvc9jbb7Ulos/56bc423d6d42c187cc1d07ae93f5732a/photo_2026-10-04_22-12-56.jpg?w=1400&fm=webp&q=80","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4184,"slots":{"children":{"name":"(mongolian)","param":null,"prefetchHints":4148,"slots":{"children":{"name":"projects","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"world-space-week-mars-habitation","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"MS138Ctl0A6vFjqhhFgJZ"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4184,"slots":{"children":{"name":"(mongolian)","param":null,"prefetchHints":4148,"slots":{"children":{"name":"projects","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"world-space-week-mars-habitation","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"vTxRDAJShLEAhtkUCC0Jg"}
