@@ -1,0 +1,206 @@
+{
+  "a": {
+    "word": "Алим",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "b": {
+    "word": "Бөмбөг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "v": {
+    "word": "Автобус",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "g": {
+    "word": "Гэр",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "d": {
+    "word": "Дугуй",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "ye": {
+    "word": "Еэвэн",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "yo": {
+    "word": "Гоё",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "zh": {
+    "word": "Жимс",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "z": {
+    "word": "Загас",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "i": {
+    "word": "Ихэр",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "short-i": {
+    "word": "Нохой",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "k": {
+    "word": "Кино",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "l": {
+    "word": "Лууван",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "m": {
+    "word": "Мод",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "n": {
+    "word": "Нар",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "o": {
+    "word": "Онгоц",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "oe": {
+    "word": "Өндөг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "p": {
+    "word": "Панда",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "r": {
+    "word": "Робот",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "s": {
+    "word": "Сар",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "t": {
+    "word": "Туулай",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u": {
+    "word": "Ус",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "ue": {
+    "word": "Үүл",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "f": {
+    "word": "Футбол",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "kh": {
+    "word": "Хаалга",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "ts": {
+    "word": "Цэцэг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "ch": {
+    "word": "Чихэр",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "sh": {
+    "word": "Шувуу",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "hard-sign": {
+    "word": "Явъя",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "y": {
+    "word": "Нарны",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "soft-sign": {
+    "word": "Морь",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "e": {
+    "word": "Эрвээхэй",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "yu": {
+    "word": "Аюулгүй",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "ya": {
+    "word": "Ямаа",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  }
+}
