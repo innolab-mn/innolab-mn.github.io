@@ -134,16 +134,18 @@ for(const action of actions.actions){
   }
 }
 const reading=JSON.parse(await readFile(new URL('data/readings.json',root),'utf8'));
-assert.equal(reading.passages.length,60);
-assert.equal(new Set(reading.passages.map(passage=>passage.id)).size,60);
-assert.equal(new Set(reading.passages.map(passage=>passage.title)).size,60);
-assert.deepEqual(reading.passages.map(passage=>passage.order),Array.from({length:60},(_,i)=>i+1));
+assert.equal(reading.passages.length,122);
+assert.equal(new Set(reading.passages.map(passage=>passage.id)).size,122);
+assert.equal(new Set(reading.passages.map(passage=>passage.title)).size,122);
+assert.deepEqual(reading.passages.map(passage=>passage.order),Array.from({length:122},(_,i)=>i+1));
 assert.equal(new Set(reading.passages.flatMap(passage=>passage.paragraphs)).size,reading.passages.flatMap(passage=>passage.paragraphs).length,'No repeated filler paragraphs');
 for(const passage of reading.passages){
   const text=passage.paragraphs.join(' ');
   assert.equal(passage.paragraphs.length,6);
   assert.ok(typeof passage.teaser==='string'&&passage.teaser.length>20);
   assert.ok(countWords(text)>200,`${passage.id}: 200+ words`);
+  if(passage.ageGroup==='10-13'&&passage.collection!=='ulaanbaatar')assert.ok(countWords(text)>=300&&countWords(text)<=400,`${passage.id}: 300–400 words`);
+  if(passage.collection==='ulaanbaatar')assert.ok(countWords(text)>=400&&countWords(text)<=500&&passage.location,`${passage.id}: 400–500 words with location`);
   assert.equal(passage.wordCount,countWords(text));
   assert.equal(passage.questions.length,5);
   for(const question of passage.questions){
@@ -155,8 +157,11 @@ for(const passage of reading.passages){
   assert.equal(quizScore(passage.questions,passage.questions.map(question=>question.correctIndex)),5);
   assert.equal(quizScore(passage.questions,passage.questions.map(question=>(question.correctIndex+1)%4)),0);
 }
-assert.equal(new Set(reading.passages.flatMap(passage=>passage.questions.map(question=>question.id))).size,300);
-for(const category of ['home','school','neighborhood','friends','discovery'])assert.equal(reading.passages.filter(passage=>passage.category===category).length,12);
+assert.equal(new Set(reading.passages.flatMap(passage=>passage.questions.map(question=>question.id))).size,610);
+assert.equal(reading.passages.filter(passage=>passage.ageGroup==='9').length,60);
+assert.equal(reading.passages.filter(passage=>passage.ageGroup==='10-13'&&passage.collection!=='ulaanbaatar').length,40);
+assert.equal(reading.passages.filter(passage=>passage.collection==='ulaanbaatar').length,22);
+for(const category of ['home','school','neighborhood','friends','discovery'])assert.equal(reading.passages.filter(passage=>passage.ageGroup==='9'&&passage.category===category).length,12);
 assert.equal(countWords('Аав ном уншив.\n— Хүү: «Би ч уншъя!»'),7,'Punctuation-only tokens do not count');
 assert.equal(wordsPerMinute(240,120000),120);
 assert.equal(wordsPerMinute(240,0),null);
@@ -168,4 +173,4 @@ for (const file of ['index.html','app.js','alphabet.js','alphabet-lessons.js','a
 const html = await readFile(new URL('index.html', root), 'utf8');
 assert.match(html, /lang="mn"/);
 assert.ok(!/(?:src|href)="https?:/.test(html), 'Runtime entry must not depend on a CDN');
-console.log(`fast_read: 20 shooter words / one missing letter / immediate answer scoring; ${reading.passages.length} readings / 300 explained questions / weighted WPM and quiz scoring; ${words.length} starter words, 25/4/6 letter lessons, ${letterAssets} letter SVGs, 12 verbs, and glTF verified.`);
+console.log(`fast_read: 20 shooter words / one missing letter / immediate answer scoring; ${reading.passages.length} readings / ${reading.passages.length*5} explained questions / weighted WPM and quiz scoring; ${words.length} starter words, 25/4/6 letter lessons, ${letterAssets} letter SVGs, 12 verbs, and glTF verified.`);

@@ -31,9 +31,8 @@ try {
     if ([0, 15, 30, 60].includes(saved.questionSeconds)) progress.questionSeconds = saved.questionSeconds;
     if (Array.isArray(saved.learned)) progress.learned = [...new Set(saved.learned.filter(x => typeof x === 'string'))];
     if (saved.storyChoices && typeof saved.storyChoices === 'object') progress.storyChoices = saved.storyChoices;
-    for (const level of levels) {
-      const score = saved.completed?.[level.id];
-      if (Number.isInteger(score) && score >= 1 && score <= 3) progress.completed[level.id] = score;
+    for (const [id, score] of Object.entries(saved.completed || {})) {
+      if (Number.isInteger(score) && score >= 1 && score <= 3) progress.completed[id] = score;
     }
   }
 } catch { /* Private browsing or damaged storage: start with an empty profile. */ }
@@ -43,7 +42,7 @@ function save() {
   catch { toast('Ахиц хадгалагдсангүй. Энэ удаагийн тоглоомоо үргэлжлүүлж болно.'); }
   updateHeader();
 }
-function totalStars() { return Object.values(progress.completed).reduce((sum, n) => sum + n, 0); }
+function totalStars() { return levels.reduce((sum, level) => sum + (progress.completed[level.id] || 0), 0); }
 function updateHeader() {
   updateProfileHeader();
   $('#total-stars').textContent = totalStars();
@@ -169,11 +168,11 @@ function renderStoryEnding() {
   $('#story-end-home').onclick = () => gameDialog.close();
 }
 function renderHome() {
-  const completed = Object.keys(progress.completed).length;
+  const completed = levels.filter(level => progress.completed[level.id]).length;
   main.innerHTML = `
     <section class="hero story-hero" aria-labelledby="hero-title"><div class="hero-copy"><div class="eyebrow">${words.length} ҮГ · 3 БҮЛЭГ · НЭГ ХАМТЫН АЯЛАЛ</div><h1 id="hero-title">Бяцхан Борын<br><em>номын аялал</em></h1><p>${story.subtitle}<br>Бортой хамт тоглонгоо уншиж сурцгаая!</p><span class="hero-badge"><span>✦</span> Замд юу тохиолдох бол?</span></div><img class="hero-art" src="assets/story/chapter-1.svg" alt="Бор шувуу гэрийнхээ дэргэд номоо дэлгэжээ"></section>
     <a class="alphabet-invite" href="#alphabet"><div><span>ШИНЭ ТОГЛООМ · 35 ҮСЭГ</span><strong>Үсгүүд дүрс болон хувирлаа!</strong><small>Өөр өөр фонттой үсэг найзуудаа таниарай. →</small></div><div aria-hidden="true"><img src="assets/alphabet/a-nunito.svg" alt=""><img src="assets/alphabet/m-comfortaa.svg" alt=""></div></a>
-    <section class="stats" aria-label="Миний ахиц"><div class="stat"><span class="stat-icon">▤</span><div><strong>${progress.learned.length}<span style="color:#bcc4d2;font-size:13px"> / ${words.length}</span></strong><small>Танил болсон үг</small></div></div><div class="stat"><span class="stat-icon">✦</span><div><strong>${totalStars()}<span style="color:#bcc4d2;font-size:13px"> / 9</span></strong><small>Цуглуулсан од</small></div></div><div class="stat"><span class="stat-icon">⚑</span><div><strong>${completed}<span style="color:#bcc4d2;font-size:13px"> / 3</span></strong><small>Дуусгасан түвшин</small></div></div></section>
+    <section class="stats" aria-label="Миний ахиц"><div class="stat"><span class="stat-icon">▤</span><div><strong>${progress.learned.filter(id => words.some(word => word.id === id)).length}<span style="color:#bcc4d2;font-size:13px"> / ${words.length}</span></strong><small>Танил болсон үг</small></div></div><div class="stat"><span class="stat-icon">✦</span><div><strong>${totalStars()}<span style="color:#bcc4d2;font-size:13px"> / 9</span></strong><small>Цуглуулсан од</small></div></div><div class="stat"><span class="stat-icon">⚑</span><div><strong>${completed}<span style="color:#bcc4d2;font-size:13px"> / 3</span></strong><small>Дуусгасан түвшин</small></div></div></section>
     <section aria-labelledby="levels-title"><div class="section-heading"><div><h2 id="levels-title">Аяллын гурван бүлэг</h2><p>Үгээ олоод, Борын түүхийг цааш үргэлжлүүлээрэй.</p></div><span style="font-size:10px;color:#a0a9b9">3 түвшин</span></div><div class="level-grid">${levels.map(level => {
       const open = unlocked(level.id); const stars = progress.completed[level.id];
       const part = chapter(level.id);
@@ -304,7 +303,6 @@ try {
   if (!Array.isArray(story?.chapters) || story.chapters.length !== levels.length) throw new Error('Invalid story');
   if (!Array.isArray(alphabet?.letters) || alphabet.letters.length !== 35) throw new Error('Invalid alphabet');
   if (!Array.isArray(actions?.actions) || actions.actions.length < 3) throw new Error('Invalid action collection');
-  progress.learned = progress.learned.filter(id => words.some(word => word.id === id));
   $('#word-count').textContent = words.length;
   updateHeader(); route();
 } catch {

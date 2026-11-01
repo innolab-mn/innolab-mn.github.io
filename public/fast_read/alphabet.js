@@ -46,7 +46,6 @@ function frame(title, body, closeLabel='Хаах') {
 }
 export function renderAlphabet(collection, callbacks) {
   data=collection; hooks=callbacks; main=callbacks.main;
-  state.learned=state.learned.filter(id=>data.letters.some(letter=>letter.id===id));
   if(!dialog) {
     dialog=$('#alphabet-dialog');
     dialog.addEventListener('close',()=>{stop();round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});

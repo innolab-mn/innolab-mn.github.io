@@ -89,7 +89,9 @@ export function renderProfiles({ main, toast }) {
   }
   function download(ids) {
     const archive = profiles.export(ids);
-    const url = URL.createObjectURL(new Blob([JSON.stringify(archive, null, 2) + '\n'], { type:'application/json' }));
+    const blob = new Blob([JSON.stringify(archive, null, 2) + '\n'], { type:'application/json' });
+    if (blob.size > MAX_PROFILE_FILE_BYTES) throw new Error('Файл 5 МБ-аас хэтэрлээ. Профайл бүрийг тусад нь экспортлоорой.');
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url; link.download = `fast-read-${ids.length === 1 ? 'profile' : 'profiles'}-${new Date().toISOString().slice(0,10)}.json`;
     document.body.append(link); link.click(); link.remove();

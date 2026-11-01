@@ -1,9 +1,18 @@
 import { PROFILE_FORMAT, PROFILE_SCHEMA_VERSION, MAX_PROFILES, GAME_KEYS, clone, profileName, makeProfile, makeArchive, validateArchive } from './profiles-model.js';
 export const PROFILES_KEY = 'fast-read-profiles-v1';
 
+function createId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  if (globalThis.crypto?.getRandomValues) {
+    const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    return [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+  // Profile IDs are local identifiers, not authentication secrets.
+  return `p-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+}
 export function createProfileStore(storage, options = {}) {
   const now = options.now || (() => new Date().toISOString());
-  const id = options.id || (() => crypto.randomUUID());
+  const id = options.id || createId;
   let registry, warning = '', memoryOnly = !storage, blocked = false;
   const write = next => {
     if (blocked) throw new Error(warning);
