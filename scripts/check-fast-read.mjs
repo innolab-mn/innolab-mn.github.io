@@ -87,7 +87,7 @@ for (const [id,count] of Object.entries(expectedLessons)) {
   }
 }
 assert.deepEqual(getLessonLetters(alphabet,'special').map(letter=>letter.upper).sort(),['Ь','Ъ','Щ','Ы','Ф','К'].sort());
-assert.ok(!alphabet.letters.some(letter=>['Ваар','Луу','Яст мэлхий','Кенгуру','Фламинго','Щедрин','Юүлүүр','Еэвэн','Ёотон','Шүхэр'].includes(letter.word)),'Retire unclear examples');
+assert.ok(!alphabet.letters.some(letter=>['Ваар','Луу','Яст мэлхий','Кенгуру','Фламинго','Щедрин','Юүлүүр','Ёотон','Шүхэр'].includes(letter.word)),'Retire unclear examples');
 let letterAssets = 0;
 for (const letter of alphabet.letters) {
   assert.equal(letter.lower, letter.upper.toLowerCase());

@@ -1,5 +1,7 @@
 import { profileStorage } from './profiles-store.js';
 import { lessons, getLessonLetters, getLetterChoices } from './alphabet-lessons.js';
+import { createWordSpeaker } from './alphabet-audio.js';
+const speaker = createWordSpeaker();
 const $ = (selector, root = document) => root.querySelector(selector);
 const KEY = 'fast-read-alphabet-v1';
 const modes = [
@@ -48,7 +50,7 @@ export function renderAlphabet(collection, callbacks) {
   data=collection; hooks=callbacks; main=callbacks.main;
   if(!dialog) {
     dialog=$('#alphabet-dialog');
-    dialog.addEventListener('close',()=>{stop();round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});
+    dialog.addEventListener('close',()=>{stop();speaker.stop();round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   }
   const fonts = data.fonts;
@@ -82,6 +84,7 @@ function detail(id) {
   const letter=data.letters.find(item=>item.id===id);
   let font=selectedFont;
   frame(`${letter.upper} ${letter.lower} · ${letter.word}`,`<div class="letter-detail"><span class="story-kicker">ДҮРС НЬ СОЛИГДОВЧ ҮСЭГ ХЭВЭЭРЭЭ</span><div class="letter-morph"><img class="morph-plain" src="${letter.variants[font].upper}" alt="${letter.upper} үсгийн энгийн хэлбэр"><img class="morph-art" src="${letter.variants[font].illustrated}" alt="${letter.upper} үсгийг ${letter.word.toLowerCase()} дүрстэй уялдуулсан зураг"></div><button class="morph-toggle secondary-button" aria-pressed="false">Энгийн үсэг болгох ⇄</button><div class="letter-font-options">${data.fonts.map(item=>`<button data-detail-font="${item.id}" aria-pressed="${item.id===font}" class="font-${item.id}">${letter.upper}${letter.lower}<small>${item.label}</small></button>`).join('')}</div><h3 class="letter-example">${highlighted(letter)}</h3><span class="pill">${usageText(letter)}</span><p class="letter-note">${letter.note}</p><div class="result-actions"><button class="secondary-button" id="letter-learned">Танил боллоо ✓</button><button class="primary-button" id="letter-practice">Энэ үсгээр тоглох →</button></div></div>`);
+  addWordAudio(letter, $('.letter-example'));
   $('.morph-toggle').onclick=()=>{const plain=$('.letter-morph').classList.toggle('show-plain');$('.morph-toggle').textContent=plain?'Дүрсийг нь буцаах ⇄':'Энгийн үсэг болгох ⇄';$('.morph-toggle').setAttribute('aria-pressed',String(plain));};
   $('#alphabet-content').querySelectorAll('[data-detail-font]').forEach(button=>button.onclick=()=>{
     font=button.dataset.detailFont;
@@ -92,7 +95,7 @@ function detail(id) {
   $('#letter-practice').onclick=()=>start('art',letter);
 }
 function start(modeId,focusedLetter) {
-  stop();
+  stop();speaker.stop();
   const mode=modes.find(item=>item.id===modeId);
   const lesson=focusedLetter?.lesson||selectedLesson;
   const pool=getLessonLetters(data,lesson);
@@ -100,7 +103,7 @@ function start(modeId,focusedLetter) {
   question();
 }
 function question() {
-  stop();round.answered=false;round.retried=false;
+  stop();speaker.stop();round.answered=false;round.retried=false;
   const letter=round.queue[round.index];
   const font=round.mode.id==='font'||round.focused?data.fonts[(round.index+round.fontOffset)%data.fonts.length].id:selectedFont;
   const otherFonts=data.fonts.filter(item=>item.id!==font);
@@ -112,6 +115,7 @@ function question() {
   const title=round.lesson==='context'?'Үг доторх өнгөт үсгийг олъё.':letter.usage==='shape'?'Өнгөөр тодруулсан үсгийг олъё.':round.mode.id==='art'?'Дүрс дотор аль үсэг байна вэ?':round.mode.id==='font'?'Өөр фонтоор бичсэн ижил үсгийг олъё.':'Жижиг үсэг найзыг нь олъё.';
   frame(round.mode.title,`<div class="game-body letter-game"><div class="game-progress" role="progressbar" aria-label="Үсгийн дасгалын ахиц" aria-valuemin="0" aria-valuemax="${round.queue.length}" aria-valuenow="${round.index}"><span style="width:${round.index/round.queue.length*100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b class="letter-remaining">${round.seconds?time(round.seconds):'∞'}</b><small>${round.seconds?'үлдлээ':'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b class="letter-elapsed">${time(Math.floor((Date.now()-round.started)/1000))}</b></span></div><div class="question-meta">ҮСЭГ ${round.index+1} / ${round.queue.length}</div><h3>${title}</h3><div class="letter-prompt"><img src="${letter.variants[font][kind]}" alt="Таних үсгийн зураг"></div><div class="letter-answers" style="--answer-count:${round.mode.choices}">${options.map((item,index)=>`<button class="letter-answer" data-letter-answer="${item.id}" aria-label="${answerKind==='lower'?item.lower:item.upper} үсэг"><img src="${item.variants[answerFont][answerKind]}" alt=""><small>${data.fonts.find(entry=>entry.id===answerFont).label}</small></button>`).join('')}</div><div class="letter-feedback feedback" role="status" aria-live="polite">Үсгийнхээ хэлбэрийг сайн ажиглаарай.</div><button class="next-button letter-next" hidden>${round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийн үсэг →'}</button></div>`,'Үсгийн тоглоомоос гарах');
   $('#alphabet-title').textContent = `${lessons.find(item=>item.id===round.lesson).title} · ${round.mode.title}`;
+  if (kind==='illustrated') addWordAudio(letter, $('.letter-prompt'));
   $('.letter-answers').style.setProperty('--answer-count',choiceCount);
   if(round.lesson==='context') {
     $('.letter-prompt').insertAdjacentHTML('beforebegin',`<div class="context-prompt-group"><div class="context-word" aria-label="${letter.word} үг доторх ${letter.upper} үсэг">${highlighted(letter)}<small>${usageText(letter)}</small></div></div>`);
@@ -156,7 +160,7 @@ function expire(){
   $('.letter-next').hidden=false;$('.letter-next').focus({preventScroll:true});hooks.chime(false);
 }
 function finish(){
-  stop();
+  stop();speaker.stop();
   const score=round.queue.length-round.mistakes;
   const percent=Math.round(score/round.queue.length*100);
   const scoreKey=round.lesson+':'+round.mode.id;
@@ -166,4 +170,23 @@ function finish(){
   const known=round.pool.filter(letter=>state.learned.includes(letter.id)).length;
   frame('Үсгийн аяллын амжилт',`<div class="game-body"><div class="reward">✦</div><h3 class="result-title">Үсгүүдтэйгээ танилцлаа!</h3><p class="result-copy">Эхний оролдлогоор <strong>${score} / ${round.queue.length}</strong> үсгийг зөв оллоо.<br>${lesson.title}: ${known} / ${round.pool.length} үсэгтэй танил болсон<br>◷ ${time(Math.floor((Date.now()-round.started)/1000))}</p><div class="alphabet-result-letters">${[...new Set(round.queue.map(letter=>letter.upper))].join(' ')}</div><div class="result-actions"><button class="secondary-button" id="alphabet-home">Үсгийн цомог</button><button class="primary-button" id="alphabet-again">Дахин тоглох →</button></div></div>`);
   $('#alphabet-home').onclick=()=>dialog.close();$('#alphabet-again').onclick=()=>start(modeId);
+}
+
+function addWordAudio(letter, anchor) {
+  if (letter.usage==='shape') return;
+  const container=document.createElement('div');
+  container.className='letter-audio';
+  const button=document.createElement('button');
+  button.className='secondary-button';
+  button.type='button';
+  button.textContent='🔊 Үгийг сонсох';
+  const status=document.createElement('small');
+  status.setAttribute('role','status');
+  container.append(button,status);
+  anchor.insertAdjacentElement('afterend',container);
+  function play() {
+    status.textContent=speaker.speak(letter.id,()=>{ if (container.isConnected) status.textContent='Дууг тоглуулахын тулд «Үгийг сонсох» товчийг дарна уу.'; })?'':'Дуу тоглуулж чадсангүй.';
+  }
+  button.onclick=play;
+  play();
 }

@@ -27,9 +27,9 @@ RUNTIME_NAMES = {'nunito':'FastReadSoft', 'comfortaa':'FastReadRound', 'serif':'
 ROWS = [
  ('a','А','Алим','#dd7e73','apple'), ('b','Б','Бөмбөг','#769dd2','ball'),
  ('v','В','Автобус','#d5ac69','bus'), ('g','Г','Гэр','#c4a17d','ger'),
- ('d','Д','Дугуй','#83b3a3','bike'), ('ye','Е','Есөн','#d6ac6c','nine'),
+ ('d','Д','Дугуй','#83b3a3','bike'), ('ye','Е','Еэвэн','#d6ac6c','yoo-cookie'),
  ('yo','Ё','Гоё','#bd92be','gift'), ('zh','Ж','Жимс','#a28ab8','grapes'),
- ('z','З','Загас','#81b5cc','fish'), ('i','И','Интоор','#d4898c','cherry'),
+ ('z','З','Загас','#81b5cc','fish'), ('i','И','Ихэр','#d4898c','twin-girls'),
  ('short-i','Й','Нохой','#c6ad94','dog'), ('k','К','Кино','#92a7c6','movie'),
  ('l','Л','Лууван','#dd9b60','carrot'), ('m','М','Мод','#87a67e','tree'),
  ('n','Н','Нар','#dfb45e','sun'), ('o','О','Онгоц','#83a9c8','plane'),
@@ -108,6 +108,9 @@ OBJECTS = {
  'gift': '<rect x="35" y="77" width="130" height="98" rx="8" fill="#b6c8e5"/><rect x="27" y="61" width="146" height="31" rx="7" fill="#9eafd4"/><path d="M88 62h23v112H88" fill="#e9b391"/><path d="M99 62q-62-8-41-36 24-13 41 36m1 0q62-8 41-36-24-13-41 36" fill="#efc2a4"/><path d="m23 29 3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1m143-5 3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1" fill="#d8bd70" stroke="none"/>',
  'crossing': '<rect x="19" y="102" width="164" height="77" rx="9" fill="#b5c0cb" stroke="none"/><path d="m24 160 19-41h15l-19 41zm28 0 19-41h15l-19 41zm28 0 19-41h15l-19 41zm28 0 19-41h15l-19 41zm28 0 19-41h15l-19 41z" fill="#fffaf0" stroke="none"/><rect x="112" y="17" width="55" height="75" rx="10" fill="#809c94"/><circle cx="140" cy="38" r="6" fill="#ddedc3" stroke="none"/><path d="m140 48-7 16-10 5m17-21 11 15m-13-3-10 21m10-21 13 21" stroke="#ddedc3" stroke-width="5" fill="none"/><path d="M139 92v26" stroke="#8d9fa4"/>',
 }
+OBJECTS['yoo-cookie'] = '<ellipse cx="100" cy="105" rx="78" ry="69" fill="#d7a66a"/><ellipse cx="100" cy="98" rx="69" ry="59" fill="#edc68f"/><ellipse cx="100" cy="98" rx="55" ry="46" fill="none" stroke="#b98750" stroke-width="5"/><path d="M62 99h76M100 64v70M73 75l54 46M127 75l-54 46" fill="none" stroke="#b98750" stroke-width="4"/><circle cx="100" cy="98" r="10" fill="#d6a568"/>'
+OBJECTS['kid-goat'] = '<ellipse cx="111" cy="121" rx="61" ry="37" fill="#f0e7d5"/><path d="M67 139v32h15v-31m53 0v31h15v-40" fill="#e4d5bd"/><path d="M51 75Q20 57 22 86l30 17m45-29q35-17 32 13L98 104" fill="#e8d9c6"/><ellipse cx="75" cy="104" rx="38" ry="42" fill="#f8efdd"/><ellipse cx="75" cy="121" rx="21" ry="15" fill="#ead4c0"/><circle cx="61" cy="98" r="4" fill="#506070"/><circle cx="89" cy="98" r="4" fill="#506070"/><path d="m70 119 5 4 5-4m-5 4q0 7-6 8m6-8q0 7 6 8M160 102q20-18 23-8" fill="none"/>'
+OBJECTS['twin-girls'] = '<g><path d="M29 77Q21 26 58 26t29 51v25H29z" fill="#4e3b39"/><circle cx="58" cy="64" r="27" fill="#f3c7a3"/><path d="M32 57q5-32 27-31 23 0 26 31-16-3-27-17-8 13-26 17" fill="#4e3b39"/><circle cx="48" cy="66" r="2.5" fill="#493837"/><circle cx="68" cy="66" r="2.5" fill="#493837"/><path d="M51 76q7 6 14 0" fill="none"/><path d="M41 97q17-8 34 0l13 46H28z" fill="#df8d9a"/><path d="M41 100 26 128m49-28 15 28M48 144v27m20-27v27" fill="none" stroke-width="7"/><path d="M42 171h13m6 0h13" fill="none" stroke-width="5"/><path d="M44 34 35 25l-3 14zm28 0 9-9 3 14z" fill="#e9a8b5"/></g><g transform="translate(86 0)"><path d="M29 77Q21 26 58 26t29 51v25H29z" fill="#4e3b39"/><circle cx="58" cy="64" r="27" fill="#f3c7a3"/><path d="M32 57q5-32 27-31 23 0 26 31-16-3-27-17-8 13-26 17" fill="#4e3b39"/><circle cx="48" cy="66" r="2.5" fill="#493837"/><circle cx="68" cy="66" r="2.5" fill="#493837"/><path d="M51 76q7 6 14 0" fill="none"/><path d="M41 97q17-8 34 0l13 46H28z" fill="#df8d9a"/><path d="M41 100 26 128m49-28 15 28M48 144v27m20-27v27" fill="none" stroke-width="7"/><path d="M42 171h13m6 0h13" fill="none" stroke-width="5"/><path d="M44 34 35 25l-3 14zm28 0 9-9 3 14z" fill="#e9a8b5"/></g>'
 OBJECTS['nine'] = ''.join(f'<circle cx="{x}" cy="{y}" r="20" fill="{["#e4ad88","#9abbd6","#b0c694"][(xi+yi)%3]}"/>' for yi,y in enumerate([47,100,153]) for xi,x in enumerate([47,100,153]))
 
 def glyph_path(font, character):

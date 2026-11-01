@@ -146,3 +146,5 @@
   .context-prompt-group { gap: 10px; }
   .context-prompt-group .letter-prompt { width: 125px; height: 130px; }
 }
+.letter-audio { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.5rem; margin:.5rem auto; }
+.letter-audio small { color:#74637b; max-width:26rem; }
