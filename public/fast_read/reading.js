@@ -1,5 +1,5 @@
 import { profileStorage } from './profiles-store.js';
-import { countWords, wordsPerMinute, readingSummary, quizScore, MIN_READING_MS } from './reading-logic.js';
+import { countWords, wordsPerMinute, readingSummary, quizScore, MIN_READING_MS, READING_RANKS, readingRankProgress, readingRankPromotion } from './reading-logic.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-reading-v1';
 let state={records:[],fontSize:21};
@@ -44,6 +44,12 @@ export async function renderReading(callbacks){
   if(session?.stage==='reading')drawReader();else if(session?.stage==='quiz')drawQuiz();else if(session?.stage==='result')drawResult();else drawLibrary();
 }
 function scopedRecords(){return scope==='first'?state.records.filter((record,index,all)=>all.findIndex(item=>item.passageId===record.passageId)===index):state.records;}
+function rankCard(){
+  const {best,average}=readingRankProgress(state.records);
+  const rank=best===null?null:READING_RANKS[best];
+  const next=best===null?READING_RANKS[0]:READING_RANKS[best+1];
+  return `<section class="reading-rank" aria-label="Миний уншлагын цол"><div class="reading-rank-badge" aria-hidden="true">${rank?.icon||'📖'}</div><div class="reading-rank-copy"><span>МИНИЙ УНШЛАГЫН ЦОЛ · ${rank?`${best+1} / ${READING_RANKS.length}`:'ЭХЭЛЦГЭЭЕ'}</span><h2>${rank?.name||'Эхний цолоо аваарай'}</h2><p>${rank?`Бүх хүчинтэй уншилтын дундаж: ${speed(average)} үг/мин. ${next?`Дараагийн цол: ${next.name} · ${next.min} үг/мин.`:'Чи хамгийн дээд цолд хүрчээ!'}`:'Эхээ уншиж, асуултуудад хариулаад эхний цолоо аваарай.'}</p><small>Цолыг бүх уншилтаар тооцно, шүүлтүүрээс хамаарахгүй. Авсан цол буурахгүй.</small></div><details class="reading-rank-list"><summary>9 цолыг харах</summary><ol>${READING_RANKS.map((item,index)=>`<li class="${best!==null&&index<=best?'earned':''}"><span>${item.icon} ${item.name}</span><b>${item.min}+ үг/мин</b></li>`).join('')}</ol><small>Эдгээр нь тоглоомын босго бөгөөд насны унших чадварын стандарт биш. Ойлгож унших нь чухал.</small></details></section>`;
+}
 function drawLibrary(){
   const agePassages=library.passages.filter(passage=>ageGroup==='all'||(ageGroup==='ulaanbaatar'?passage.collection==='ulaanbaatar':passage.ageGroup===ageGroup));
   const ageIds=new Set(agePassages.map(passage=>passage.id));
@@ -56,6 +62,7 @@ function drawLibrary(){
     <div class="reading-scope" aria-label="Дундаж тооцох уншилт"><button data-reading-scope="all" aria-pressed="${scope==='all'}">Бүх уншилт</button><button data-reading-scope="first" aria-pressed="${scope==='first'}">Эх бүрийн анхны уншилт</button></div>
     <section class="reading-stats" aria-label="Уншлагын ахиц"><div><span>Уншсан эх</span><strong>${new Set(state.records.filter(record=>ageIds.has(record.passageId)).map(record=>record.passageId)).size}<small> / ${agePassages.length}</small></strong></div><div><span>Дундаж хурд</span><strong>${speed(summary.average)}<small> үг/мин</small></strong></div><div><span>Утгын ойлголт</span><strong>${summary.accuracy===null?'—':summary.accuracy+'%'}<small> зөв хариулт</small></strong></div><div><span>Дуусгасан уншилт</span><strong>${summary.attempts}<small> удаа</small></strong></div></section>
     <p class="reading-average-note">Дундаж = нийт уншсан үг ÷ нийт идэвхтэй минут. Түр зогссон болон асуулт бөглөсөн хугацаа орохгүй. ${scope==='all'?'Давтан уншилтууд орсон.':'Эх бүрийн зөвхөн анхны оролдлогыг харуулж байна.'}</p>
+    ${rankCard()}
     ${recent.length?`<section class="reading-history"><div><h2>Сүүлийн уншилтууд</h2><p>Хурд болон ойлголтын оноогоо хамт харьцуулаарай.</p></div><div class="reading-bars" aria-label="Сүүлийн ${recent.length} уншилтын хурд">${recent.map(record=>{const passage=library.passages.find(item=>item.id===record.passageId);const value=wordsPerMinute(record.words,record.elapsedMs);return `<div title="${passage.title}: ${Math.round(value)} үг/мин, ${record.correct}/5 зөв"><b>${Math.round(value)}</b><span style="height:${Math.max(8,value/max*62)}px"></span><small>${String(passage.order).padStart(2,'0')} · ${record.correct}/5</small></div>`;}).join('')}</div></section>`:''}
     <div class="section-heading reading-library-heading"><div><h2>Миний ${agePassages.length} эх</h2><p>Насны бүлэг, сэдвээр нь сонирхолтой эхээ сонгоорой.</p></div><span>${state.records.filter(record=>ageIds.has(record.passageId)).length} нийт оролдлого</span></div>
     <div class="reading-categories" aria-label="Эхийн сэдэв"><button data-reading-category="all" aria-pressed="${category==='all'}">Бүх эх</button>${categories.map(([id,label])=>`<button data-reading-category="${id}" aria-pressed="${category===id}">${label}</button>`).join('')}</div>
@@ -104,7 +111,21 @@ function complete(){
   if(!session||session.stage!=='quiz'||session.answers.some(answer=>answer===null))return;
   const passage=session.passage;
   const record={passageId:passage.id,words:countWords(passage.paragraphs.join(' ')),elapsedMs:Math.round(session.elapsedMs),correct:quizScore(passage.questions,session.answers),totalQuestions:passage.questions.length,completedAt:new Date().toISOString()};
-  session.record=record;session.stage='result';state.records.push(record);save();hooks.chime(true);drawResult();window.scrollTo(0,0);
+  const promotion=readingRankPromotion(state.records,record);
+  session.record=record;session.stage='result';state.records.push(record);
+  save();hooks.chime(true);drawResult();window.scrollTo(0,0);
+  if(promotion!==null)celebrateRank(promotion);
+}
+function celebrateRank(index){
+  const rank=READING_RANKS[index];
+  const dialog=document.createElement('dialog');
+  dialog.className='rank-celebration';
+  dialog.setAttribute('aria-labelledby','rank-celebration-title');
+  dialog.innerHTML=`<div class="rank-confetti" aria-hidden="true">${Array.from({length:20},(_,i)=>`<i style="left:${i*5}%;animation-delay:-${i*.17}s"></i>`).join('')}</div><div class="rank-celebration-content"><span class="rank-celebration-eyebrow">ШИНЭ ЦОЛ · ${index+1} / ${READING_RANKS.length}</span><div class="rank-celebration-medal" aria-hidden="true">${rank.icon}</div><h2 id="rank-celebration-title">Баяр хүргэе!</h2><p>Чи <strong>${rank.name}</strong> цол хүртлээ!</p><p class="rank-celebration-note">Түүхээ ойлгож, өөрийн хурдаар үргэлжлүүлэн уншаарай.</p><button class="primary-button" autofocus>Үргэлжлүүлэх ✨</button></div>`;
+  document.body.append(dialog);
+  dialog.addEventListener('close',()=>{dialog.remove();$('#reading-next-story')?.focus({preventScroll:true});},{once:true});
+  dialog.querySelector('button').onclick=()=>dialog.close();
+  dialog.showModal();
 }
 function drawResult(){
   const {passage,record}=session;const eligible=record.elapsedMs>=MIN_READING_MS;
