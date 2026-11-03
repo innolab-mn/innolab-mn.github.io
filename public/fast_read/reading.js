@@ -51,7 +51,7 @@ function rankCard(){
   return `<section class="reading-rank" aria-label="Миний уншлагын цол"><div class="reading-rank-badge" aria-hidden="true">${rank?.icon||'📖'}</div><div class="reading-rank-copy"><span>МИНИЙ УНШЛАГЫН ЦОЛ · ${rank?`${best+1} / ${READING_RANKS.length}`:'ЭХЭЛЦГЭЭЕ'}</span><h2>${rank?.name||'Эхний цолоо аваарай'}</h2><p>${rank?`Бүх хүчинтэй уншилтын дундаж: ${speed(average)} үг/мин. ${next?`Дараагийн цол: ${next.name} · ${next.min} үг/мин.`:'Чи хамгийн дээд цолд хүрчээ!'}`:'Эхээ уншиж, асуултуудад хариулаад эхний цолоо аваарай.'}</p><small>Цолыг бүх уншилтаар тооцно, шүүлтүүрээс хамаарахгүй. Авсан цол буурахгүй.</small></div><details class="reading-rank-list"><summary>9 цолыг харах</summary><ol>${READING_RANKS.map((item,index)=>`<li class="${best!==null&&index<=best?'earned':''}"><span>${item.icon} ${item.name}</span><b>${item.min}+ үг/мин</b></li>`).join('')}</ol><small>Эдгээр нь тоглоомын босго бөгөөд насны унших чадварын стандарт биш. Ойлгож унших нь чухал.</small></details></section>`;
 }
 function drawLibrary(){
-  const agePassages=library.passages.filter(passage=>ageGroup==='all'||(ageGroup==='ulaanbaatar'?passage.collection==='ulaanbaatar':passage.ageGroup===ageGroup));
+  const agePassages=library.passages.filter(passage=>ageGroup==='all'||(ageGroup==='ulaanbaatar'?passage.collection==='ulaanbaatar':passage.ageGroup===ageGroup)).sort((a,b)=>(a.ageGroup==='9'?0:1)-(b.ageGroup==='9'?0:1)||a.order-b.order);
   const ageIds=new Set(agePassages.map(passage=>passage.id));
   const records=scopedRecords().filter(record=>ageIds.has(record.passageId));const summary=readingSummary(records);
   const categories=[...new Map(library.passages.map(passage=>[passage.category,passage.categoryLabel])).entries()];

@@ -24,9 +24,9 @@ At `/read_fast#shooter`, children see a word with one letter hidden (for example
 one shot; wrong answers can be retried. It supports moving or still targets,
 keyboard controls, 5 or 20 words, and local progress. The standalone preview
 opens the same game at `/#shooter`.
-The `/fast_read/#reading` library contains 122 original Mongolian stories for ages 9–13,
+The `/fast_read/#reading` library contains 200 original Mongolian stories for ages 9–13,
 including 40 stories of 300–400 words and 22 Ulaanbaatar stories of
-400–500 words, with 610 explained comprehension questions, an active-reading
+400–500 words, plus 23 stories of 500–700 words, with 1000 explained comprehension questions, an active-reading
 timer with pause, weighted words-per-minute averages, and locally saved history.
 Source stories live in `content/fast_read/readings/`; rebuild with
 `node scripts/build-reading-library.mjs` after edits.

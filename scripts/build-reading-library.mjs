@@ -11,7 +11,8 @@ for(const passage of passages){
   if(count<=200){failed=true;console.error('  Must contain more than 200 words.');}
   if(passage.collection==='ulaanbaatar'&&(count<400||count>500)){failed=true;console.error('  Ulaanbaatar stories require 400–500 words.');}
   if(passage.collection==='ulaanbaatar'&&(passage.ageGroup!=='10-13'||!passage.location))throw Error(`${passage.id}: Ulaanbaatar collection requires age group and location`);
-  if(passage.ageGroup==='10-13'&&passage.collection!=='ulaanbaatar'&&(count<300||count>400)){failed=true;console.error('  Ages 10–13 require 300–400 words.');}
+  if(passage.collection==='longform'&&(count<500||count>700)){failed=true;console.error('  Long-form stories require 500–700 words.');}
+  if(passage.ageGroup==='10-13'&&!['ulaanbaatar','longform'].includes(passage.collection)&&(count<300||count>400)){failed=true;console.error('  Ages 10–13 require 300–400 words.');}
   if(passage.ageGroup && !['9','10-13'].includes(passage.ageGroup))throw Error(`${passage.id}: invalid age group`);
   if(passage.quiz.length!==5)throw Error(`${passage.id}: 5 questions required`);
   for(const item of passage.quiz){if(item.length!==7||new Set(item.slice(1,5)).size!==4)throw Error(`${passage.id}: invalid quiz`);if(!passage.paragraphs.join(' ').toLowerCase().includes(item[6].toLowerCase()))throw Error(`${passage.id}: evidence not in story: ${item[6]}`);}
