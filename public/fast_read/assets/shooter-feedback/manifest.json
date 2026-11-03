@@ -1,0 +1,236 @@
+{
+  "correct": {
+    "text": "Зөв!",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "letter-joins": {
+    "text": "үсэг орж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "completed": {
+    "text": "боллоо!",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0430": {
+    "text": "а",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0431": {
+    "text": "б",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0432": {
+    "text": "в",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0433": {
+    "text": "г",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0434": {
+    "text": "д",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0435": {
+    "text": "е",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0451": {
+    "text": "ё",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0436": {
+    "text": "ж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0437": {
+    "text": "з",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0438": {
+    "text": "и",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0439": {
+    "text": "й",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043a": {
+    "text": "к",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043b": {
+    "text": "л",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043c": {
+    "text": "м",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043d": {
+    "text": "н",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043e": {
+    "text": "о",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u04e9": {
+    "text": "ө",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u043f": {
+    "text": "п",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0440": {
+    "text": "р",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0441": {
+    "text": "с",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0442": {
+    "text": "т",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0443": {
+    "text": "у",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u04af": {
+    "text": "ү",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0444": {
+    "text": "ф",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0445": {
+    "text": "х",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0446": {
+    "text": "ц",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0447": {
+    "text": "ч",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0448": {
+    "text": "ш",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u0449": {
+    "text": "щэ",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044a": {
+    "text": "хатуугийн тэмдэг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044b": {
+    "text": "ы",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044c": {
+    "text": "зөөлний тэмдэг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044d": {
+    "text": "э",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044e": {
+    "text": "ю",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "u044f": {
+    "text": "я",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "mismatch": {
+    "text": "тохирохгүй байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  }
+}

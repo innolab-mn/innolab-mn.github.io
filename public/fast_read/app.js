@@ -15,6 +15,7 @@ const levels = [
   { id: 3, title: 'Одоо бүгдийг нь чадна!', description: 'Зураг, үгээ ээлжлэн олж, сурсан бүхнээ бататгая.', count: 10, options: 4, kind: 'mixed', icon: 'нар', image: 'sun', color: 'purple' },
 ];
 let words = [];
+let shooterExtra = [];
 let story;
 let alphabet;
 let actions;
@@ -288,7 +289,7 @@ function route() {
     link.classList.toggle('active', link.dataset.view === view);
     if (link.dataset.view === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
-  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter(words,{main,chime,toast}); else renderHome();
+  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound}); else renderHome();
   window.scrollTo(0, 0);
 }
 gameDialog.addEventListener('close', () => { stopClock(); session = null; route(); });
@@ -296,13 +297,14 @@ for (const dialog of [gameDialog, wordDialog]) dialog.addEventListener('click', 
 $('#sound-toggle').onclick = () => { progress.sound = !progress.sound; save(); if (progress.sound) chime(true); if (location.hash === '#settings') renderSettings(); };
 window.addEventListener('hashchange', route);
 try {
-  const responses = await Promise.all([fetch('./data/words.json'), fetch('./data/story.json'), fetch('./data/alphabet.json'),fetch('./data/actions.json')]);
+  const responses = await Promise.all([fetch('./data/words.json'), fetch('./data/story.json'), fetch('./data/alphabet.json'),fetch('./data/actions.json'),fetch('./data/shooter-extra.json')]);
   if (responses.some(response => !response.ok)) throw new Error('Content unavailable');
-  [words, story, alphabet, actions] = await Promise.all(responses.map(response => response.json()));
+  [words, story, alphabet, actions, shooterExtra] = await Promise.all(responses.map(response => response.json()));
   if (!Array.isArray(words) || words.length < 4) throw new Error('Invalid word collection');
   if (!Array.isArray(story?.chapters) || story.chapters.length !== levels.length) throw new Error('Invalid story');
   if (!Array.isArray(alphabet?.letters) || alphabet.letters.length !== 35) throw new Error('Invalid alphabet');
   if (!Array.isArray(actions?.actions) || actions.actions.length < 3) throw new Error('Invalid action collection');
+  if (!Array.isArray(shooterExtra)) throw new Error('Invalid shooter word collection');
   $('#word-count').textContent = words.length;
   updateHeader(); route();
 } catch {

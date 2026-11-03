@@ -1,0 +1,102 @@
+[
+  {
+    "id": "extra-v",
+    "text": "Автобус",
+    "image": "assets/alphabet/v-nunito.svg"
+  },
+  {
+    "id": "extra-d",
+    "text": "Дугуй",
+    "image": "assets/alphabet/d-nunito.svg"
+  },
+  {
+    "id": "extra-ye",
+    "text": "Еэвэн",
+    "image": "assets/alphabet/ye-nunito.svg"
+  },
+  {
+    "id": "extra-zh",
+    "text": "Жимс",
+    "image": "assets/alphabet/zh-nunito.svg"
+  },
+  {
+    "id": "extra-z",
+    "text": "Загас",
+    "image": "assets/alphabet/z-nunito.svg"
+  },
+  {
+    "id": "extra-i",
+    "text": "Ихэр",
+    "image": "assets/alphabet/i-nunito.svg"
+  },
+  {
+    "id": "extra-k",
+    "text": "Кино",
+    "image": "assets/alphabet/k-nunito.svg"
+  },
+  {
+    "id": "extra-l",
+    "text": "Лууван",
+    "image": "assets/alphabet/l-nunito.svg"
+  },
+  {
+    "id": "extra-o",
+    "text": "Онгоц",
+    "image": "assets/alphabet/o-nunito.svg"
+  },
+  {
+    "id": "extra-oe",
+    "text": "Өндөг",
+    "image": "assets/alphabet/oe-nunito.svg"
+  },
+  {
+    "id": "extra-p",
+    "text": "Панда",
+    "image": "assets/alphabet/p-nunito.svg"
+  },
+  {
+    "id": "extra-r",
+    "text": "Робот",
+    "image": "assets/alphabet/r-nunito.svg"
+  },
+  {
+    "id": "extra-t",
+    "text": "Туулай",
+    "image": "assets/alphabet/t-nunito.svg"
+  },
+  {
+    "id": "extra-ue",
+    "text": "Үүл",
+    "image": "assets/alphabet/ue-nunito.svg"
+  },
+  {
+    "id": "extra-f",
+    "text": "Футбол",
+    "image": "assets/alphabet/f-nunito.svg"
+  },
+  {
+    "id": "extra-kh",
+    "text": "Хаалга",
+    "image": "assets/alphabet/kh-nunito.svg"
+  },
+  {
+    "id": "extra-ch",
+    "text": "Чихэр",
+    "image": "assets/alphabet/ch-nunito.svg"
+  },
+  {
+    "id": "extra-soft-sign",
+    "text": "Морь",
+    "image": "assets/alphabet/soft-sign-nunito.svg"
+  },
+  {
+    "id": "extra-e",
+    "text": "Эрвээхэй",
+    "image": "assets/alphabet/e-nunito.svg"
+  },
+  {
+    "id": "extra-ya",
+    "text": "Ямаа",
+    "image": "assets/alphabet/ya-nunito.svg"
+  }
+]

@@ -1,5 +1,29 @@
+import { shuffled } from './randomize.js';
 export function countWords(text){return text.trim().split(/\s+/u).filter(token=>/[\p{L}\p{N}]/u.test(token)).length;}
+// Question and answer order belongs to an attempt, not to an individual render.
+export function createReadingQuiz(questions,random=Math.random){
+  const ordered=shuffled(questions,random);
+  return {questions:ordered,order:ordered.map(question=>shuffled(question.choices.map((_,index)=>index),random))};
+}
 export const MIN_READING_MS=10000;
+// Count only each passage's best eligible result, so rereading rewards progress
+// without creating unlimited stars or changing the saved profile format.
+export function readingStars(record){
+  if(!Number.isFinite(record?.elapsedMs)||record.elapsedMs<MIN_READING_MS||!Number.isInteger(record.correct)||record.correct<0||record.correct>5||record.totalQuestions!==5)return 0;
+  return record.correct===5?3:record.correct>=3?2:1;
+}
+export function readingStarProgress(records){
+  const best=new Map();
+  for(const record of records){
+    if(typeof record.passageId!=='string')continue;
+    best.set(record.passageId,Math.max(best.get(record.passageId)||0,readingStars(record)));
+  }
+  return {total:[...best.values()].reduce((sum,value)=>sum+value,0),best};
+}
+export function readingStarAward(records,record){
+  const prior=readingStarProgress(records).best.get(record.passageId)||0;
+  return Math.max(0,readingStars(record)-prior);
+}
 // Game milestones, not reading standards; all profile attempts use the same scale.
 export const READING_RANKS=Object.freeze([
   {name:'Номын сониуч',min:0,icon:'🌱'},
