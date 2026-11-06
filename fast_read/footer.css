@@ -1,0 +1,5 @@
+.page-footer { align-items:center; flex-wrap:wrap; gap:14px; }
+.donation-link { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:9px 16px; border:1px solid #d7cde8; border-radius:12px; background:#f3eefb; color:#67518d; font-size:12px; font-weight:700; }
+.donation-link:hover { background:#e9dff7; border-color:#ae99cd; }
+.donation-link:focus-visible { outline:3px solid #67518d; outline-offset:3px; }
+@media(max-width:560px) { .page-footer { justify-content:center; text-align:center; } .page-footer>span { width:100%; } }

@@ -55,9 +55,15 @@
 .sentence-slot:disabled { opacity:1; }
 .sentence-slots.correct .sentence-slot { background:#e8f3df; border-color:#9cbc89; }
 .sentence-slots.retry .sentence-slot { border-color:#dbbf8f; }
-.word-bank { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:44px; gap:7px; min-height:95px; }
-.bank-word { border:1px solid #dce4e9; border-radius:10px; background:#fff; color:#697b94; padding:7px 6px; font:inherit; font-size:18px; }
+.word-bank { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); grid-auto-rows:minmax(44px,auto); gap:7px; min-height:95px; }
+.bank-word { border:1px solid #dce4e9; border-radius:10px; background:#fff; color:#697b94; padding:7px 6px; font:inherit; font-size:18px; overflow-wrap:anywhere; }
 .bank-word:disabled { color:transparent; background:#eff1f2; border-style:dashed; cursor:default; }
+.audible-choice { display:flex; min-width:0; }
+.audible-choice .verb-option,.audible-choice .bank-word { flex:1 1 auto; min-width:0; border-radius:10px 0 0 10px; }
+.choice-audio { flex:0 0 42px; min-height:42px; padding:0; border:1px solid #bfd8c5; border-radius:0 10px 10px 0; background:#f1faf1; font-size:17px; cursor:pointer; touch-action:manipulation; }
+.choice-audio:hover:enabled { background:#e3f3e6; }
+.choice-audio:focus-visible { outline:3px solid #426f52; outline-offset:2px; }
+.choice-audio:disabled { background:#eff1f2; opacity:.45; cursor:default; }
 .verb-next:disabled { background:#e7ebe8; color:#a6b2a8; cursor:default; }
 .verb-game .verb-feedback { min-height:70px; }
 .question-dialog .game-body.verb-game { grid-template-rows:5px 34px 12px auto minmax(50px,1fr) auto 70px 42px; }
@@ -72,3 +78,13 @@
  .actions-grid{grid-template-columns:repeat(2,1fr);gap:12px}.action-card img{height:115px}.action-card strong{font-size:20px}.action-card small{font-size:9px}.action-lesson{padding:21px 18px}.action-lesson-picture img{height:180px}.teaching-sentence button{font-size:20px;padding:9px 10px}.action-lesson h3{font-size:28px}
  .verb-option{font-size:21px;min-height:52px}.reading-options{gap:7px}.reading-option img{height:88px}.reading-option small{font-size:8px}.reading-prompt{gap:5px}.reading-prompt button{font-size:25px;padding:5px}.sentence-slot{font-size:15px;padding:7px 3px}.sentence-slots{gap:4px}.bank-word{font-size:16px}.learned-sentences p{font-size:15px}
 }
+.learning-audio-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0}
+.learning-audio-button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin:6px 3px;padding:8px 14px;border:2px solid #bfd8c5;border-radius:12px;background:#f1faf1;color:#315c3c;font:inherit;font-size:13px;font-weight:700;cursor:pointer;touch-action:manipulation}
+.learning-audio-button:hover{background:#e3f3e6}.learning-audio-button:focus-visible{outline:3px solid #426f52;outline-offset:3px}.learning-audio-status{margin:7px 16px;text-align:center;color:#8b583b;font-size:12px;line-height:1.5}.learning-audio-status:empty{display:none}
+.learning-audio-button:disabled{opacity:.5;cursor:default}
+/* Keep the lesson and its new audio controls visible on ordinary laptop screens. */
+#actions-dialog .action-lesson{padding:14px 22px 18px}
+#actions-dialog .action-lesson-picture img{height:clamp(100px,20dvh,170px)}
+#actions-dialog .action-lesson h3{margin:8px 0}
+#actions-dialog .action-lesson .teaching-sentence{margin:10px 0}
+#actions-dialog .action-lesson .story-footnote{margin:8px 0 12px}

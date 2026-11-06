@@ -1,0 +1,308 @@
+{
+  "walk-verb": {
+    "text": "Алхах",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "walk-short": {
+    "text": "Хүү алхаж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-044504af04af": {
+    "text": "хүү",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0430043b044504300436": {
+    "text": "алхаж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043104300439043d0430": {
+    "text": "байна",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "run-verb": {
+    "text": "Гүйх",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "run-short": {
+    "text": "Охин гүйж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043e04450438043d": {
+    "text": "охин",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043304af04390436": {
+    "text": "гүйж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "jump-verb": {
+    "text": "Үсрэх",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "jump-short": {
+    "text": "Хүү үсэрч байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-04af0441044d04400447": {
+    "text": "үсэрч",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "sit-verb": {
+    "text": "Суух",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "sit-short": {
+    "text": "Охин сууж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0441044304430436": {
+    "text": "сууж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "sleep-verb": {
+    "text": "Унтах",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "sleep-short": {
+    "text": "Хүү унтаж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0443043d044204300436": {
+    "text": "унтаж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "eat-verb": {
+    "text": "Идэх",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "eat-short": {
+    "text": "Охин идэж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-04380434044d0436": {
+    "text": "идэж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "eat-long": {
+    "text": "Охин алим идэж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0430043b0438043c": {
+    "text": "алим",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "drink-verb": {
+    "text": "Уух",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "drink-short": {
+    "text": "Хүү ууж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-044304430436": {
+    "text": "ууж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "drink-long": {
+    "text": "Хүү ус ууж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-04430441": {
+    "text": "ус",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "read-verb": {
+    "text": "Унших",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "read-short": {
+    "text": "Охин уншиж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0443043d044804380436": {
+    "text": "уншиж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "read-long": {
+    "text": "Охин ном уншиж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043d043e043c": {
+    "text": "ном",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "draw-verb": {
+    "text": "Зурах",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "draw-short": {
+    "text": "Хүү зурж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0437044304400436": {
+    "text": "зурж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "draw-long": {
+    "text": "Хүү нар зурж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043d04300440": {
+    "text": "нар",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "laugh-verb": {
+    "text": "Инээх",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "laugh-short": {
+    "text": "Охин инээж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0438043d044d044d0436": {
+    "text": "инээж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "wash-verb": {
+    "text": "Угаах",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "wash-short": {
+    "text": "Хүү угааж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-04430433043004300436": {
+    "text": "угааж",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "wash-long": {
+    "text": "Хүү гараа угааж байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-04330430044004300430": {
+    "text": "гараа",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "play-verb": {
+    "text": "Тоглох",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "play-short": {
+    "text": "Охин тоглож байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-0442043e0433043b043e0436": {
+    "text": "тоглож",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "play-long": {
+    "text": "Охин бөмбөгөөр тоглож байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "token-043104e9043c043104e9043304e904e90440": {
+    "text": "бөмбөгөөр",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  }
+}

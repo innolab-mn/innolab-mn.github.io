@@ -33,7 +33,7 @@ export function validateArchive(value) {
   safeTree(value);
   if (!object(value) || value.format !== PROFILE_FORMAT) throw new Error('Энэ нь fast_read профайлын файл биш байна.');
   if (value.schemaVersion !== PROFILE_SCHEMA_VERSION) {
-    if (Number.isInteger(value.schemaVersion) && value.schemaVersion > PROFILE_SCHEMA_VERSION) throw new Error('Энэ файл шинэ хувилбараар үүссэн байна. Програмаа шинэчлээд дахин импортлоорой.');
+    if (Number.isInteger(value.schemaVersion) && value.schemaVersion > PROFILE_SCHEMA_VERSION) throw new Error('Энэ файл шинэ хувилбараар үүссэн байна. Программаа шинэчлээд дахин импортлоорой.');
     throw new Error('Профайлын файлын хувилбар дэмжигдэхгүй байна.');
   }
   if (!Array.isArray(value.profiles) || !value.profiles.length || value.profiles.length > MAX_PROFILES) throw new Error(`Файлд 1–${MAX_PROFILES} профайл байна.`);

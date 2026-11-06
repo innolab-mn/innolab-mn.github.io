@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="shooter.css">
   <link rel="stylesheet" href="play-controls.css">
   <link rel="stylesheet" href="profiles.css">
+  <link rel="stylesheet" href="footer.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -30,7 +31,7 @@
       <a href="#shooter" data-view="shooter"><span>✦</span> Одон харваа</a>
       <a href="#reading" data-view="reading"><span>◷</span> Уншлага <b>200</b></a>
       <a href="#words" data-view="words"><span>▦</span> Үгийн сан <b id="word-count">20</b></a>
-      <a href="#models" data-view="models"><span>◇</span> 3D ертөнц</a>
+      <!-- 3D цэсийг түр нуув. #models хэсгийг дараа нь сэргээж болно. -->
       <a href="#profiles" data-view="profiles"><span>☺</span> Профайл</a>
       <a href="#settings" data-view="settings"><span>⚙</span> Тохиргоо</a>
     </nav>
@@ -40,7 +41,7 @@
   <div class="main-shell">
     <header class="topbar"><div id="profile-greeting">Сайн уу, бяцхан уншигч! ☀</div><div class="top-actions"><span class="stars-counter">✦ <b id="total-stars">0</b> од</span><button id="sound-toggle" class="icon-button" aria-label="Дууг хаах" aria-pressed="true">♫</button><a href="#profiles" class="profile-switch" aria-label="Хүүхдийн профайл сонгох"><span id="profile-label">🐣 Миний профайл</span></a></div></header>
     <main id="main" tabindex="-1"></main>
-    <footer class="page-footer"><span>Хүүхэд бүр өөрийн хурдаар сурдаг.</span><span>Монгол үг · Том мөрөөдөл <span class="footer-heart">♡</span></span></footer>
+    <footer class="page-footer"><span>Хүүхэд бүр өөрийн хурдаар сурдаг.</span><a class="donation-link" href="https://innolab.mn/donation" target="_blank" rel="noopener noreferrer" aria-label="Хандив — шинэ табаар нээгдэнэ"><span aria-hidden="true">♡</span> Хандив <span aria-hidden="true">↗</span></a><span>Монгол үг · Том мөрөөдөл <span class="footer-heart">♡</span></span></footer>
   </div>
   <dialog id="game-dialog" aria-labelledby="game-title"><div id="game-content"></div></dialog>
   <dialog id="word-dialog" aria-label="Үгтэй танилцах"><div id="word-content"></div></dialog>

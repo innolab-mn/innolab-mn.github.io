@@ -40,6 +40,22 @@ export function createShooterPlan(pool,random=Math.random){
     })),
   }));
 }
+// Sentence steps keep the correct word and two distinct, spoken distractors.
+export function createSentenceShooterPlan(actions,length='short',random=Math.random){
+  const eligible=actions.filter(action=>Array.isArray(action.sentences?.[length]));
+  const normalize=word=>word.replace(/[.,!?]+$/u,'').normalize('NFC').toLocaleLowerCase('mn');
+  const vocabulary=[...new Map(eligible.flatMap(action=>action.sentences[length]).map(word=>[normalize(word),word.replace(/[.,!?]+$/u,'')])).values()];
+  return shuffled(eligible,random).map(action=>({
+    action,
+    steps:action.sentences[length].map((word,index)=>{
+      const answer=normalize(word);
+      const similar=eligible.map(other=>other.sentences[length][index]).filter(Boolean).map(value=>value.replace(/[.,!?]+$/u,''));
+      const alternatives=[...new Map([...shuffled(similar,random),...shuffled(vocabulary,random)].filter(value=>normalize(value)!==answer).map(value=>[normalize(value),value])).values()];
+      if(alternatives.length<2)throw new Error('Sentence shooter needs at least two different distractors');
+      return {word,answer,targets:shuffled([word.replace(/[.,!?]+$/u,''),...alternatives.slice(0,2)],random)};
+    }),
+  }));
+}
 export function shooterStars(mistakes) {
   return mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1;
 }

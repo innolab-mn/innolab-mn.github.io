@@ -184,9 +184,10 @@ function addWordAudio(letter, anchor) {
   status.setAttribute('role','status');
   container.append(button,status);
   anchor.insertAdjacentElement('afterend',container);
-  function play() {
+  function play(manual=true) {
+    if(hooks.isSoundOn?.()===false){speaker.stop();status.textContent=manual?'Дууг тохиргооноос нээгээрэй.':'';return;}
     status.textContent=speaker.speak(letter.id,()=>{ if (container.isConnected) status.textContent='Дууг тоглуулахын тулд «Үгийг сонсох» товчийг дарна уу.'; })?'':'Дуу тоглуулж чадсангүй.';
   }
-  button.onclick=play;
-  play();
+  button.onclick=()=>play(true);
+  play(false);
 }

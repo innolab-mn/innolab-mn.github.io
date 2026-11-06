@@ -4,3 +4,11 @@
 .shoot-slot.is-gap:not(.is-correct){border-color:#dbbd78;background:#fff8e9;color:#a17b35}.shoot-slot.is-gap i{font-size:32px;color:#b38a42}.shoot-target.was-wrong{background:#f4c8c5;color:#a75e5a;border-color:#db9691;box-shadow:0 0 0 4px #f6dedd}.shoot-prompt h1{font-size:27px;line-height:1.45}@media(max-width:560px){.shoot-prompt h1{font-size:21px}}
 .shoot-rank{display:flex;align-items:center;gap:16px;margin:0 0 22px;padding:20px;border:1px solid #ded5ef;border-radius:18px;background:linear-gradient(120deg,#fff8e8,#f1edff);color:#5c4f80}.shoot-rank-icon{font-size:38px}.shoot-rank>div{flex:1}.shoot-rank small{font-size:10px;font-weight:800;letter-spacing:.06em}.shoot-rank h2{font-size:19px;margin:4px 0}.shoot-rank p{font-size:12px;margin:5px 0;line-height:1.6}.shoot-rank details{font-size:11px}.shoot-rank summary{cursor:pointer;background:#fff;border-radius:9px;padding:10px;font-weight:700}.shoot-rank ol{padding-left:23px;line-height:2}.shoot-audio-button{margin-top:8px;border:1px solid #d4cbe8;background:#fff;border-radius:9px;padding:7px 12px;color:#65518e;cursor:pointer}.shoot-audio-status{display:block;max-width:250px;color:#9b6a54;font-size:10px;line-height:1.5}.shoot-audio-button:focus-visible{outline:3px solid #6d59ad;outline-offset:3px}@media(max-width:560px){.shoot-rank{flex-wrap:wrap}.shoot-rank details{width:100%}}
 .shoot-options select{display:block;margin-top:5px;padding:8px 10px;min-width:180px;border:1px solid #dcdfea;border-radius:9px;background:#fff;color:#5c4f80;font:inherit}
+.shoot-options [hidden]{display:none}
+.shoot-sentence-slots{flex-wrap:wrap;gap:7px}
+.shoot-sentence-slots .shoot-slot{width:auto;min-width:64px;height:auto;min-height:48px;padding:6px 12px;font-size:clamp(16px,3vw,22px);overflow-wrap:anywhere}
+.shoot-word-targets{grid-template-rows:1fr;gap:8px}
+.shoot-word-target{width:min(100%,170px);height:auto;min-height:64px;padding:10px 7px;border-radius:24px}
+.shoot-word-target span{font-size:clamp(15px,3vw,21px);overflow-wrap:anywhere;max-width:100%;line-height:1.25}
+.shoot-game .shoot-word-target{width:min(100%,170px);height:auto;min-height:58px}
+@media(max-width:560px){.shoot-word-targets{inset:20px 8px 82px;gap:6px}.shoot-word-target{padding:8px 3px}.shoot-sentence-slots .shoot-slot{padding:6px 8px;min-width:52px}}
