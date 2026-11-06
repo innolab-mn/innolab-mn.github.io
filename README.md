@@ -1,5 +1,13 @@
 # InnoLab — Innovation Laboratory
 
+## Donations
+
+`/donation` and `/en/donation` show bank details and a thank-you message. They use
+the existing `NEXT_PUBLIC_SHOP_BANK_NAME`, `NEXT_PUBLIC_SHOP_BANK_ACCOUNT` and
+`NEXT_PUBLIC_SHOP_BANK_HOLDER` environment values. Rebuild and deploy after editing
+them. Footer donation links open `https://innolab.mn/donation` in a new tab.
+The page does not process or confirm transfers.
+
 ## fast_read — Монгол хүүхдийн унших тоглоом
 
 Open `/read_fast` in Next.js (or `/read_fast#reading` for the reading library).

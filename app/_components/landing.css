@@ -784,7 +784,12 @@ input:focus-visible {
   justify-content: space-between;
   font-size: 10px;
   color: var(--muted);
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
+.footer-donation { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:9px 16px; border:1px solid var(--border-strong); border-radius:6px; background:var(--highlight); color:var(--green); font-size:13px; font-weight:600; }
+.footer-donation:hover { background:var(--surface-hover); }
 .page-header {
   padding: 64px 0 44px;
   border-bottom: 1px solid var(--line);

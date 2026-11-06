@@ -1,5 +1,6 @@
 import { profileStorage } from './profiles-store.js';
 import { actionModes, actionPool, sentenceTokens, sentenceIsCorrect, pictureDistractors } from './actions-logic.js';
+import { actionVerbClip, actionSentenceClip, actionTokenClip, playLearningAudio, stopLearningAudio } from './learning-audio.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-actions-v1';
 let state={learned:[],rounds:0,best:{}};
@@ -13,13 +14,14 @@ try{
   if(saved?.best&&typeof saved.best==='object')state.best=saved.best;
 }catch{/* A new local profile remains playable. */}
 function save(){try{profileStorage.setItem(KEY,JSON.stringify(state));}catch{hooks.toast('Үйл үгийн ахицыг хадгалж чадсангүй. Тоглоомоо үргэлжлүүлээрэй.');}}
-export function resetActions(){state={learned:[],rounds:0,best:{}};try{profileStorage.removeItem(KEY);}catch{}}
+export function resetActions(){stopLearningAudio();state={learned:[],rounds:0,best:{}};try{profileStorage.removeItem(KEY);}catch{}}
+export function leaveActions(){stopLearningAudio();}
 function shuffle(items){const result=[...items];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
 function time(seconds){return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
 function stop(){clearInterval(ticker);ticker=undefined;}
 function picture(action,extra=''){return `<img src="${action.image}" alt="" ${extra}>`;}
 function frame(title,body){
-  $('#actions-content').innerHTML=`<div class="game-head"><h2 id="actions-title">${title}</h2><button class="close-button" aria-label="Үйл үгийн хичээлээс гарах">×</button></div>${body}`;
+  $('#actions-content').innerHTML=`<div class="game-head"><h2 id="actions-title">${title}</h2><button class="close-button" aria-label="Үйл үгийн хичээлээс гарах">×</button></div><p id="actions-audio-status" class="learning-audio-status" role="status" aria-live="polite"></p>${body}`;
   $('#actions-content .close-button').onclick=()=>dialog.close();
   dialog.classList.toggle('question-dialog',!!$('#actions-content .verb-game'));
   dialog.classList.toggle('result-dialog',!!$('#actions-content .result-title'));
@@ -29,7 +31,7 @@ export function renderActions(collection,callbacks){
   data=collection;hooks=callbacks;main=callbacks.main;
   if(!dialog){
     dialog=$('#actions-dialog');
-    dialog.addEventListener('close',()=>{stop();round=null;if(location.hash==='#actions')renderActions(data,hooks);});
+    dialog.addEventListener('close',()=>{stop();stopLearningAudio();round=null;if(location.hash==='#actions')renderActions(data,hooks);});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   }
   const available=actionPool(data,sentenceLength);
@@ -43,11 +45,27 @@ export function renderActions(collection,callbacks){
 }
 function lesson(id){
   const action=data.actions.find(item=>item.id===id);
-  const tokens=sentenceTokens(action,action.sentences[sentenceLength]?sentenceLength:'short');
-  frame(`${action.verb} — хамтдаа суръя`,`<div class="action-lesson"><div class="action-lesson-picture">${picture(action)}</div><span class="pill">ХИЙЖ БАЙГАА ҮЙЛДЭЛ</span><h3>${action.verb}</h3><p class="verb-change">${action.verb} → <strong>${action.present} байна</strong></p><p class="letter-note">${action.hint}</p><div class="teaching-sentence" aria-label="${tokens.join(' ')}">${tokens.map((token,index)=>`<button data-teach-token="${index}" class="${token===action.present?'verb-token':''}" aria-pressed="false">${token}</button>`).join('')}</div><p class="story-footnote">Үг бүрд хүрч сонгоод, нэг нэгээр нь чангаар уншаарай.</p><div class="result-actions"><button class="secondary-button" id="action-known">Танил боллоо ✓</button><button class="primary-button" id="action-practice">Энэ үйлдлээр тоглох →</button></div></div>`);
-  $('#actions-content').querySelectorAll('[data-teach-token]').forEach(button=>button.onclick=()=>{const active=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(active));});
+  const length=action.sentences[sentenceLength]?sentenceLength:'short';
+  const tokens=sentenceTokens(action,length);
+  frame(`${action.verb} — хамтдаа суръя`,`<div class="action-lesson"><div class="action-lesson-picture">${picture(action)}</div><span class="pill">ХИЙЖ БАЙГАА ҮЙЛДЭЛ</span><h3>${action.verb}</h3><p class="verb-change">${action.verb} → <strong>${action.present} байна</strong></p><p class="letter-note">${action.hint}</p><div class="teaching-sentence" aria-label="${tokens.join(' ')}">${tokens.map((token,index)=>`<button data-teach-token="${index}" class="${token===action.present?'verb-token':''}" aria-pressed="false">${token}</button>`).join('')}</div><p class="story-footnote">Үг бүрд хүрч сонсоод, хамт чангаар хэлээрэй.</p><div class="result-actions"><button class="secondary-button" id="action-known">Танил боллоо ✓</button><button class="primary-button" id="action-practice">Энэ үйлдлээр тоглох →</button></div></div>`);
+  $('.verb-change').insertAdjacentHTML('afterend','<div class="learning-audio-controls"><button class="learning-audio-button" id="action-verb-audio">🔊 Үйл үгийг сонсох</button><button class="learning-audio-button" id="action-sentence-audio">🔊 Өгүүлбэрийг сонсох</button></div>');
+  $('#action-verb-audio').onclick=()=>playActionAudio(actionVerbClip(action.id));
+  $('#action-sentence-audio').onclick=()=>playActionAudio(actionSentenceClip(action.id,length));
+  $('#actions-content').querySelectorAll('[data-teach-token]').forEach(button=>button.onclick=()=>{const active=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(active));playActionAudio(actionTokenClip(tokens[Number(button.dataset.teachToken)]));});
   $('#action-known').onclick=()=>{learn(action.id);hooks.chime(true);dialog.close();};
   $('#action-practice').onclick=()=>start('learn',action);
+  playActionAudio(actionVerbClip(action.id),false);
+}
+function playActionAudio(path,manual=true){
+  const status=$('#actions-audio-status');
+  if(status)status.textContent='';
+  if(!hooks.isSoundOn()){
+    stopLearningAudio();
+    if(manual&&status)status.textContent='Дууг тохиргооноос нээгээрэй.';
+    return;
+  }
+  const fail=()=>{const current=$('#actions-audio-status');if(current)current.textContent='Дуу тоглоогүй бол сонсох товчийг дахин дараарай.';};
+  if(!playLearningAudio(path,true,fail))fail();
 }
 function learn(id){if(!state.learned.includes(id)){state.learned.push(id);save();}}
 function start(modeId,focused){
@@ -60,7 +78,7 @@ function pictureOptions(target){
   return shuffle([target,...pictureDistractors(shuffle(round.pool),target,2)]);
 }
 function question(){
-  stop();round.retried=false;round.answered=false;round.selected=[];
+  stop();stopLearningAudio();round.retried=false;round.answered=false;round.selected=[];
   const action=round.queue[round.index];
   const mode=round.mode.id;
   const tokens=sentenceTokens(action,round.length);
@@ -68,7 +86,7 @@ function question(){
   if(mode==='learn'){
     prompt=`<div class="verb-prompt scene-prompt">${picture(action)}</div>`;
     const other=shuffle(data.actions.filter(item=>item.id!==action.id))[0];
-    answers=`<div class="verb-answer-area verb-options">${shuffle([action,other]).map(item=>`<button class="verb-option" data-verb-answer="${item.id}">${item.verb}</button>`).join('')}</div>`;
+    answers=`<div class="verb-answer-area verb-options">${shuffle([action,other]).map(item=>`<div class="audible-choice"><button class="verb-option" data-verb-answer="${item.id}">${item.verb}</button><button type="button" class="choice-audio" data-listen-verb="${item.id}" aria-label="${item.verb} гэдэг үгийг сонсох">🔊</button></div>`).join('')}</div>`;
   }else if(mode==='read'){
     prompt=`<div class="verb-prompt reading-prompt" aria-label="${tokens.join(' ')}">${tokens.map((token,index)=>`<button data-reading-word="${index}" aria-pressed="false">${token}</button>`).join('')}</div>`;
     answers=`<div class="verb-answer-area reading-options">${pictureOptions(action).map((item,index)=>`<button class="reading-option" data-verb-answer="${item.id}" aria-label="${index+1}-р үйлдлийн зураг">${picture(item)}<small>${index+1}-р зураг</small></button>`).join('')}</div>`;
@@ -79,11 +97,20 @@ function question(){
     round.bank=shuffle([...tokens.map((text,index)=>({id:`word-${index}`,text})),{id:'extra-verb',text:wrong.present}]);
   }
   const title=mode==='learn'?'Ямар үйлдэл хийж байна вэ?':mode==='read'?'Уншаад, тохирох зургийг олъё.':'Зургийн өгүүлбэрийг бүтээе.';
-  const instruction=mode==='build'?'Үгэнд хүрч дарааллаар нь өрөөрэй. Өрсөн үгэндээ хүрвэл буцаана.':mode==='read'?'Өгүүлбэрээ чангаар уншаад, зөв зурагт хүрээрэй.':'Зургийг ажиглаад, үйл үгээ сонгоорой.';
+  const instruction=mode==='build'?'🔊-д хүрч үгийг сонсоорой. Үгэнд хүрч өрнө, өрсөн үгэнд хүрвэл буцаана.':mode==='read'?'Өгүүлбэрээ чангаар уншаад, зөв зурагт хүрээрэй.':'🔊-д хүрч үгсийг сонсоод, зурагт тохирох үйл үгийг сонгоорой.';
   frame(round.mode.title,`<div class="game-body verb-game mode-${mode}"><div class="game-progress" role="progressbar" aria-label="Үйл үгийн дасгалын ахиц" aria-valuemin="0" aria-valuemax="${round.queue.length}" aria-valuenow="${round.index}"><span style="width:${round.index/round.queue.length*100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b class="verb-remaining">${round.seconds?time(round.seconds):'∞'}</b><small>${round.seconds?'үлдлээ':'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b class="verb-elapsed">${time(Math.floor((Date.now()-round.started)/1000))}</b></span></div><div class="question-meta">ДААЛГАВАР ${round.index+1} / ${round.queue.length}${mode==='learn'?'':` · ${tokens.length} ҮГТЭЙ`}</div><h3>${title}</h3>${prompt}${answers}<div class="verb-feedback feedback" role="status" aria-live="polite">${instruction}</div><button class="next-button verb-next" ${mode==='build'?'':'disabled'}>${mode==='build'?'Шалгах ✓':round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийнх →'}</button></div>`);
   if(mode==='build')renderBuilder();
+  if(mode==='build'){
+    $('.scene-prompt').insertAdjacentHTML('afterend','<button class="learning-audio-button" id="action-prompt-audio">🔊 Өгүүлбэрийг сонсоод өрье</button>');
+    $('#action-prompt-audio').onclick=()=>{if(!round.answered&&!timeUp())playActionAudio(actionSentenceClip(action.id,round.length));};
+  }
+  if(mode==='read'){
+    $('.reading-prompt').insertAdjacentHTML('afterend','<button class="learning-audio-button" id="action-prompt-audio">🔊 Өгүүлбэрийг сонсох</button>');
+    $('#action-prompt-audio').onclick=()=>playActionAudio(actionSentenceClip(action.id,round.length));
+  }
   $('#actions-content').querySelectorAll('[data-verb-answer]').forEach(button=>button.onclick=()=>selectAnswer(button));
-  $('#actions-content').querySelectorAll('[data-reading-word]').forEach(button=>button.onclick=()=>button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true')));
+  $('#actions-content').querySelectorAll('[data-listen-verb]').forEach(button=>button.onclick=()=>{if(!round.answered&&!timeUp())playActionAudio(actionVerbClip(button.dataset.listenVerb));});
+  $('#actions-content').querySelectorAll('[data-reading-word]').forEach(button=>button.onclick=()=>{button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));playActionAudio(actionTokenClip(tokens[Number(button.dataset.readingWord)]));});
   $('.verb-next').onclick=()=>{
     if(mode==='build'&&!round.answered){checkBuilder();return;}
     if(!round.answered)return;
@@ -96,17 +123,18 @@ function question(){
 function renderBuilder(){
   const tokens=sentenceTokens(round.queue[round.index],round.length);
   $('.sentence-slots').innerHTML=tokens.map((_,index)=>{const item=round.bank.find(word=>word.id===round.selected[index]);return `<button class="sentence-slot ${item?'filled':''}" data-sentence-slot="${index}" aria-label="${index+1}-р үг${item?`: ${item.text}, буцаах`:': сонгоогүй'}" ${round.answered?'disabled':''}>${item?item.text:`Үг ${index+1}`}</button>`;}).join('');
-  $('.word-bank').innerHTML=round.bank.map(item=>`<button class="bank-word" data-bank-word="${item.id}" ${round.answered||round.selected.includes(item.id)?'disabled':''}>${item.text}</button>`).join('');
-  $('#actions-content').querySelectorAll('[data-bank-word]').forEach(button=>button.onclick=()=>{if(round.answered||round.selected.length===tokens.length)return;round.selected.push(button.dataset.bankWord);renderBuilder();});
+  $('.word-bank').innerHTML=round.bank.map(item=>{const disabled=round.answered||round.selected.includes(item.id);return `<div class="audible-choice bank-choice"><button class="bank-word" data-bank-word="${item.id}" ${disabled?'disabled':''}>${item.text}</button><button type="button" class="choice-audio" data-listen-word="${item.id}" aria-label="${item.text} гэдэг үгийг сонсох" ${disabled?'disabled':''}>🔊</button></div>`;}).join('');
+  $('#actions-content').querySelectorAll('[data-bank-word]').forEach(button=>button.onclick=()=>{if(round.answered||round.selected.length===tokens.length||timeUp())return;const item=round.bank.find(word=>word.id===button.dataset.bankWord);round.selected.push(item.id);renderBuilder();playActionAudio(actionTokenClip(item.text));});
+  $('#actions-content').querySelectorAll('[data-listen-word]').forEach(button=>button.onclick=()=>{if(round.answered||timeUp())return;const item=round.bank.find(word=>word.id===button.dataset.listenWord);playActionAudio(actionTokenClip(item.text));});
   $('#actions-content').querySelectorAll('[data-sentence-slot]').forEach(button=>button.onclick=()=>{if(round.answered)return;round.selected.splice(Number(button.dataset.sentenceSlot),1);renderBuilder();});
   $('.verb-next').disabled=!round.answered&&round.selected.length!==tokens.length;
 }
-function recordMistake(){if(!round.retried){round.mistakes++;round.retried=true;}hooks.chime(false);}
+function recordMistake(sound=true){if(!round.retried){round.mistakes++;round.retried=true;}if(sound){stopLearningAudio();hooks.chime(false);}}
 function timeUp(){if(round.seconds&&Date.now()>=round.deadline){expire();return true;}return false;}
 function selectAnswer(button){
   if(!round||round.answered||button.disabled||timeUp())return;
   const action=round.queue[round.index];
-  if(button.dataset.verbAnswer!==action.id){recordMistake();button.classList.add('wrong');button.disabled=true;$('.verb-feedback').textContent='Зураг, үйлдлийг нь дахин ажиглаад үзье.';return;}
+  if(button.dataset.verbAnswer!==action.id){recordMistake(false);button.classList.add('wrong');button.disabled=true;$('.verb-feedback').textContent='Зураг, үйлдлийг нь дахин ажиглаад үзье.';playActionAudio(actionVerbClip(button.dataset.verbAnswer),false);return;}
   button.classList.add('correct');correct();
 }
 function checkBuilder(){
@@ -117,25 +145,34 @@ function checkBuilder(){
   $('.sentence-slots').classList.remove('retry');$('.sentence-slots').classList.add('correct');correct();
 }
 function correct(){
-  stop();round.answered=true;hooks.chime(true);
+  stop();round.answered=true;
   const action=round.queue[round.index];learn(action.id);
   if(round.mode.id==='build')renderBuilder();
-  $('#actions-content').querySelectorAll('[data-verb-answer]').forEach(button=>button.disabled=true);
+  $('#actions-content').querySelectorAll('[data-verb-answer],[data-listen-verb]').forEach(button=>button.disabled=true);
+  if(round.mode.id==='build')$('#action-prompt-audio').disabled=true;
   $('.verb-feedback').innerHTML=`<strong>${round.mode.id==='learn'?action.verb+' · ':''}${sentenceTokens(action,round.length).join(' ')}</strong><span>Хамт чангаар уншаарай. Чи чадлаа!</span>`;
+  $('.verb-feedback').insertAdjacentHTML('afterend','<button class="learning-audio-button" id="action-answer-audio">🔊 Зөв өгүүлбэрийг сонсох</button>');
+  $('#action-answer-audio').onclick=()=>playActionAudio(actionSentenceClip(action.id,round.length));
+  playActionAudio(round.mode.id==='learn'?[actionVerbClip(action.id),actionSentenceClip(action.id,round.length)]:actionSentenceClip(action.id,round.length),false);
   enableNext();
 }
 function enableNext(){const next=$('.verb-next');next.disabled=false;next.textContent=round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийнх →';next.focus({preventScroll:true});}
 function expire(){
-  if(!round||round.answered)return;stop();round.answered=true;if(!round.retried)round.mistakes++;
+  if(!round||round.answered)return;stop();stopLearningAudio();round.answered=true;if(!round.retried)round.mistakes++;
   const action=round.queue[round.index];
   if(round.mode.id==='build'){
     round.selected=sentenceTokens(action,round.length).map((_,index)=>`word-${index}`);renderBuilder();$('.sentence-slots').classList.add('correct');
   }else $('#actions-content').querySelectorAll('[data-verb-answer]').forEach(button=>{button.disabled=true;if(button.dataset.verbAnswer===action.id)button.classList.add('correct');});
+  $('#actions-content').querySelectorAll('[data-listen-verb]').forEach(button=>button.disabled=true);
+  if(round.mode.id==='build')$('#action-prompt-audio').disabled=true;
   $('.verb-feedback').innerHTML=`<strong>${sentenceTokens(action,round.length).join(' ')}</strong><span>Хугацаа дууслаа. Хамт уншаад авъя!</span>`;enableNext();hooks.chime(false);
+  $('.verb-feedback').insertAdjacentHTML('afterend','<button class="learning-audio-button" id="action-answer-audio">🔊 Өгүүлбэрийг сонсох</button>');
+  $('#action-answer-audio').onclick=()=>playActionAudio(actionSentenceClip(action.id,round.length));
 }
 function finish(){
-  stop();state.rounds++;const key=`${round.mode.id}:${round.length}`;const score=round.queue.length-round.mistakes;state.best[key]=Math.max(Number(state.best[key])||0,Math.round(score/round.queue.length*100));save();
+  stop();stopLearningAudio();state.rounds++;const key=`${round.mode.id}:${round.length}`;const score=round.queue.length-round.mistakes;state.best[key]=Math.max(Number(state.best[key])||0,Math.round(score/round.queue.length*100));save();
   const mode=round.mode.id;
-  frame('Миний шинэ өгүүлбэрүүд',`<div class="game-body"><div class="reward">✦</div><h3 class="result-title">Үгс нийлээд өгүүлбэр боллоо!</h3><p class="result-copy">Эхний оролдлогоор ${score} / ${round.queue.length} зөв.<br>${state.learned.filter(id=>data.actions.some(action=>action.id===id)).length} / ${data.actions.length} үйл үгтэй танил боллоо.<br>◷ ${time(Math.floor((Date.now()-round.started)/1000))}</p><div class="learned-sentences">${round.queue.slice(0,3).map(action=>`<p>${sentenceTokens(action,round.length).join(' ')}</p>`).join('')}</div><div class="result-actions"><button class="secondary-button" id="actions-home">Үйл үгийн цомог</button><button class="primary-button" id="actions-again">Дахин тоглох →</button></div></div>`);
+  frame('Миний шинэ өгүүлбэрүүд',`<div class="game-body"><div class="reward">✦</div><h3 class="result-title">Үгс нийлээд өгүүлбэр боллоо!</h3><p class="result-copy">Эхний оролдлогоор ${score} / ${round.queue.length} зөв.<br>${state.learned.filter(id=>data.actions.some(action=>action.id===id)).length} / ${data.actions.length} үйл үгтэй танил боллоо.<br>◷ ${time(Math.floor((Date.now()-round.started)/1000))}</p><div class="learned-sentences">${round.queue.slice(0,3).map(action=>`<p>${sentenceTokens(action,round.length).join(' ')} <button class="learning-audio-button" data-review-audio="${action.id}">🔊 Сонсох</button></p>`).join('')}</div><div class="result-actions"><button class="secondary-button" id="actions-home">Үйл үгийн цомог</button><button class="primary-button" id="actions-again">Дахин тоглох →</button></div></div>`);
+  $('#actions-content').querySelectorAll('[data-review-audio]').forEach(button=>button.onclick=()=>playActionAudio(actionSentenceClip(button.dataset.reviewAudio,round.length)));
   $('#actions-home').onclick=()=>dialog.close();$('#actions-again').onclick=()=>start(mode);
 }

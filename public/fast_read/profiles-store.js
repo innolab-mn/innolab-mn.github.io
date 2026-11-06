@@ -30,7 +30,7 @@ export function createProfileStore(storage, options = {}) {
     if (raw) registry = clone(validateArchive(JSON.parse(raw)));
   } catch {
     blocked = true;
-    warning = 'Хадгалсан профайлын сан уншигдахгүй эсвэл шинэ хувилбартай байна. Хуучин санг дарж бичихгүй. Програмаа шинэчлээрэй.';
+    warning = 'Хадгалсан профайлын сан уншигдахгүй эсвэл шинэ хувилбартай байна. Хуучин санг дарж бичихгүй. Программаа шинэчлээрэй.';
   }
   if (!registry) {
     const timestamp = now();
@@ -56,7 +56,7 @@ export function createProfileStore(storage, options = {}) {
         if (raw) registry = clone(validateArchive(JSON.parse(raw)));
       } catch {
         blocked = true;
-        warning = 'Профайлын сан өөрчлөгдсөн тул дарж хадгалахгүй. Програмаа шинэчлээд дахин нээгээрэй.';
+        warning = 'Профайлын сан өөрчлөгдсөн тул дарж хадгалахгүй. Программаа шинэчлээд дахин нээгээрэй.';
       }
     }
     return registry;
@@ -75,7 +75,7 @@ export function createProfileStore(storage, options = {}) {
     list:() => clone(fresh().profiles),
     create(name, avatar) {
       const next = clone(fresh());
-      if (next.profiles.length >= MAX_PROFILES) throw new Error(`Нэг хөтөчид ${MAX_PROFILES} хүртэл профайл хадгална.`);
+      if (next.profiles.length >= MAX_PROFILES) throw new Error(`Нэг хөтөч дээр ${MAX_PROFILES} хүртэл профайл хадгална.`);
       const profile = makeProfile(name, avatar, now(), id());
       next.profiles.push(profile); committed(next); return clone(profile);
     },
@@ -125,7 +125,7 @@ export function createProfileStore(storage, options = {}) {
         const profile = next.profiles.find(item => item.id === boundId);
         if (!profile) throw new Error('Профайл олдсонгүй.');
         const previous = profile.games[gameId];
-        if (previous && previous.version !== 1) throw new Error('Шинэ хувилбарын ахицыг хуучин програмаар дарж бичихгүй.');
+        if (previous && previous.version !== 1) throw new Error('Шинэ хувилбарын ахицыг хуучин программаар дарж бичихгүй.');
         const state = JSON.parse(value);
         profile.games[gameId] = { ...previous, version:1, state:{ ...previous?.state, ...state } };
         profile.updatedAt = now(); committed(next);
@@ -136,7 +136,7 @@ export function createProfileStore(storage, options = {}) {
         const next = clone(fresh());
         const profile = next.profiles.find(item => item.id === boundId);
         if (!profile) throw new Error('Профайл олдсонгүй.');
-        if (profile.games[gameId] && profile.games[gameId].version !== 1) throw new Error('Шинэ хувилбарын ахицыг хуучин програмаар арилгахгүй.');
+        if (profile.games[gameId] && profile.games[gameId].version !== 1) throw new Error('Шинэ хувилбарын ахицыг хуучин программаар арилгахгүй.');
         delete profile.games[gameId]; profile.updatedAt = now(); committed(next);
       },
     },

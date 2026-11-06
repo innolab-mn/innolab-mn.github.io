@@ -316,6 +316,9 @@ export function LandingFooter({
           <span>
             © {new Date().getFullYear()} {t("InnoLab. Улаанбаатар, Монгол.")}
           </span>
+          <a className="footer-donation" href="https://innolab.mn/donation" target="_blank" rel="noopener noreferrer" aria-label={locale === "en" ? "Donate — opens in a new tab" : "Хандив — шинэ табаар нээгдэнэ"}>
+            <span aria-hidden="true">♡</span> {locale === "en" ? "Donate" : "Хандив"} <ArrowUpRight />
+          </a>
           <span>{t("Суралц. Турш. Бүтээ.")}</span>
         </div>
       </div>

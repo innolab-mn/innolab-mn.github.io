@@ -1,9 +1,11 @@
 import { renderProfiles, updateProfileHeader } from './profiles-ui.js';
 import { profileStorage } from './profiles-store.js';
 import { renderAlphabet, resetAlphabet } from './alphabet.js';
-import { renderActions, resetActions } from './actions.js';
+import { renderActions, resetActions, leaveActions } from './actions.js';
 import { renderReading, pauseReading, resetReading } from './reading.js';
 import { renderShooter, leaveShooter, resetShooter } from './shooter.js';
+import { playLearningAudio, stopLearningAudio } from './learning-audio.js';
+import { shooterWordClip } from './shooter-audio.js';
 const $ = (selector, root = document) => root.querySelector(selector);
 const main = $('#main');
 const gameDialog = $('#game-dialog');
@@ -76,6 +78,13 @@ function chime(correct) {
     });
   } catch { /* Sound is optional; the visual feedback is always available. */ }
 }
+function playWordAudio(id,manual=false){
+  const status=$('#learning-audio-status');
+  if(status)status.textContent='';
+  if(!progress.sound){stopLearningAudio();if(manual&&status)status.textContent='Дууг тохиргооноос нээгээрэй.';return;}
+  const fail=()=>{const current=$('#learning-audio-status');if(current)current.textContent='Дуу тоглоогүй бол сонсох товчийг дахин дараарай.';};
+  if(!playLearningAudio(shooterWordClip(id),true,fail))fail();
+}
 function shuffle(items) {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
@@ -116,16 +125,18 @@ function timeExpired() {
     if (button.dataset.choice === word.id) button.classList.add('correct');
   });
   $('.feedback').textContent = `Хугацаа дууслаа. Зөв хариулт: ${word.text.toLocaleLowerCase('mn')}. Хамт тогтоогоод авъя!`;
+  if(!$('#game-word-audio'))$('.feedback').insertAdjacentHTML('beforebegin','<button class="learning-audio-button" id="game-word-audio">🔊 Үгийг сонсох</button>');
+  $('#game-word-audio').onclick=()=>playWordAudio(word.id,true);
   $('.next-button').hidden = false;
   $('.next-button').focus({preventScroll:true});
-  chime(false);
+  playWordAudio(word.id);
 }
 function renderSettings() {
-  main.innerHTML = `<div class="eyebrow" style="margin-top:28px">ӨӨРИЙН ХУРДААР СУРЪЯ</div><h1 class="page-title">Миний тохиргоо</h1><p class="page-subtitle">Бяцхан уншигчдаа тохируулан тоглоомоо бэлдээрэй. Сонголт бүр автоматаар хадгалагдана.</p><section class="settings-card" aria-labelledby="timer-setting-title"><div class="setting-heading"><span class="stat-icon">◷</span><div><h2 id="timer-setting-title">Асуултын хугацаа</h2><p>Зураг, үгээ харгалзуулах нэг асуултын хугацаа.</p></div></div><fieldset class="time-options"><legend class="sr-only">Асуултын хугацааг сонгох</legend>${[{value:15,title:'15 секунд',text:'Хурдан сэтгэж тоглоё'},{value:30,title:'30 секунд',text:'Тайван ажиглаад олъё'},{value:60,title:'60 секунд',text:'Бодох хугацаа хангалттай'},{value:0,title:'Хугацаагүй',text:'Яаралгүй хамтдаа суръя'}].map(option => `<label class="time-option"><input type="radio" name="question-seconds" value="${option.value}" ${progress.questionSeconds === option.value ? 'checked' : ''}><span><strong>${option.title}</strong><small>${option.text}</small></span></label>`).join('')}</fieldset><div class="setting-note">☀ Хугацаа дуусахад зөв хариултыг харуулна. Дараагийн асуултад товч дарж шилжинэ.</div></section><section class="settings-card"><div class="setting-row"><div><h2>Дууны эффект</h2><p>Зөв, буруу хариултад богино хөг эгшиглэнэ.</p></div><button id="settings-sound" class="toggle" role="switch" aria-label="Дууны эффект" aria-checked="${progress.sound}"><span></span></button></div></section><section class="settings-card"><div class="setting-row"><div><h2>Шинээр эхлэх</h2><p>Танил болсон үг, од болон нээгдсэн түвшнүүдийг эхнээс нь эхлүүлнэ.</p></div><button id="reset-ask" class="secondary-button">Ахиц арилгах</button></div><div id="reset-confirmation" class="reset-confirmation" hidden><p>Бүх од, сурсан үгийн ахицыг энэ төхөөрөмжөөс арилгах уу?</p><button id="reset-cancel" class="secondary-button">Болих</button> <button id="reset-progress" class="danger-button">Тийм, шинээр эхэлье</button></div></section><a class="primary-button" href="#home">Тоглоом руу буцах →</a>`;
+  main.innerHTML = `<div class="eyebrow" style="margin-top:28px">ӨӨРИЙН ХУРДААР СУРЪЯ</div><h1 class="page-title">Миний тохиргоо</h1><p class="page-subtitle">Бяцхан уншигчдаа тохируулан тоглоомоо бэлдээрэй. Сонголт бүр автоматаар хадгалагдана.</p><section class="settings-card" aria-labelledby="timer-setting-title"><div class="setting-heading"><span class="stat-icon">◷</span><div><h2 id="timer-setting-title">Асуултын хугацаа</h2><p>Зураг, үгээ харгалзуулах нэг асуултын хугацаа.</p></div></div><fieldset class="time-options"><legend class="sr-only">Асуултын хугацааг сонгох</legend>${[{value:15,title:'15 секунд',text:'Хурдан сэтгэж тоглоё'},{value:30,title:'30 секунд',text:'Тайван ажиглаад олъё'},{value:60,title:'60 секунд',text:'Бодох хугацаа хангалттай'},{value:0,title:'Хугацаагүй',text:'Яаралгүй хамтдаа суръя'}].map(option => `<label class="time-option"><input type="radio" name="question-seconds" value="${option.value}" ${progress.questionSeconds === option.value ? 'checked' : ''}><span><strong>${option.title}</strong><small>${option.text}</small></span></label>`).join('')}</fieldset><div class="setting-note">☀ Хугацаа дуусахад зөв хариултыг харуулна. Дараагийн асуултад товч дарж шилжинэ.</div></section><section class="settings-card"><div class="setting-row"><div><h2>Дуу</h2><p>Үг, өгүүлбэрийн дуудлага болон тоглоомын дууг нээж, хаана.</p></div><button id="settings-sound" class="toggle" role="switch" aria-label="Дуу" aria-checked="${progress.sound}"><span></span></button></div></section><section class="settings-card"><div class="setting-row"><div><h2>Шинээр эхлэх</h2><p>Танил болсон үг, од болон нээгдсэн түвшнүүдийг эхнээс нь эхлүүлнэ.</p></div><button id="reset-ask" class="secondary-button">Ахиц арилгах</button></div><div id="reset-confirmation" class="reset-confirmation" hidden><p>Бүх од, сурсан үгийн ахицыг энэ төхөөрөмжөөс арилгах уу?</p><button id="reset-cancel" class="secondary-button">Болих</button> <button id="reset-progress" class="danger-button">Тийм, шинээр эхэлье</button></div></section><a class="primary-button" href="#home">Тоглоом руу буцах →</a>`;
   $('#reset-confirmation p').textContent = 'Одоогийн профайлын бүх тоглоомын ахиц болон уншлагын түүхийг арилгах уу? Бусад хүүхдийн ахиц хэвээр үлдэнэ.';
   $('#reset-ask').closest('.setting-row').querySelector('p').textContent = 'Зөвхөн одоогийн хүүхдийн үг, үсэг, үйл үг, одон харваа болон уншлагын ахицыг шинээр эхлүүлнэ.';
   main.querySelectorAll('[name="question-seconds"]').forEach(input => input.onchange = () => { progress.questionSeconds = Number(input.value); save(); toast('Асуултын хугацаа хадгалагдлаа.'); });
-  $('#settings-sound').onclick = () => { progress.sound = !progress.sound; save(); $('#settings-sound').setAttribute('aria-checked', String(progress.sound)); if (progress.sound) chime(true); };
+  $('#settings-sound').onclick = () => { progress.sound = !progress.sound; if(!progress.sound)stopLearningAudio(); save(); $('#settings-sound').setAttribute('aria-checked', String(progress.sound)); if (progress.sound) chime(true); };
   $('#reset-ask').onclick = () => { $('#reset-confirmation').hidden = false; $('#reset-cancel').focus(); };
   $('#reset-cancel').onclick = () => { $('#reset-confirmation').hidden = true; $('#reset-ask').focus(); };
   $('#reset-progress').onclick = () => { progress.completed = {}; progress.learned = []; progress.storyChoices = {}; resetAlphabet(); resetActions(); resetReading(); resetShooter(); save(); renderSettings(); toast('Шинэ аялалд бэлэн боллоо!'); };
@@ -191,13 +202,15 @@ function renderWords() {
 }
 function openWord(id) {
   const word = words.find(item => item.id === id);
-  $('#word-content').innerHTML = `<div class="word-detail"><button class="close-button" aria-label="Хаах">×</button><div>${image(word)}</div><span class="pill">${word.categoryLabel}</span><h2>${word.text}</h2><p>${word.sentence}</p><button class="primary-button">Танил боллоо ✓</button></div>`;
+  $('#word-content').innerHTML = `<div class="word-detail"><button class="close-button" aria-label="Хаах">×</button><div>${image(word)}</div><span class="pill">${word.categoryLabel}</span><h2>${word.text}</h2><button class="learning-audio-button" id="word-audio">🔊 Үгийг сонсох</button><p id="learning-audio-status" class="learning-audio-status" role="status" aria-live="polite"></p><p>${word.sentence}</p><button class="primary-button">Танил боллоо ✓</button></div>`;
   $('#word-content .close-button').onclick = () => wordDialog.close();
+  $('#word-audio').onclick = () => playWordAudio(id,true);
   $('#word-content .primary-button').onclick = () => {
     if (!progress.learned.includes(id)) progress.learned.push(id);
     save(); chime(true); wordDialog.close(); renderWords();
   };
   wordDialog.showModal();
+  playWordAudio(id);
 }
 async function renderModels() {
   const models = words.filter(word => word.model);
@@ -228,15 +241,19 @@ function startGame(id) {
   renderChapterIntro(id);
 }
 function renderQuestion() {
+  stopLearningAudio();
   gameDialog.classList.add('question-dialog');
   gameDialog.classList.remove('result-dialog');
   const word = session.queue[session.index];
   const {level} = session;
   const kind = level.kind === 'mixed' ? (session.index % 2 ? 'picture' : 'word') : level.kind;
+  session.kind = kind;
   session.answered = false; session.retried = false;
   session.choices = shuffle([word, ...shuffle(words.filter(item => item.id !== word.id)).slice(0, level.options - 1)]);
   $('#game-content').innerHTML = `<div class="game-head"><h2 id="game-title">Түвшин ${level.id} · ${kind === 'word' ? 'Үгээ олъё' : 'Зургаа олъё'}</h2><button class="close-button" aria-label="Тоглоомоос гарах">×</button></div><div class="game-body"><div class="game-progress" role="progressbar" aria-label="Даалгаврын ахиц" aria-valuemin="0" aria-valuemax="${level.count}" aria-valuenow="${session.index}"><span style="width:${session.index / level.count * 100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b id="remaining-time">${progress.questionSeconds ? timeText(progress.questionSeconds) : '∞'}</b><small>${progress.questionSeconds ? 'үлдлээ' : 'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b id="elapsed-time">${timeText(Math.floor((Date.now() - session.startedAt) / 1000))}</b></span></div><div class="question-meta">ДААЛГАВАР ${session.index + 1} / ${level.count}</div><h3>${kind === 'word' ? 'Энэ ямар зураг вэ?' : 'Энэ үг аль зурагтай найз вэ?'}</h3>${kind === 'word' ? image(word, 'class="prompt-picture"') : `<div class="prompt-word">${word.text}</div>`}<div class="choices">${session.choices.map((choice, i) => `<button class="choice" data-choice="${choice.id}" aria-label="${kind === 'word' ? choice.text : `${i + 1}-р зураг`}">${kind === 'word' ? choice.text : image(choice)}</button>`).join('')}</div><div class="feedback" role="status" aria-live="polite">Зөв ${kind === 'word' ? 'үгэнд' : 'зурагт'} хүрээрэй.</div><button class="next-button" hidden>${session.index + 1 === level.count ? 'Амжилтаа харах ✦' : 'Дараагийнх →'}</button></div>`;
   $('#game-content .close-button').onclick = () => gameDialog.close();
+  $('.feedback').insertAdjacentHTML('beforebegin',`<p id="learning-audio-status" class="learning-audio-status" role="status" aria-live="polite"></p>${kind==='picture'?'<button class="learning-audio-button" id="game-word-audio">🔊 Үгийг сонсох</button>':''}`);
+  if(kind==='picture')$('#game-word-audio').onclick=()=>playWordAudio(word.id,true);
   $('#game-content').querySelectorAll('[data-choice]').forEach(button => button.onclick = () => answer(button));
   $('.next-button').onclick = () => {
     session.index++;
@@ -250,11 +267,11 @@ function answer(button) {
   if (progress.questionSeconds && Date.now() >= session.deadline) { timeExpired(); return; }
   const word = session.queue[session.index];
   const correct = button.dataset.choice === word.id;
-  chime(correct);
   if (!correct) {
     button.classList.add('wrong'); button.disabled = true;
     if (!session.retried) { session.mistakes++; session.retried = true; }
     $('.feedback').textContent = 'Дахиад ажиглаад үзье. Чи чадна!';
+    playWordAudio(button.dataset.choice);
     return;
   }
   session.answered = true;
@@ -263,6 +280,9 @@ function answer(button) {
   $('#game-content').querySelectorAll('[data-choice]').forEach(choice => choice.disabled = true);
   if (!progress.learned.includes(word.id)) { progress.learned.push(word.id); save(); }
   $('.feedback').textContent = `Мундаг байна! Энэ бол ${word.text.toLocaleLowerCase('mn')}.`;
+  if(!$('#game-word-audio'))$('.feedback').insertAdjacentHTML('beforebegin','<button class="learning-audio-button" id="game-word-audio">🔊 Үгийг сонсох</button>');
+  $('#game-word-audio').onclick=()=>playWordAudio(word.id,true);
+  playWordAudio(word.id);
   $('.next-button').hidden = false;
   $('.next-button').focus({preventScroll:true});
 }
@@ -282,6 +302,8 @@ function finishGame() {
 }
 function route() {
   const view = location.hash.slice(1) || 'home';
+  stopLearningAudio();
+  if(view!=='actions')leaveActions();
   if(view!=='reading')pauseReading();
   if(view!=='shooter')leaveShooter();
   document.title = view === 'profiles' ? 'fast_read — Хүүхдийн профайлууд' : view === 'shooter' ? 'fast_read — Үсгийн одон харваа' : view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Бяцхан Борын номын аялал';
@@ -289,12 +311,14 @@ function route() {
     link.classList.toggle('active', link.dataset.view === view);
     if (link.dataset.view === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
-  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound}); else renderHome();
+  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound,actions:actions.actions}); else renderHome();
   window.scrollTo(0, 0);
 }
 gameDialog.addEventListener('close', () => { stopClock(); session = null; route(); });
+wordDialog.addEventListener('close',stopLearningAudio);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopLearningAudio();});
 for (const dialog of [gameDialog, wordDialog]) dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-$('#sound-toggle').onclick = () => { progress.sound = !progress.sound; save(); if (progress.sound) chime(true); if (location.hash === '#settings') renderSettings(); };
+$('#sound-toggle').onclick = () => { progress.sound = !progress.sound; if(!progress.sound)stopLearningAudio(); save(); if (progress.sound) chime(true); if (location.hash === '#settings') renderSettings(); };
 window.addEventListener('hashchange', route);
 try {
   const responses = await Promise.all([fetch('./data/words.json'), fetch('./data/story.json'), fetch('./data/alphabet.json'),fetch('./data/actions.json'),fetch('./data/shooter-extra.json')]);

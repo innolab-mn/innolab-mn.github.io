@@ -18,7 +18,7 @@ const body = Inter({
 export const defaultMetadata = {
   title: "InnoLab — Суралц. Турш. Бүтээ.",
   description:
-    "Технологид дуртай залуусын клуб. 3D загварчлал, робот техник, програмчлалын сургалт, бодит төсөл, 3D хэвлэл.",
+    "Технологид дуртай залуусын клуб. 3D загварчлал, робот техник, программчлалын сургалт, бодит төсөл, 3D хэвлэл.",
 };
 export default function SiteLayout({
   children,
