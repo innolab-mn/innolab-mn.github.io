@@ -23,6 +23,11 @@ versioned entry for every game. The machine-readable schema is
 ```
 
 Game identifiers are `core`, `alphabet`, `actions`, `reading`, and `shooter`.
+The optional `alphabet.state.starHits` field counts first-attempt correct answers
+in the picture-to-letter shooting game. It defaults to zero in older archives.
+Its nine ranks and target counts are derived from that count, independently of
+the word-shooting game. It is saved after each correct answer and exported with
+the existing alphabet state, without changing the archive version.
 An archive may contain one profile or several. Import validates the whole file,
 then adds selected profiles as new copies with new local IDs. Existing profiles
 and the active profile are not overwritten. Source IDs are recorded in

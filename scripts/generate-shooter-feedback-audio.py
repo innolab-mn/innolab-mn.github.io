@@ -20,7 +20,7 @@ VOICE={'voice':'mn-MN-YesuiNeural','rate':'+0%','pitch':'+50Hz'}
 async def main():
     OUT.mkdir(parents=True,exist_ok=True)
     alphabet=json.loads((SITE/'data/alphabet.json').read_text(encoding='utf-8'))['letters']
-    clips={'correct':'Зөв!', 'letter-joins':'үсэг орж', 'completed':'боллоо!', 'mismatch':'тохирохгүй байна.'}
+    clips={'correct':'Зөв!', 'answer-correct':'Зөв байна.', 'answer-wrong':'Буруу байна.', 'letter-joins':'үсэг орж', 'letter':'үсэг', 'completed':'боллоо!', 'mismatch':'тохирохгүй байна.'}
     for letter in alphabet:
         char=letter['lower']
         # Signs are named explicitly because they do not have independent sounds.

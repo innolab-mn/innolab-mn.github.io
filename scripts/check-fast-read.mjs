@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, readdir, access } from 'node:fs/promises';
 import { getLessonLetters, getLetterChoices } from '../public/fast_read/alphabet-lessons.js';
 import { actionPool, sentenceTokens, sentenceIsCorrect, pictureDistractors } from '../public/fast_read/actions-logic.js';
 import { countWords, wordsPerMinute, readingSummary, quizScore } from '../public/fast_read/reading-logic.js';
@@ -134,21 +134,36 @@ for(const action of actions.actions){
   }
 }
 const reading=JSON.parse(await readFile(new URL('data/readings.json',root),'utf8'));
-assert.equal(reading.passages.length,122);
-assert.equal(new Set(reading.passages.map(passage=>passage.id)).size,122);
-assert.equal(new Set(reading.passages.map(passage=>passage.title)).size,122);
-assert.deepEqual(reading.passages.map(passage=>passage.order),Array.from({length:122},(_,i)=>i+1));
+const sourceDir = new URL('../content/fast_read/readings/', import.meta.url);
+const sourceFiles = (await readdir(sourceDir)).filter(name => name.endsWith('.json'));
+const sources = (await Promise.all(sourceFiles.map(async name => JSON.parse(await readFile(new URL(name, sourceDir), 'utf8'))))).flat();
+const byId = new Map(sources.map(passage => [passage.id, passage]));
+assert.ok(sources.length >= 200);
+assert.equal(reading.passages.length, sources.length);
+assert.equal(new Set(reading.passages.map(passage=>passage.id)).size,sources.length);
+assert.equal(new Set(reading.passages.map(passage=>passage.title)).size,sources.length);
+assert.deepEqual(reading.passages.map(passage=>passage.order),Array.from({length:sources.length},(_,i)=>i+1));
 assert.equal(new Set(reading.passages.flatMap(passage=>passage.paragraphs)).size,reading.passages.flatMap(passage=>passage.paragraphs).length,'No repeated filler paragraphs');
 for(const passage of reading.passages){
   const text=passage.paragraphs.join(' ');
-  assert.equal(passage.paragraphs.length,6);
+  const source = byId.get(passage.id);
+  assert.deepEqual(passage.paragraphs, source.paragraphs);
+  assert.equal(passage.title, source.title);
+  assert.equal(passage.teaser, source.teaser);
   assert.ok(typeof passage.teaser==='string'&&passage.teaser.length>20);
   assert.ok(countWords(text)>200,`${passage.id}: 200+ words`);
-  if(passage.ageGroup==='10-13'&&passage.collection!=='ulaanbaatar')assert.ok(countWords(text)>=300&&countWords(text)<=400,`${passage.id}: 300–400 words`);
+  if(passage.ageGroup==='10-13'&&!passage.collection)assert.ok(countWords(text)>=300&&countWords(text)<=400,`${passage.id}: 300–400 words`);
+  if(passage.collection==='longform')assert.ok(countWords(text)>=500&&countWords(text)<=700,`${passage.id}: 500–700 words`);
   if(passage.collection==='ulaanbaatar')assert.ok(countWords(text)>=400&&countWords(text)<=500&&passage.location,`${passage.id}: 400–500 words with location`);
   assert.equal(passage.wordCount,countWords(text));
   assert.equal(passage.questions.length,5);
-  for(const question of passage.questions){
+  for(const [index,question] of passage.questions.entries()){
+    const [prompt, answer, ...rest] = source.quiz[index];
+    assert.equal(question.prompt, prompt);
+    assert.equal(question.choices[question.correctIndex], answer);
+    assert.deepEqual(new Set(question.choices), new Set([answer,...rest.slice(0,3)]));
+    assert.equal(question.explanation, rest[3]);
+    assert.equal(question.evidence, rest[4]);
     assert.equal(question.choices.length,4);assert.equal(new Set(question.choices).size,4);
     assert.ok(Number.isInteger(question.correctIndex)&&question.correctIndex>=0&&question.correctIndex<4);
     assert.ok(question.prompt.length>10&&question.explanation.length>15);
@@ -157,11 +172,8 @@ for(const passage of reading.passages){
   assert.equal(quizScore(passage.questions,passage.questions.map(question=>question.correctIndex)),5);
   assert.equal(quizScore(passage.questions,passage.questions.map(question=>(question.correctIndex+1)%4)),0);
 }
-assert.equal(new Set(reading.passages.flatMap(passage=>passage.questions.map(question=>question.id))).size,610);
-assert.equal(reading.passages.filter(passage=>passage.ageGroup==='9').length,60);
-assert.equal(reading.passages.filter(passage=>passage.ageGroup==='10-13'&&passage.collection!=='ulaanbaatar').length,40);
-assert.equal(reading.passages.filter(passage=>passage.collection==='ulaanbaatar').length,22);
-for(const category of ['home','school','neighborhood','friends','discovery'])assert.equal(reading.passages.filter(passage=>passage.ageGroup==='9'&&passage.category===category).length,12);
+assert.equal(new Set(reading.passages.flatMap(passage=>passage.questions.map(question=>question.id))).size,sources.length*5);
+for(const category of ['home','school','neighborhood','friends','discovery'])assert.equal(reading.passages.filter(passage=>passage.order<=60&&passage.category===category).length,12);
 assert.equal(countWords('Аав ном уншив.\n— Хүү: «Би ч уншъя!»'),7,'Punctuation-only tokens do not count');
 assert.equal(wordsPerMinute(240,120000),120);
 assert.equal(wordsPerMinute(240,0),null);
@@ -172,5 +184,5 @@ assert.equal(timingExample.completed,2);assert.equal(timingExample.validAttempts
 for (const file of ['index.html','app.js','alphabet.js','alphabet-lessons.js','actions.js','actions-logic.js','actions.css','exercise.css','reading.js','reading-logic.js','reading.css','style.css','settings.css','story.css','alphabet.css','assets/reading.svg','assets/favicon.svg','vendor/model-viewer.min.js','vendor/LICENSE-model-viewer.txt']) await access(new URL(file, root));
 const html = await readFile(new URL('index.html', root), 'utf8');
 assert.match(html, /lang="mn"/);
-assert.ok(!/(?:src|href)="https?:/.test(html), 'Runtime entry must not depend on a CDN');
+assert.ok(!/<(?:script|link|img)\b[^>]*(?:src|href)="https?:/.test(html), 'Runtime entry must not depend on a CDN');
 console.log(`fast_read: 20 shooter words / one missing letter / immediate answer scoring; ${reading.passages.length} readings / ${reading.passages.length*5} explained questions / weighted WPM and quiz scoring; ${words.length} starter words, 25/4/6 letter lessons, ${letterAssets} letter SVGs, 12 verbs, and glTF verified.`);

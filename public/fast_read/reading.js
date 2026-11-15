@@ -1,5 +1,6 @@
 import { profileStorage } from './profiles-store.js';
 import { pauseControlMarkup } from './play-controls.js';
+import { playAnswerFeedback, stopLearningAudio } from './learning-audio.js';
 import { countWords, wordsPerMinute, readingSummary, quizScore, createReadingQuiz, MIN_READING_MS, READING_RANKS, readingRankProgress, readingRankPromotion, readingStars, readingStarProgress, readingStarAward } from './reading-logic.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-reading-v1';
@@ -105,14 +106,14 @@ function updatePause(){
 }
 function startTicker(){stopTicker();ticker=setInterval(()=>{if(session?.stage==='reading'&&!session.paused&&$('.reading-time'))$('.reading-time').textContent=duration(activeElapsed());},250);}
 function finishReading(){if(!session||session.stage!=='reading'||session.paused)return;session.elapsedMs=activeElapsed();session.paused=true;session.stage='quiz';stopTicker();drawQuiz();window.scrollTo(0,0);}
-function exitToLibrary(){stopTicker();session=null;drawLibrary();window.scrollTo(0,0);}
+function exitToLibrary(){stopTicker();stopLearningAudio();session=null;drawLibrary();window.scrollTo(0,0);}
 function drawQuiz(){
   const {passage,quizIndex:index,answers,questions}=session;const question=questions[index];
   main.innerHTML=`<section class="reading-session reading-quiz"><button class="reading-back kid-control kid-control-back"><span class="kid-control-icon" aria-hidden="true">←</span><span>Эхийн жагсаалт</span></button><header><span class="eyebrow">${passage.title} · УТГЫГ НЬ САНАЯ</span><h1>Уншаад юу ойлгов?</h1><p>Уншсан хугацаа: ${duration(session.elapsedMs)}. Асуултын хугацаа хурдад орохгүй.</p></header><div class="quiz-progress" aria-label="${index+1} / ${questions.length} асуулт">${questions.map((_,i)=>`<span class="${i===index?'current':answers[i]!==null?'answered':''}">${i+1}</span>`).join('')}</div><div class="reading-question"><span>АСУУЛТ ${index+1} / ${questions.length}</span><h2>${question.prompt}</h2><fieldset><legend class="sr-only">Зөв хариултыг сонгох</legend>${session.order[index].map((original,position)=>`<label class="reading-option"><input type="radio" name="reading-answer" value="${original}" ${answers[index]===original?'checked':''}><span class="option-letter">${['А','Б','В','Г'][position]}</span><span>${question.choices[original]}</span></label>`).join('')}</fieldset></div><div class="reading-quiz-nav"><button class="secondary-button" id="quiz-back" ${index===0?'disabled':''}>← Өмнөх</button><button class="primary-button" id="quiz-next" ${answers[index]===null?'disabled':''}>${index+1===questions.length?'Үр дүнгээ харах ✦':'Дараагийн асуулт →'}</button></div><p class="reading-quiz-note">Хариултаа сонгоод цаашлаарай. Төгсгөлд нь зөв хариулт, тайлбарыг хамт харна.</p></section>`;
   $('.reading-back').onclick=exitToLibrary;
   main.querySelectorAll('[name="reading-answer"]').forEach(input=>input.onchange=()=>{session.answers[index]=Number(input.value);$('#quiz-next').disabled=false;});
   $('#quiz-back').onclick=()=>{if(index>0){session.quizIndex--;drawQuiz();window.scrollTo(0,0);}};
-  $('#quiz-next').onclick=()=>{if(session.answers[index]===null)return;if(index+1<questions.length){session.quizIndex++;drawQuiz();window.scrollTo(0,0);}else complete();};
+  $('#quiz-next').onclick=()=>{if(session.answers[index]===null)return;const correct=session.answers[index]===question.correctIndex;if(index+1<questions.length){session.quizIndex++;drawQuiz();window.scrollTo(0,0);}else complete();playAnswerFeedback(correct,hooks.isSoundOn());};
 }
 function complete(){
   if(!session||session.stage!=='quiz'||session.answers.some(answer=>answer===null))return;

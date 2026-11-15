@@ -1,6 +1,6 @@
 import { profileStorage } from './profiles-store.js';
 import { actionModes, actionPool, sentenceTokens, sentenceIsCorrect, pictureDistractors } from './actions-logic.js';
-import { actionVerbClip, actionSentenceClip, actionTokenClip, playLearningAudio, stopLearningAudio } from './learning-audio.js';
+import { actionVerbClip, actionSentenceClip, actionTokenClip, playLearningAudio, playAnswerFeedback, stopLearningAudio } from './learning-audio.js';
 const $=(selector,root=document)=>root.querySelector(selector);
 const KEY='fast-read-actions-v1';
 let state={learned:[],rounds:0,best:{}};
@@ -129,12 +129,12 @@ function renderBuilder(){
   $('#actions-content').querySelectorAll('[data-sentence-slot]').forEach(button=>button.onclick=()=>{if(round.answered)return;round.selected.splice(Number(button.dataset.sentenceSlot),1);renderBuilder();});
   $('.verb-next').disabled=!round.answered&&round.selected.length!==tokens.length;
 }
-function recordMistake(sound=true){if(!round.retried){round.mistakes++;round.retried=true;}if(sound){stopLearningAudio();hooks.chime(false);}}
+function recordMistake(){if(!round.retried){round.mistakes++;round.retried=true;}playAnswerFeedback(false,hooks.isSoundOn());}
 function timeUp(){if(round.seconds&&Date.now()>=round.deadline){expire();return true;}return false;}
 function selectAnswer(button){
   if(!round||round.answered||button.disabled||timeUp())return;
   const action=round.queue[round.index];
-  if(button.dataset.verbAnswer!==action.id){recordMistake(false);button.classList.add('wrong');button.disabled=true;$('.verb-feedback').textContent='Зураг, үйлдлийг нь дахин ажиглаад үзье.';playActionAudio(actionVerbClip(button.dataset.verbAnswer),false);return;}
+  if(button.dataset.verbAnswer!==action.id){recordMistake();button.classList.add('wrong');button.disabled=true;$('.verb-feedback').textContent='Буруу байна. Зураг, үйлдлийг нь дахин ажиглаад үзье.';return;}
   button.classList.add('correct');correct();
 }
 function checkBuilder(){
@@ -153,7 +153,7 @@ function correct(){
   $('.verb-feedback').innerHTML=`<strong>${round.mode.id==='learn'?action.verb+' · ':''}${sentenceTokens(action,round.length).join(' ')}</strong><span>Хамт чангаар уншаарай. Чи чадлаа!</span>`;
   $('.verb-feedback').insertAdjacentHTML('afterend','<button class="learning-audio-button" id="action-answer-audio">🔊 Зөв өгүүлбэрийг сонсох</button>');
   $('#action-answer-audio').onclick=()=>playActionAudio(actionSentenceClip(action.id,round.length));
-  playActionAudio(round.mode.id==='learn'?[actionVerbClip(action.id),actionSentenceClip(action.id,round.length)]:actionSentenceClip(action.id,round.length),false);
+  playAnswerFeedback(true,hooks.isSoundOn(),round.mode.id==='learn'?[actionVerbClip(action.id),actionSentenceClip(action.id,round.length)]:[actionSentenceClip(action.id,round.length)]);
   enableNext();
 }
 function enableNext(){const next=$('.verb-next');next.disabled=false;next.textContent=round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийнх →';next.focus({preventScroll:true});}

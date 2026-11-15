@@ -1,10 +1,10 @@
 import { renderProfiles, updateProfileHeader } from './profiles-ui.js';
 import { profileStorage } from './profiles-store.js';
-import { renderAlphabet, resetAlphabet } from './alphabet.js';
+import { renderAlphabet, resetAlphabet, leaveAlphabet } from './alphabet.js';
 import { renderActions, resetActions, leaveActions } from './actions.js';
 import { renderReading, pauseReading, resetReading } from './reading.js';
 import { renderShooter, leaveShooter, resetShooter } from './shooter.js';
-import { playLearningAudio, stopLearningAudio } from './learning-audio.js';
+import { playLearningAudio, playAnswerFeedback, stopLearningAudio } from './learning-audio.js';
 import { shooterWordClip } from './shooter-audio.js';
 const $ = (selector, root = document) => root.querySelector(selector);
 const main = $('#main');
@@ -271,7 +271,7 @@ function answer(button) {
     button.classList.add('wrong'); button.disabled = true;
     if (!session.retried) { session.mistakes++; session.retried = true; }
     $('.feedback').textContent = 'Дахиад ажиглаад үзье. Чи чадна!';
-    playWordAudio(button.dataset.choice);
+    playAnswerFeedback(false,progress.sound);
     return;
   }
   session.answered = true;
@@ -282,7 +282,7 @@ function answer(button) {
   $('.feedback').textContent = `Мундаг байна! Энэ бол ${word.text.toLocaleLowerCase('mn')}.`;
   if(!$('#game-word-audio'))$('.feedback').insertAdjacentHTML('beforebegin','<button class="learning-audio-button" id="game-word-audio">🔊 Үгийг сонсох</button>');
   $('#game-word-audio').onclick=()=>playWordAudio(word.id,true);
-  playWordAudio(word.id);
+  playAnswerFeedback(true,progress.sound,[shooterWordClip(word.id)]);
   $('.next-button').hidden = false;
   $('.next-button').focus({preventScroll:true});
 }
@@ -304,6 +304,7 @@ function route() {
   const view = location.hash.slice(1) || 'home';
   stopLearningAudio();
   if(view!=='actions')leaveActions();
+  if(view!=='alphabet')leaveAlphabet();
   if(view!=='reading')pauseReading();
   if(view!=='shooter')leaveShooter();
   document.title = view === 'profiles' ? 'fast_read — Хүүхдийн профайлууд' : view === 'shooter' ? 'fast_read — Үсгийн одон харваа' : view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Бяцхан Борын номын аялал';
@@ -311,7 +312,7 @@ function route() {
     link.classList.toggle('active', link.dataset.view === view);
     if (link.dataset.view === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
-  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound,actions:actions.actions}); else renderHome();
+  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast,isSoundOn:()=>progress.sound}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound,actions:actions.actions}); else renderHome();
   window.scrollTo(0, 0);
 }
 gameDialog.addEventListener('close', () => { stopClock(); session = null; route(); });

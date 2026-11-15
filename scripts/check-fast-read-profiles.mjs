@@ -38,6 +38,9 @@ assert.deepEqual(JSON.parse(second.storage.getItem('fast-read-shooter-v1')), nul
 assert.deepEqual(JSON.parse(first.storage.getItem('fast-read-shooter-v1')).learned, ['dad','mom','sun']);
 const one = first.export([firstId]);
 assert.equal(one.profiles.length, 1);
+first.storage.setItem('fast-read-alphabet-v1', JSON.stringify({...legacy['fast-read-alphabet-v1'],starHits:50}));
+assert.equal(JSON.parse(first.storage.getItem('fast-read-alphabet-v1')).starHits,50);
+assert.equal(second.storage.getItem('fast-read-alphabet-v1'),null,'Picture shooting rank belongs only to the active child');
 const archive = parseProfileFile(JSON.stringify(first.export(first.list().map(profile => profile.id))));
 assert.equal(archive.profiles.length, 2);
 const destinationStorage = memory();
@@ -48,6 +51,7 @@ assert.equal(imported.length, 2);
 assert.ok(imported.every(profile => !archive.profiles.some(original => original.id === profile.id)));
 assert.deepEqual(destination.current(), beforeImport.profiles[0], 'Import does not switch or overwrite the existing child');
 assert.deepEqual(imported[0].games, archive.profiles[0].games, 'Every game and setting survives file transfer');
+assert.equal(imported[0].games.alphabet.state.starHits,50,'Picture shooting rank survives export and import');
 assert.equal(destination.list().length, 3);
 destination.import(archive, [archive.profiles[0].id]);
 assert.equal(destination.list().length, 4, 'Repeated imports add independent copies');
@@ -69,7 +73,7 @@ assert.deepEqual(roundTrip.games.core.state.futureSetting, {color:'blue'});
 // Reset affects only this child and the requested game, including empty objects.
 olderClient.storage.removeItem('fast-read-alphabet-v1');
 assert.equal(olderClient.storage.getItem('fast-read-alphabet-v1'), null);
-assert.deepEqual(JSON.parse(first.storage.getItem('fast-read-alphabet-v1')), legacy['fast-read-alphabet-v1']);
+assert.deepEqual(JSON.parse(first.storage.getItem('fast-read-alphabet-v1')), {...legacy['fast-read-alphabet-v1'],starHits:50});
 olderClient.storage.setItem('fast-read-progress-v1', JSON.stringify({completed:{},learned:[]}));
 assert.deepEqual(JSON.parse(olderClient.storage.getItem('fast-read-progress-v1')).completed, {});
 const futureGame = clone(one);

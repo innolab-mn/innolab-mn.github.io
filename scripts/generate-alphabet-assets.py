@@ -144,6 +144,46 @@ def make_svg(path, color, motif=None, reference=None):
         texture = '<path d="M82 81h130v50H122v93h84" fill="none" stroke="#fff7df" stroke-width="5" stroke-dasharray="9 10"/>'
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320"><defs><clipPath id="letter"><path d="{path}"/></clipPath></defs><ellipse cx="159" cy="264" rx="106" ry="10" fill="{color}" opacity=".11"/><path d="{path}" fill="{color}" stroke="{color}" stroke-width="1.5" stroke-linejoin="round"/><g clip-path="url(#letter)">{texture}</g><g stroke="#526179" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">{accent}{icon}</g></svg>'
 
+# Picture prompts use only the object, never the glyph or its outline.
+def picture_files():
+    existing = {'apple','ball','ger','tree','sun','moon','water','flower','bird'}
+    folder = SITE / 'assets' / 'alphabet-pictures'
+    folder.mkdir(exist_ok=True)
+    files = {}
+    for letter_id, upper, word, color, motif in ROWS:
+        if letter_id in SPECIAL or letter_id in CONTEXT:
+            continue
+        if motif in existing:
+            files[letter_id] = f'assets/images/{motif}.svg'
+            continue
+        if motif == 'grapes':
+            # A bowl with several fruits cues the category Жимс, not one variety.
+            view = '0 0 180 158'
+            art = ('<path d="M36 83q-22-21-4-38 12-8 24-1 13-7 23 2 15 16-5 36z" fill="#ed7977"/>'
+                   '<path d="M53 45q-3-17 10-23" fill="none"/><path d="M55 34q13-16 28-6-10 15-28 6" fill="#82b173"/>'
+                   '<path d="M78 68q-2-15 6-22 10-8 12-24 16-4 18 13 2 13 14 25 11 17-4 28-32 18-46-4z" fill="#edca66"/>'
+                   '<g fill="#ac80c3"><circle cx="124" cy="71" r="13"/><circle cx="145" cy="75" r="13"/>'
+                   '<circle cx="114" cy="89" r="13"/><circle cx="135" cy="94" r="13"/><circle cx="123" cy="108" r="12"/></g>'
+                   '<path d="M16 88h147q-6 48-58 52H75Q26 135 16 88Z" fill="#8fbfc8"/><path d="M23 99h134" stroke="#d8eff0"/>')
+        elif motif in OBJECTS:
+            view, art = '0 0 200 200', OBJECTS[motif]
+        else:
+            view, art = '219 216 112 112', MOTIFS[motif][1]
+        file = folder / (letter_id + '.svg')
+        file.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{view}"><g stroke="#526179" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">{art}</g></svg>', encoding='utf-8')
+        files[letter_id] = file.relative_to(SITE).as_posix()
+    return files
+
+pictures = picture_files()
+if '--pictures-only' in sys.argv:
+    file = SITE / 'data' / 'alphabet.json'
+    collection = json.loads(file.read_text(encoding='utf-8'))
+    for letter in collection['letters']:
+        if letter['id'] in pictures:
+            letter['picture'] = pictures[letter['id']]
+    file.write_text(json.dumps(collection,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    sys.exit(0)
+
 data=[]
 font_objects={}
 charset=''.join(row[1]+row[1].lower() for row in ROWS)
@@ -181,5 +221,8 @@ for index,(letter_id,upper,word,color,motif) in enumerate(ROWS):
     data.append({'id':letter_id,'order':index+1,'upper':upper,'lower':upper.lower(),'word':word,'highlightIndex':highlight,'usage':usage,'lesson':'special' if letter_id in SPECIAL else 'context' if letter_id in CONTEXT else 'beginner','kind':'sign' if upper in 'ЪЬ' else 'vowel' if upper in VOWELS else 'consonant','note':note,'color':color,'motif':motif,'variants':variants})
 
 result={'version':1,'fonts':[{'id':font_id,'label':label,'family':RUNTIME_NAMES[font_id],'sourceFamily':filename,'file':f'vendor/fonts/{RUNTIME_NAMES[font_id]}.ttf'} for font_id,filename,label in FONTS],'source':'https://toli.gov.mn/r','letters':data}
+for letter in data:
+    if letter['id'] in pictures:
+        letter['picture'] = pictures[letter['id']]
 (SITE/'data'/'alphabet.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(f'Generated {len(data)} letters x {len(FONTS)} fonts x 3 image states = {len(data)*len(FONTS)*3} SVG assets; {len(FONTS)} local font subsets.')

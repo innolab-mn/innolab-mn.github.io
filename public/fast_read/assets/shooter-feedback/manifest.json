@@ -232,5 +232,23 @@
     "voice": "mn-MN-YesuiNeural",
     "rate": "+0%",
     "pitch": "+50Hz"
+  },
+  "letter": {
+    "text": "үсэг",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "answer-correct": {
+    "text": "Зөв байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
+  },
+  "answer-wrong": {
+    "text": "Буруу байна.",
+    "voice": "mn-MN-YesuiNeural",
+    "rate": "+0%",
+    "pitch": "+50Hz"
   }
 }
