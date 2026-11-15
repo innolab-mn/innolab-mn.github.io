@@ -2,7 +2,7 @@ const MONGOLIAN_LETTERS=new Set([...('абвгдеёжзийклмнопрсту
 
 // Clip names use Unicode codepoints so filenames are portable across hosts.
 const version='?v=2';
-function letterClip(letter){
+export function letterClip(letter){
   const normalized=letter.normalize('NFC').toLocaleLowerCase('mn');
   if([...normalized].length!==1||!MONGOLIAN_LETTERS.has(normalized))throw new Error('Invalid feedback letter');
   const code=normalized.codePointAt(0).toString(16).padStart(4,'0');
@@ -13,10 +13,13 @@ export function shooterWordClip(wordId){
   return `assets/shooter-audio/${wordId}.mp3${version}`;
 }
 export function shooterFeedbackClips(letter,wordId){
-  return [`assets/shooter-feedback/correct.mp3${version}`,letterClip(letter),`assets/shooter-feedback/letter-joins.mp3${version}`,shooterWordClip(wordId),`assets/shooter-feedback/completed.mp3${version}`];
+  return [answerFeedbackClip(true),letterClip(letter),`assets/shooter-feedback/letter-joins.mp3${version}`,shooterWordClip(wordId),`assets/shooter-feedback/completed.mp3${version}`];
 }
 export function shooterWrongClips(letter){
-  return [letterClip(letter),`assets/shooter-feedback/mismatch.mp3${version}`];
+  return [answerFeedbackClip(false),letterClip(letter),`assets/shooter-feedback/mismatch.mp3${version}`];
+}
+export function answerFeedbackClip(correct){
+  return `assets/shooter-feedback/answer-${correct?'correct':'wrong'}.mp3`;
 }
 
 // A single audio element is reused across clips, including on mobile browsers.
@@ -27,7 +30,7 @@ export function createAudioSequence(AudioClass=globalThis.Audio){
     generation++;
     if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio=undefined;}
   }
-  function play(paths,onError=()=>{}){
+  function play(paths,onError=()=>{},onEnded=()=>{}){
     stop();
     if(!AudioClass||!paths.length)return false;
     const token=generation;
@@ -37,7 +40,7 @@ export function createAudioSequence(AudioClass=globalThis.Audio){
     const fail=()=>{if(token!==generation||failed)return;failed=true;stop();onError();};
     const next=()=>{
       if(token!==generation||failed)return;
-      if(index===paths.length){player.onended=null;player.onerror=null;audio=undefined;return;}
+      if(index===paths.length){player.onended=null;player.onerror=null;audio=undefined;generation++;onEnded();return;}
       player.src=paths[index++];
       try{const result=player.play();result?.catch(fail);}catch{fail();}
     };

@@ -1,8 +1,9 @@
 import { profileStorage } from './profiles-store.js';
 import { beginnerWordIds, wordLetters, missingLetterIsCorrect, shooterStars, createShooterPlan, createSentenceShooterPlan, SHOOTER_RANKS, shooterRank } from './shooter-logic.js';
-import { createAudioSequence, shooterFeedbackClips, shooterWrongClips, shooterWordClip } from './shooter-audio.js';
-import { actionVerbClip, actionSentenceClip, actionTokenClip } from './learning-audio.js';
+import { answerFeedbackClip, shooterFeedbackClips, shooterWrongClips, shooterWordClip } from './shooter-audio.js';
+import { actionVerbClip, actionSentenceClip, actionTokenClip, playLearningAudio, stopLearningAudio } from './learning-audio.js';
 import { pauseControlMarkup } from './play-controls.js';
+import { drawRay, initShotStage, clearShotEffects, shotLauncherMarkup } from './shot-ray.js';
 
 const KEY = 'fast-read-shooter-v1';
 let saved = { learned: [], rounds: 0, best: 0 };
@@ -13,7 +14,6 @@ try {
   if ([1, 2, 3].includes(value?.best)) saved.best = value.best;
 } catch { /* A new profile can play without storage. */ }
 let main, hooks, words, baseWords, verbs, round, events, rewardDialog;
-const audioSequence=createAudioSequence();
 let moving = true, poolMode = 'starter', includeVerbs=false, gameMode='letters', sentenceLength='short';
 const $ = selector => main.querySelector(selector);
 
@@ -33,7 +33,7 @@ export function leaveShooter() {
   if(rewardDialog?.open)rewardDialog.close();
   round = null;
 }
-function stopWordAudio(){ audioSequence.stop(); }
+function stopWordAudio(){ stopLearningAudio(); clearShotEffects(main?.querySelector('.shoot-stage')); }
 function audioError(){
   if($('.shoot-audio-status'))$('.shoot-audio-status').textContent='Дуу тоглоогүй бол дахин сонсох товчийг дараарай.';
 }
@@ -44,7 +44,7 @@ function playWord(){
     return;
   }
   if($('.shoot-audio-status'))$('.shoot-audio-status').textContent='';
-  if(!audioSequence.play([currentWord().actionId?actionVerbClip(currentWord().actionId):shooterWordClip(currentWord().id)],audioError))audioError();
+  if(!playLearningAudio([currentWord().actionId?actionVerbClip(currentWord().actionId):shooterWordClip(currentWord().id)],true,audioError))audioError();
 }
 function playFeedback(){
   if(!round||round.paused||!round.solved)return;
@@ -55,7 +55,7 @@ function playFeedback(){
   if($('.shoot-audio-status'))$('.shoot-audio-status').textContent='';
   const clips=shooterFeedbackClips(round.exercise.answer,currentWord().id);
   if(currentWord().actionId)clips[3]=actionVerbClip(currentWord().actionId);
-  if(!audioSequence.play(clips,audioError))audioError();
+  if(!playLearningAudio(clips,true,audioError))audioError();
 }
 function playWrongFeedback(){
   if(!round||round.paused||round.solved||round.choice===null)return;
@@ -64,7 +64,7 @@ function playWrongFeedback(){
     return;
   }
   if($('.shoot-audio-status'))$('.shoot-audio-status').textContent='';
-  if(!audioSequence.play(shooterWrongClips(round.choice),audioError))audioError();
+  if(!playLearningAudio(shooterWrongClips(round.choice),true,audioError))audioError();
 }
 export function renderShooter(collection, callbacks) {
   leaveShooter();
@@ -108,6 +108,7 @@ function lobby() {
 }
 function currentWord() { return round.pool[round.index]; }
 function drawRound() {
+  stopWordAudio();
   const word = currentWord();
   const length=wordLetters(word.text).length;
   const task=round.plan[round.index].steps[round.letterStep];
@@ -117,9 +118,10 @@ function drawRound() {
   main.innerHTML = `<section class="shoot-game"><header class="shoot-toolbar"><button class="kid-control kid-control-back" id="shoot-exit"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button><span>Үг <b>${round.index + 1} / ${round.pool.length}</b></span><button class="kid-control kid-control-pause" id="shoot-pause">${pauseControlMarkup(false)}</button></header><div class="shoot-progress" aria-label="Аяллын ахиц"><span style="width:${round.index / round.pool.length * 100}%"></span></div>
     <div class="shoot-prompt"><img src="${word.image}" alt="Дутуу үсгийг нь олох зураг"><div><span class="eyebrow">ҮСЭГ ${round.letterStep+1} / ${length} · НЭГ ҮСЭГ ДУТУУ</span><h1>Дутуу үсгийг олъё</h1><p>Үгийн бүх үсгийг ээлжлэн харвана</p><button class="shoot-audio-button" type="button" id="shoot-audio">🔊 Үгийг сонсох</button><small class="shoot-audio-status" role="status"></small></div></div>
     <div class="shoot-slots" role="group" aria-label="Дутуу үсэгтэй үг"></div>
-    <div class="shoot-stage ${moving ? '' : 'is-still'}" style="--shoot-columns:${targets.length > 6 ? 4 : 3}"><span class="shoot-sky-star star-one" aria-hidden="true">✦</span><span class="shoot-sky-star star-two" aria-hidden="true">✧</span><span class="shoot-sky-star star-three" aria-hidden="true">✦</span><div class="shoot-targets" aria-label="Харвах үсгүүд">${targets.map((letter, index) => `<button class="shoot-target tone-${index % 4}" data-shoot-letter="${letter}" style="--float-delay:${-index * 0.7}s;--float-duration:${4 + index % 3}s" aria-label="${letter} үсгийг харвах"><span>${letter}</span><small aria-hidden="true">✧</small></button>`).join('')}</div><div class="shoot-launcher" aria-hidden="true"><span>✦</span><b>ОДОН ХАРВАА</b></div><div class="shoot-paused" hidden role="region" aria-label="Харваа түр зогссон"><div class="kid-pause-card"><span class="kid-pause-symbol" aria-hidden="true">Ⅱ</span><b>Харваа түр зогслоо</b><p>Бэлэн болмогц үргэлжлүүлээрэй.</p><div class="kid-pause-actions"><button id="shoot-resume" class="kid-control kid-control-resume">${pauseControlMarkup(true)}</button><button id="shoot-paused-exit" class="kid-control kid-control-back"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button></div></div></div></div>
+    <div class="shoot-stage ${moving ? '' : 'is-still'}" style="--shoot-columns:${targets.length > 6 ? 4 : 3}"><span class="shoot-sky-star star-one" aria-hidden="true">✦</span><span class="shoot-sky-star star-two" aria-hidden="true">✧</span><span class="shoot-sky-star star-three" aria-hidden="true">✦</span><div class="shoot-targets" aria-label="Харвах үсгүүд">${targets.map((letter, index) => `<button class="shoot-target tone-${index % 4}" data-shoot-letter="${letter}" style="--float-delay:${-index * 0.7}s;--float-duration:${4 + index % 3}s" aria-label="${letter} үсгийг харвах"><span>${letter}</span><small aria-hidden="true">✧</small></button>`).join('')}</div>${shotLauncherMarkup()}<div class="shoot-paused" hidden role="region" aria-label="Харваа түр зогссон"><div class="kid-pause-card"><span class="kid-pause-symbol" aria-hidden="true">Ⅱ</span><b>Харваа түр зогслоо</b><p>Бэлэн болмогц үргэлжлүүлээрэй.</p><div class="kid-pause-actions"><button id="shoot-resume" class="kid-control kid-control-resume">${pauseControlMarkup(true)}</button><button id="shoot-paused-exit" class="kid-control kid-control-back"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button></div></div></div></div>
     <div class="shoot-feedback" role="status" aria-live="polite"></div><div class="shoot-controls"><button id="shoot-next" class="primary-button" hidden>${round.letterStep+1<length?'Дараагийн үсэг →':round.index + 1 === round.pool.length ? 'Амжилтаа харах ✦' : 'Дараагийн үг →'}</button></div><p class="shoot-keyboard">Үсэг бүр товчтой. Tab-аар сонгоод Enter эсвэл зайгаар харваж болно.</p></section>`;
   main.querySelectorAll('[data-shoot-letter]').forEach(button => button.onclick = () => shoot(button));
+  initShotStage($('.shoot-stage'));
   $('#shoot-next').onclick = () => {
     if (!round.solved) return;
     if (++round.letterStep < length) { drawRound(); return; }
@@ -151,25 +153,14 @@ function shoot(button) {
   if (!round || round.paused || round.solved) return;
   round.choice = button.dataset.shootLetter;
   main.querySelectorAll('.was-wrong').forEach(target => target.classList.remove('was-wrong'));
-  drawRay(button);
+  drawRay(button, $('.shoot-stage'), missingLetterIsCorrect(round.exercise, round.choice));
   check(button);
-}
-function drawRay(button){
-  const stage = $('.shoot-stage');
-  const area = stage.getBoundingClientRect(), target = button.getBoundingClientRect();
-  const startX = area.width / 2, startY = area.height - 40;
-  const dx = target.left + target.width / 2 - area.left - startX;
-  const dy = target.top + target.height / 2 - area.top - startY;
-  const ray = document.createElement('span'); ray.className = 'shoot-ray'; ray.setAttribute('aria-hidden', 'true');
-  ray.style.cssText = `left:${startX}px;top:${startY}px;width:${Math.hypot(dx, dy)}px;transform:rotate(${Math.atan2(dy, dx)}rad)`;
-  stage.append(ray); ray.addEventListener('animationend', () => ray.remove(), { once: true });
-  // Reduced-motion mode has no animationend event.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) ray.remove();
 }
 function check(button) {
   const correct = missingLetterIsCorrect(round.exercise, round.choice);
   if (correct) {
     round.solved = true;
+    button.classList.add('was-correct');
     const before=shooterRank(saved.learned,words).rank;
     if(round.letterStep+1===round.exercise.letters.length) {
       saved.learned = [...new Set([...saved.learned, currentWord().id])]; save();
@@ -201,7 +192,7 @@ function sentenceAudio(paths,manual=false){
     return;
   }
   if($('.shoot-audio-status'))$('.shoot-audio-status').textContent='';
-  if(!audioSequence.play(Array.isArray(paths)?paths:[paths],audioError))audioError();
+  if(!playLearningAudio(paths,true,audioError))audioError();
 }
 function drawSentence(){
   stopWordAudio();
@@ -210,9 +201,10 @@ function drawSentence(){
   main.innerHTML=`<section class="shoot-game shoot-sentence-game"><header class="shoot-toolbar"><button class="kid-control kid-control-back" id="shoot-exit"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button><span>Өгүүлбэр <b>${round.index+1} / ${round.plan.length}</b></span><button class="kid-control kid-control-pause" id="shoot-pause">${pauseControlMarkup(false)}</button></header><div class="shoot-progress" aria-label="Аяллын ахиц"><span style="width:${round.index/round.plan.length*100}%"></span></div>
   <div class="shoot-prompt"><img src="${item.action.image}" alt="Өгүүлбэр бүтээх зураг"><div><span class="eyebrow">ҮГ ${round.step+1} / ${item.steps.length} · ӨГҮҮЛБЭР БҮТЭЭЕ</span><h1>Дараагийн үгийг харвая</h1><p>Зургийг ажиглаад үгсийг дарааллаар харваарай.</p><button class="shoot-audio-button" id="shoot-audio" type="button">🔊 Өгүүлбэрийг сонсох</button><small class="shoot-audio-status" role="status"></small></div></div>
   <div class="shoot-slots shoot-sentence-slots" role="group" aria-label="Бүтээж байгаа өгүүлбэр"></div>
-  <div class="shoot-stage ${moving?'':'is-still'}" style="--shoot-columns:3"><span class="shoot-sky-star star-one" aria-hidden="true">✦</span><span class="shoot-sky-star star-two" aria-hidden="true">✧</span><div class="shoot-targets shoot-word-targets" aria-label="Харвах үгс">${task.targets.map((word,index)=>`<button class="shoot-target shoot-word-target tone-${index%4}" data-shoot-word="${index}" style="--float-delay:${-index*.7}s;--float-duration:${4+index%3}s" aria-label="${word} гэдэг үгийг харвах"><span>${word}</span><small aria-hidden="true">✧</small></button>`).join('')}</div><div class="shoot-launcher" aria-hidden="true"><span>✦</span><b>ОДОН ХАРВАА</b></div><div class="shoot-paused" hidden role="region" aria-label="Харваа түр зогссон"><div class="kid-pause-card"><span class="kid-pause-symbol" aria-hidden="true">Ⅱ</span><b>Харваа түр зогслоо</b><p>Бэлэн болмогц үргэлжлүүлээрэй.</p><div class="kid-pause-actions"><button id="shoot-resume" class="kid-control kid-control-resume">${pauseControlMarkup(true)}</button><button id="shoot-paused-exit" class="kid-control kid-control-back"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button></div></div></div></div>
+  <div class="shoot-stage ${moving?'':'is-still'}" style="--shoot-columns:3"><span class="shoot-sky-star star-one" aria-hidden="true">✦</span><span class="shoot-sky-star star-two" aria-hidden="true">✧</span><div class="shoot-targets shoot-word-targets" aria-label="Харвах үгс">${task.targets.map((word,index)=>`<button class="shoot-target shoot-word-target tone-${index%4}" data-shoot-word="${index}" style="--float-delay:${-index*.7}s;--float-duration:${4+index%3}s" aria-label="${word} гэдэг үгийг харвах"><span>${word}</span><small aria-hidden="true">✧</small></button>`).join('')}</div>${shotLauncherMarkup()}<div class="shoot-paused" hidden role="region" aria-label="Харваа түр зогссон"><div class="kid-pause-card"><span class="kid-pause-symbol" aria-hidden="true">Ⅱ</span><b>Харваа түр зогслоо</b><p>Бэлэн болмогц үргэлжлүүлээрэй.</p><div class="kid-pause-actions"><button id="shoot-resume" class="kid-control kid-control-resume">${pauseControlMarkup(true)}</button><button id="shoot-paused-exit" class="kid-control kid-control-back"><span class="kid-control-icon" aria-hidden="true">←</span><span>Буцах</span></button></div></div></div></div>
   <div class="shoot-feedback" role="status" aria-live="polite"></div><div class="shoot-controls"><button id="shoot-next" class="primary-button" hidden>${round.step+1<item.steps.length?'Дараагийн үг →':round.index+1===round.plan.length?'Амжилтаа харах ✦':'Дараагийн өгүүлбэр →'}</button></div><p class="shoot-keyboard">Tab-аар үг сонгоод Enter эсвэл зайгаар харваж болно.</p></section>`;
   main.querySelectorAll('[data-shoot-word]').forEach(button=>button.onclick=()=>shootSentenceWord(button));
+  initShotStage($('.shoot-stage'));
   $('#shoot-audio').onclick=()=>sentenceAudio(actionSentenceClip(item.action.id,round.length),true);
   $('#shoot-exit').onclick=lobby;$('#shoot-paused-exit').onclick=lobby;
   $('#shoot-resume').onclick=()=>setPaused(false);$('#shoot-pause').onclick=()=>setPaused(!round.paused);
@@ -241,18 +233,20 @@ function shootSentenceWord(button){
   const item=round.plan[round.index],task=item.steps[round.step];
   const choice=task.targets[Number(button.dataset.shootWord)];
   if(!choice)return;
-  round.choice=choice;main.querySelectorAll('.was-wrong').forEach(target=>target.classList.remove('was-wrong'));drawRay(button);
-  if(choice.normalize('NFC').toLocaleLowerCase('mn')===task.answer){
+  const correct=choice.normalize('NFC').toLocaleLowerCase('mn')===task.answer;
+  round.choice=choice;main.querySelectorAll('.was-wrong').forEach(target=>target.classList.remove('was-wrong'));drawRay(button, $('.shoot-stage'), correct);
+  if(correct){
+    button.classList.add('was-correct');
     round.solved=true;updateSentence();$('.shoot-stage').classList.add('is-solved');
     const complete=round.step+1===item.steps.length;
     $('.shoot-feedback').className='shoot-feedback is-success';
     $('.shoot-feedback').textContent=complete?`✦ Өгүүлбэр бүтлээ! ${item.steps.map(step=>step.word).join(' ')}`:`✦ Зөв! «${choice}» гэдэг үг орлоо.`;
-    sentenceAudio(complete?actionSentenceClip(item.action.id,round.length):actionTokenClip(choice));
+    sentenceAudio([answerFeedbackClip(true),complete?actionSentenceClip(item.action.id,round.length):actionTokenClip(choice)]);
   }else{
     round.mistakes++;button.classList.add('was-wrong');
     $('.shoot-feedback').className='shoot-feedback is-retry';
     $('.shoot-feedback').textContent=`«${choice}» энэ байрлалд тохирохгүй. Дахин оролдоорой!`;
-    sentenceAudio([actionTokenClip(choice),'assets/shooter-feedback/mismatch.mp3?v=2']);
+    sentenceAudio([answerFeedbackClip(false),actionTokenClip(choice),'assets/shooter-feedback/mismatch.mp3?v=2']);
   }
 }
 function finishSentence(){

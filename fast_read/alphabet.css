@@ -148,3 +148,47 @@
 }
 .letter-audio { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.5rem; margin:.5rem auto; }
 .letter-audio small { color:#74637b; max-width:26rem; }
+
+@media (min-width: 960px) { .alphabet-modes.with-star { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 561px) and (max-width: 959px) { .alphabet-modes.with-star { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.alphabet-modes.with-star article:last-child { background: #fff8ed; border-color: #ead8b5; }
+.alphabet-modes.with-star article:last-child .mode-letter { color: #ad702f; }
+.alphabet-star-rank { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; padding: 20px; margin: -15px 0 32px; border: 1px solid #ead8b5; border-radius: 17px; background: #fff8ed; color: #785525; }
+.star-rank-icon { font-size: 36px; }
+.alphabet-star-rank h3 { margin: 7px 0; font-size: 18px; }
+.alphabet-star-rank p { margin: 6px 0; font-size: 13px; }
+.alphabet-star-rank small { font-size: 11px; line-height: 1.6; }
+.alphabet-star-rank details { margin-left: auto; font-size: 12px; line-height: 1.9; }
+.alphabet-star-rank summary { cursor: pointer; padding: 8px; }
+.alphabet-star-rank ol { padding-left: 24px; }
+.star-result-rank { text-align: center; padding: 14px; border-radius: 15px; background: #fff3d8; color: #785525; }
+.star-result-rank p { margin: 8px 0 0; font-size: 13px; }
+.star-promotion { border-radius: 14px; background: #fff3d8; color: #785525; }
+.star-game .picture-hint { position: relative; height: 100%; min-height: 0; text-align: center; }
+.picture-hint img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.star-listen { position: absolute; right: 0; bottom: 0; min-height: 42px; padding: 7px 11px; border: 1px solid #d7cde8; border-radius: 14px; color: #574777; background: #faf8ff; font: inherit; font-size: 13px; }
+.star-audio-note { position: absolute; right: 0; top: 0; max-width: 35%; background: white; font-size: 11px; }
+.letter-prompt.with-audio { position: relative; box-sizing: border-box; padding-bottom: 44px; }
+.letter-prompt.with-audio .star-listen { left: 50%; right: auto; transform: translateX(-50%); white-space: nowrap; }
+.letter-prompt.with-audio .star-audio-note { max-width: 100%; }
+.star-range { position: relative; display: grid; align-items: center; height: 162px; padding: 8px 12px 28px; overflow: hidden; isolation: isolate; border: 1px solid #e2d9f0; border-radius: 18px; background: radial-gradient(ellipse at 22% 0%, #e2d9f9, transparent 65%), #f2effb; }
+.star-targets { display: grid; grid-template-columns: repeat(var(--target-columns), minmax(0, 1fr)); gap: 7px; justify-items: center; }
+.star-letter { position: relative; z-index: 2; width: min(100%, 80px); height: 56px; padding: 0; border: 2px solid white; border-radius: 50%; background: #fffcff; color: #604185; font-size: 38px; line-height: 1; cursor: crosshair; box-shadow: 0 3px 0 #c7b9dc; }
+.star-letter:nth-child(2n) { color: #287280; }
+.star-letter:nth-child(3n) { color: #94551e; }
+.star-letter[data-letter-answer="zh"] { color: #b32c77; }
+.star-letter.correct { color: #27592d; background: #e1f3d7; border-color: #7eaa72; }
+.star-letter.wrong { color: #824743; background: #f7e0dc; border-color: #cc9993; }
+.star-launch { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); color: #ad702f; font-size: 21px; line-height: 26px; }
+@media (prefers-reduced-motion: no-preference) {
+  .star-promotion { animation: star-rank-pop .65s ease-out; }
+  @keyframes star-rank-pop { from { opacity: .3; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
+  .star-letter:enabled { animation: star-drift 4s ease-in-out infinite alternate; }
+  .star-letter:nth-child(even) { animation-delay: -2s; }
+  .star-letter:hover, .star-letter:focus-visible { animation-play-state: paused; }
+  @keyframes star-drift { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+}
+@media (max-height: 700px) {
+  .star-range { height: 130px; }
+  .star-letter { height: 44px; font-size: 31px; }
+}

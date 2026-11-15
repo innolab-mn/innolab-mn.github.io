@@ -1,6 +1,9 @@
 import { profileStorage } from './profiles-store.js';
 import { lessons, getLessonLetters, getLetterChoices } from './alphabet-lessons.js';
-import { createWordSpeaker } from './alphabet-audio.js';
+import { alphabetPromptClips, createWordSpeaker } from './alphabet-audio.js';
+import { PICTURE_SHOT_RANKS, pictureShotRank, pictureShotPlan, pictureShotAtRank, pictureShotBoard } from './alphabet-star.js';
+import { playLearningAudio, playAnswerFeedback, stopLearningAudio } from './learning-audio.js';
+import { drawRay, initShotStage, clearShotEffects } from './shot-ray.js';
 const speaker = createWordSpeaker();
 const $ = (selector, root = document) => root.querySelector(selector);
 const KEY = 'fast-read-alphabet-v1';
@@ -8,9 +11,10 @@ const modes = [
   {id:'art',title:'Дүрсээс үсгээ олъё',text:'Дүрс дотор ямар үсэг нуугдсан бэ?',choices:3,icon:'А'},
   {id:'font',title:'Өөр хувцастай ижил үсэг',text:'Фонт нь өөр ч нэг л үсэг. Ижил үсгээ олоорой.',choices:4,icon:'М'},
   {id:'case',title:'Том, жижиг хоёр найз',text:'Том үсгийн жижиг найзыг нь олоорой.',choices:3,icon:'а'},
+  {id:'star',title:'Одон харваа',text:'Зургийг нэрлээд, эхний үсгийг нь харваарай.',icon:'✦'},
 ];
-let state = {learned:[],rounds:0,best:{}};
-let data, hooks, main, dialog, round, ticker;
+let state = {learned:[],rounds:0,best:{},starHits:0};
+let data, hooks, main, dialog, round, ticker, advanceTimer;
 let selectedFont = 'nunito';
 let selectedLesson = 'beginner';
 let group = 'all';
@@ -20,13 +24,15 @@ try {
   if (saved && Array.isArray(saved.learned)) state.learned = [...new Set(saved.learned.filter(id => typeof id === 'string'))];
   if (Number.isInteger(saved?.rounds) && saved.rounds >= 0) state.rounds = saved.rounds;
   if (saved?.best && typeof saved.best === 'object') state.best = saved.best;
+  state.starHits = pictureShotRank(saved?.starHits).hits;
 } catch { /* A fresh independent alphabet profile is always available. */ }
 function persist() {
   try { profileStorage.setItem(KEY,JSON.stringify(state)); }
   catch { hooks.toast('Үсгийн ахицыг хадгалж чадсангүй. Тоглоомоо үргэлжлүүлж болно.'); }
 }
 export function resetAlphabet() {
-  state = {learned:[],rounds:0,best:{}};
+  stop();speaker.stop();stopLearningAudio();round=null;
+  state = {learned:[],rounds:0,best:{},starHits:0};
   try { profileStorage.removeItem(KEY); } catch { /* Session reset still works. */ }
 }
 function shuffle(items) {
@@ -35,7 +41,7 @@ function shuffle(items) {
   return result;
 }
 function time(seconds) { return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`; }
-function stop() { clearInterval(ticker); ticker=undefined; }
+function stop() { clearInterval(ticker); ticker=undefined; clearTimeout(advanceTimer); advanceTimer=undefined; }
 function highlighted(letter) { return [...letter.word].map((character,index)=>index===letter.highlightIndex?`<b>${character}</b>`:character).join(''); }
 function usageText(letter) { return ({initial:'Үгийн эхэнд',inside:'Үгийн дунд',ending:'Үгийн төгсгөлд',shape:'Хэлбэрээр нь таниарай'})[letter.usage]; }
 function frame(title, body, closeLabel='Хаах') {
@@ -50,10 +56,12 @@ export function renderAlphabet(collection, callbacks) {
   data=collection; hooks=callbacks; main=callbacks.main;
   if(!dialog) {
     dialog=$('#alphabet-dialog');
-    dialog.addEventListener('close',()=>{stop();speaker.stop();round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});
+    dialog.addEventListener('close',()=>{stop();speaker.stop();stopLearningAudio();clearShotEffects($('.star-range'));round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   }
   const fonts = data.fonts;
+  const starRank = pictureShotRank(state.starHits);
+  const availableModes = selectedLesson === 'beginner' ? modes : modes.filter(mode => mode.id !== 'star');
   const pool = getLessonLetters(data,selectedLesson);
   const lesson = lessons.find(item=>item.id===selectedLesson);
   const visible=pool.filter(letter=>group==='all'||letter.kind===group);
@@ -68,7 +76,8 @@ export function renderAlphabet(collection, callbacks) {
     <div class="lesson-guide" role="status">${lesson.description}${selectedLesson==='beginner'?' Үгийн дунд ордог болон хэцүү үсгүүд энэ дасгалын асуулт, сонголтод орохгүй.':selectedLesson==='context'?' Үг дотор хайж буй үсгийг өнгөөр тодруулсан.':' Щ-г Ш үсэгтэй харьцуулж, бусдыг танил зураг, үгтэй нь нэг нэгээр нь үзээрэй.'}</div>
     <div class="alphabet-font-strip"><span>Үсгийн фонт</span><div class="alphabet-fonts" aria-label="Үсгийн фонт">${fonts.map(font=>`<button data-alphabet-font="${font.id}" aria-pressed="${selectedFont===font.id}" class="${selectedFont===font.id?'active':''}">${font.label}</button>`).join('')}</div></div>
     <div class="section-heading"><div><h2>${lesson.title} — тоглож суръя</h2><p>${selectedLesson==='beginner'?'Хоёр сонголттой, богинохон дасгалаас эхлээрэй.':'Хэлбэрийг нь ажиглаад, хамт чангаар хэлээрэй.'}</p></div><label class="round-count">Нэг дасгалд <select id="alphabet-count" aria-label="Дасгалын асуултын тоо">${counts.map(count=>`<option value="${count}" ${count===activeCount?'selected':''}>${count} үсэг</option>`).join('')}</select></label></div>
-    <div class="alphabet-modes">${modes.map((mode,index)=>`<article><span class="mode-number">0${index+1}</span><span class="mode-letter font-${fonts[index].id}">${mode.icon}</span><h3>${mode.title}</h3><p>${mode.text}</p><button class="level-button" data-letter-mode="${mode.id}"><span>Тоглож эхлэх</span><span>→</span></button></article>`).join('')}</div>
+    <div class="alphabet-modes${selectedLesson==='beginner'?' with-star':''}">${availableModes.map((mode,index)=>`<article><span class="mode-number">0${index+1}</span><span class="mode-letter font-${fonts[index].id}">${mode.icon}</span><h3>${mode.title}</h3><p>${mode.text}</p><button class="level-button" data-letter-mode="${mode.id}"><span>Тоглож эхлэх</span><span>→</span></button></article>`).join('')}</div>
+    ${selectedLesson==='beginner'?`<section class="alphabet-star-rank" aria-label="Үсгийн одон харвааны цол"><span class="star-rank-icon" aria-hidden="true">${starRank.icon}</span><div><small>04 · ОДОН ХАРВАА · ЦОЛ ${starRank.index+1} / 9</small><h3>${starRank.name}</h3><p>★ ${starRank.hits} од · ${starRank.targets} үсгээс сонгоно</p><p>${starRank.next?`Дараагийн цол хүртэл ${starRank.next.min-starRank.hits} од.`:'Бүх цолыг хүртлээ!'}</p><small>Эхний оролдлогоор зөв онох бүрд нэг од авна. Цол ахихад үсгийн тоо нэмэгдэнэ.</small></div><details><summary>9 цолыг харах</summary><ol>${PICTURE_SHOT_RANKS.map(rank=>`<li>${rank.icon} ${rank.name} · ${rank.min} од · ${rank.targets} үсэг</li>`).join('')}</ol></details></section>`:''}
     <section class="alphabet-gallery" aria-labelledby="alphabet-gallery-title"><div class="section-heading"><div><h2 id="alphabet-gallery-title">${lesson.title} — ${pool.length} зураг</h2><p>Үсэгт хүрээд дүрс, энгийн хэлбэрийг нь сольж үзээрэй.</p></div></div>
     <div class="alphabet-tools"><div class="alphabet-groups" aria-label="Үсгийн ангилал">${[{id:'all',label:'Бүгд'},{id:'vowel',label:'Эгшиг'},{id:'consonant',label:'Гийгүүлэгч'},{id:'sign',label:'Тэмдэг'}].filter(item=>item.id==='all'||pool.some(letter=>letter.kind===item.id)).map(item=>`<button data-letter-group="${item.id}" aria-pressed="${group===item.id}" class="${group===item.id?'active':''}">${item.label}</button>`).join('')}</div></div>
     <div class="alphabet-grid">${visible.map(letter=>`<button class="alphabet-card" data-letter="${letter.id}" aria-label="${letter.upper} үсэг, ${letter.word}"><span class="alphabet-order">${String(letter.order).padStart(2,'0')}</span>${state.learned.includes(letter.id)?'<span class="alphabet-known">✓</span>':''}<img src="${letter.variants[selectedFont].illustrated}" alt="" loading="lazy"><strong>${letter.upper}<span>${letter.lower}</span></strong><span class="alphabet-example">${highlighted(letter)}</span>${letter.usage!=='initial'?`<small>${usageText(letter)}</small>`:''}</button>`).join('')}</div>
@@ -95,34 +104,59 @@ function detail(id) {
   $('#letter-practice').onclick=()=>start('art',letter);
 }
 function start(modeId,focusedLetter) {
-  stop();speaker.stop();
+  stop();speaker.stop();stopLearningAudio();
   const mode=modes.find(item=>item.id===modeId);
   const lesson=focusedLetter?.lesson||selectedLesson;
   const pool=getLessonLetters(data,lesson);
-  round={mode,lesson,pool,focused:!!focusedLetter,queue:focusedLetter?data.fonts.map(()=>focusedLetter):shuffle(pool).slice(0,questionCount),index:0,mistakes:0,retried:false,answered:false,started:Date.now(),fontOffset:Math.floor(Math.random()*data.fonts.length),seconds:hooks.getQuestionSeconds()};
+  const shots = mode.id === 'star' ? pictureShotPlan(pool, questionCount) : null;
+  const queue = shots ? shots.map(shot => shot.letter) : focusedLetter ? data.fonts.map(() => focusedLetter) : shuffle(pool).slice(0, questionCount);
+  round={mode,lesson,pool,focused:!!focusedLetter,shots,queue,index:0,mistakes:0,retried:false,answered:false,started:Date.now(),fontOffset:Math.floor(Math.random()*data.fonts.length),seconds:hooks.getQuestionSeconds()};
   question();
 }
 function question() {
-  stop();speaker.stop();round.answered=false;round.retried=false;
+  clearShotEffects($('.star-range'));
+  stop();speaker.stop();stopLearningAudio();round.answered=false;round.retried=false;
   const letter=round.queue[round.index];
   const font=round.mode.id==='font'||round.focused?data.fonts[(round.index+round.fontOffset)%data.fonts.length].id:selectedFont;
   const otherFonts=data.fonts.filter(item=>item.id!==font);
   const answerFont=round.mode.id==='font'?otherFonts[round.index%otherFonts.length].id:selectedFont;
-  const choiceCount=round.lesson==='beginner'?(round.mode.id==='font'?3:2):Math.min(round.mode.choices,round.pool.length);
-  const options=getLetterChoices(round.pool,letter,choiceCount);
+  const shot = round.shots ? pictureShotAtRank(round.shots[round.index], state.starHits) : null;
+  const choiceCount=shot ? shot.choices.length : round.lesson==='beginner'?(round.mode.id==='font'?3:2):Math.min(round.mode.choices,round.pool.length);
+  const options=shot?.choices ?? getLetterChoices(round.pool,letter,choiceCount);
   const kind=round.mode.id==='art'?'illustrated':'upper';
   const answerKind=round.mode.id==='case'?'lower':'upper';
-  const title=round.lesson==='context'?'Үг доторх өнгөт үсгийг олъё.':letter.usage==='shape'?'Өнгөөр тодруулсан үсгийг олъё.':round.mode.id==='art'?'Дүрс дотор аль үсэг байна вэ?':round.mode.id==='font'?'Өөр фонтоор бичсэн ижил үсгийг олъё.':'Жижиг үсэг найзыг нь олъё.';
-  frame(round.mode.title,`<div class="game-body letter-game"><div class="game-progress" role="progressbar" aria-label="Үсгийн дасгалын ахиц" aria-valuemin="0" aria-valuemax="${round.queue.length}" aria-valuenow="${round.index}"><span style="width:${round.index/round.queue.length*100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b class="letter-remaining">${round.seconds?time(round.seconds):'∞'}</b><small>${round.seconds?'үлдлээ':'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b class="letter-elapsed">${time(Math.floor((Date.now()-round.started)/1000))}</b></span></div><div class="question-meta">ҮСЭГ ${round.index+1} / ${round.queue.length}</div><h3>${title}</h3><div class="letter-prompt"><img src="${letter.variants[font][kind]}" alt="Таних үсгийн зураг"></div><div class="letter-answers" style="--answer-count:${round.mode.choices}">${options.map((item,index)=>`<button class="letter-answer" data-letter-answer="${item.id}" aria-label="${answerKind==='lower'?item.lower:item.upper} үсэг"><img src="${item.variants[answerFont][answerKind]}" alt=""><small>${data.fonts.find(entry=>entry.id===answerFont).label}</small></button>`).join('')}</div><div class="letter-feedback feedback" role="status" aria-live="polite">Үсгийнхээ хэлбэрийг сайн ажиглаарай.</div><button class="next-button letter-next" hidden>${round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийн үсэг →'}</button></div>`,'Үсгийн тоглоомоос гарах');
+  const title=shot ? 'Ямар үсгээр эхэлдэг вэ?' : round.lesson==='context'?'Үг доторх өнгөт үсгийг олъё.':letter.usage==='shape'?'Өнгөөр тодруулсан үсгийг олъё.':round.mode.id==='art'?'Дүрс дотор аль үсэг байна вэ?':round.mode.id==='font'?'Өөр фонтоор бичсэн ижил үсгийг олъё.':'Жижиг үсэг найзыг нь олъё.';
+  const board = shot ? pictureShotBoard(shot, selectedFont) : `<div class="letter-prompt"><img src="${letter.variants[font][kind]}" alt="Таних үсгийн зураг"></div><div class="letter-answers" style="--answer-count:${choiceCount}">${options.map((item,index)=>`<button class="letter-answer" data-letter-answer="${item.id}" aria-label="${answerKind==='lower'?item.lower:item.upper} үсэг"><img src="${item.variants[answerFont][answerKind]}" alt=""><small>${data.fonts.find(entry=>entry.id===answerFont).label}</small></button>`).join('')}</div>`;
+  frame(round.mode.title,`<div class="game-body letter-game${shot?' star-game':''}"><div class="game-progress" role="progressbar" aria-label="Үсгийн дасгалын ахиц" aria-valuemin="0" aria-valuemax="${round.queue.length}" aria-valuenow="${round.index}"><span style="width:${round.index/round.queue.length*100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b class="letter-remaining">${round.seconds?time(round.seconds):'∞'}</b><small>${round.seconds?'үлдлээ':'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b class="letter-elapsed">${time(Math.floor((Date.now()-round.started)/1000))}</b></span></div><div class="question-meta">ҮСЭГ ${round.index+1} / ${round.queue.length}${shot ? ` · ЦОЛ ${shot.rank.index+1} / 9 · ${choiceCount} бай · ★ ${state.starHits}` : ''}</div><h3 tabindex="-1">${title}</h3>${board}<div class="letter-feedback feedback" role="status" aria-live="polite">${shot ? 'Сонсоод, эхний үсгийг нь онилоорой.' : 'Үсгийнхээ хэлбэрийг сайн ажиглаарай.'}</div><button class="next-button letter-next" hidden>${round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийн үсэг →'}</button></div>`,'Үсгийн тоглоомоос гарах');
   $('#alphabet-title').textContent = `${lessons.find(item=>item.id===round.lesson).title} · ${round.mode.title}`;
   if (kind==='illustrated') addWordAudio(letter, $('.letter-prompt'));
-  $('.letter-answers').style.setProperty('--answer-count',choiceCount);
+  const spokenPrompt = shot || round.mode.id==='font' || round.mode.id==='case';
+  if (spokenPrompt) {
+    if (!shot) {
+      const prompt = $('.letter-prompt');
+      prompt.classList.add('with-audio');
+      prompt.insertAdjacentHTML('beforeend','<button type="button" class="star-listen" aria-label="Үсэг, жишээ үгийг дахин сонсох">🔊 Давтах</button><small class="star-audio-note" role="status"></small>');
+    }
+    $('.star-listen').onclick = () => playLetterPrompt(letter, true);
+    playLetterPrompt(letter);
+  }
+  if (shot) {
+    initShotStage($('.star-range'));
+    $('.letter-game h3').focus({preventScroll:true});
+    if (round.promotion) {
+      const rank = round.promotion;
+      const feedback = $('.letter-feedback');
+      feedback.classList.add('star-promotion');
+      feedback.innerHTML = `<strong>${rank.icon} ${rank.name}!</strong><span>Цол ахилаа! Одоо ${choiceCount} үсгээс сонгоно.</span>`;
+      round.promotion = null;
+    }
+  }
   if(round.lesson==='context') {
     $('.letter-prompt').insertAdjacentHTML('beforebegin',`<div class="context-prompt-group"><div class="context-word" aria-label="${letter.word} үг доторх ${letter.upper} үсэг">${highlighted(letter)}<small>${usageText(letter)}</small></div></div>`);
     $('.context-prompt-group').append($('.letter-prompt'));
   }
   $('#alphabet-content').querySelectorAll('[data-letter-answer]').forEach(button=>button.onclick=()=>answer(button));
-  $('.letter-next').onclick=()=>{round.index++;if(round.index===round.queue.length)finish();else question();};
+  $('.letter-next').onclick=nextQuestion;
   round.deadline=Date.now()+round.seconds*1000;
   function tick(){
     if(!round||round.answered){stop();return;}
@@ -135,20 +169,56 @@ function question() {
   }
   ticker=setInterval(tick,250);tick();
 }
+function nextQuestion() {
+  if (!round?.answered) return;
+  stop();
+  round.index++;
+  if (round.index === round.queue.length) finish(); else question();
+}
 function answer(button){
   if(!round||round.answered||button.disabled)return;
   if(round.seconds&&Date.now()>=round.deadline){expire();return;}
   const letter=round.queue[round.index];
+  const star = round.mode.id === 'star';
+  speaker.stop();
+  if (star) {
+    stopLearningAudio();
+    drawRay(button, $('.star-range'), button.dataset.letterAnswer===letter.id);
+  }
   if(button.dataset.letterAnswer!==letter.id){
     if(!round.retried){round.mistakes++;round.retried=true;}
     button.classList.add('wrong');button.disabled=true;hooks.chime(false);
-    $('.letter-feedback').textContent='Хэлбэрийг нь дахин ажиглаад үзье.';return;
+    $('.letter-feedback').textContent=star ? 'Буруу байна. Дахиад онилоорой.' : 'Буруу байна. Хэлбэрийг нь дахин ажиглаад үзье.';
+    playAnswerFeedback(false,hooks.isSoundOn());return;
   }
   round.answered=true;stop();hooks.chime(true);
   button.classList.add('correct');
   $('#alphabet-content').querySelectorAll('[data-letter-answer]').forEach(item=>item.disabled=true);
-  if(!state.learned.includes(letter.id)){state.learned.push(letter.id);persist();}
-  $('.letter-feedback').innerHTML=`<strong>${letter.upper} ${letter.lower} · ${highlighted(letter)}</strong><span>${letter.note}</span>`;
+  if(!state.learned.includes(letter.id))state.learned.push(letter.id);
+  if (star) {
+    const before = pictureShotRank(state.starHits);
+    if (!round.retried) state.starHits = Math.min(Number.MAX_SAFE_INTEGER, state.starHits + 1);
+    const after = pictureShotRank(state.starHits);
+    if (after.index > before.index) round.promotion = after;
+    persist();
+    revealPictureAnswer(letter);
+    $('.star-listen').disabled=true;
+    const activeRound = round, index = round.index;
+    const advance = () => {
+      if (round === activeRound && round.index === index && dialog.open) nextQuestion();
+    };
+    // A failed or stalled recording must never trap the child on this question.
+    advanceTimer = setTimeout(advance, 4000);
+    playAnswerFeedback(true,hooks.isSoundOn(),[],()=>{
+      clearTimeout(advanceTimer);
+      advanceTimer=setTimeout(advance,350);
+    });
+    return;
+  } else {
+    persist();
+    $('.letter-feedback').innerHTML=`<strong>${letter.upper} ${letter.lower} · ${highlighted(letter)}</strong><span>${letter.note}</span>`;
+    playAnswerFeedback(true,hooks.isSoundOn());
+  }
   $('.letter-next').hidden=false;$('.letter-next').focus({preventScroll:true});
 }
 function expire(){
@@ -157,10 +227,41 @@ function expire(){
   const letter=round.queue[round.index];
   $('#alphabet-content').querySelectorAll('[data-letter-answer]').forEach(button=>{button.disabled=true;if(button.dataset.letterAnswer===letter.id)button.classList.add('correct');});
   $('.letter-feedback').innerHTML=`<strong>Энэ бол ${letter.upper} ${letter.lower}.</strong><span>Хугацаа дууслаа. Хамт тогтоогоод дараагийн үсэг рүү оръё.</span>`;
+  if (round.mode.id === 'star') {
+    stopLearningAudio();
+    revealPictureAnswer(letter, true);
+  }
   $('.letter-next').hidden=false;$('.letter-next').focus({preventScroll:true});hooks.chime(false);
 }
+function revealPictureAnswer(letter, expired = false) {
+  $('.letter-feedback').innerHTML = `<strong>${letter.upper} үсэг, ${letter.word.toLocaleLowerCase('mn')}.</strong><span>${expired ? 'Хугацаа дууслаа. Хамт сонсоод тогтооё.' : 'Зөв онолоо! Дараагийн үсэг рүү оръё.'}</span>`;
+  const listen = $('.star-listen');
+  listen.textContent = '🔊 Давтах';
+  listen.setAttribute('aria-label', 'Үг, үсгийг дахин сонсох');
+}
+
+function playLetterPrompt(letter, manual = false) {
+  const status = $('.star-audio-note');
+  status.textContent = '';
+  if (!hooks.isSoundOn()) {
+    if (manual) status.textContent = 'Дууг тохиргооноос нээгээрэй.';
+    return;
+  }
+  const clips = alphabetPromptClips(letter);
+  const fail = () => { if (status.isConnected) status.textContent = 'Сонсох товчийг дахин дараарай.'; };
+  if (!playLearningAudio(clips, true, fail)) fail();
+}
+
+export function leaveAlphabet() {
+  clearShotEffects($('.star-range'));
+  if (dialog?.open) dialog.close();
+  stop();
+  speaker.stop();
+  stopLearningAudio();
+}
+
 function finish(){
-  stop();speaker.stop();
+  stop();speaker.stop();stopLearningAudio();
   const score=round.queue.length-round.mistakes;
   const percent=Math.round(score/round.queue.length*100);
   const scoreKey=round.lesson+':'+round.mode.id;
@@ -168,7 +269,9 @@ function finish(){
   const modeId=round.mode.id;
   const lesson=lessons.find(item=>item.id===round.lesson);
   const known=round.pool.filter(letter=>state.learned.includes(letter.id)).length;
+  const rank=pictureShotRank(state.starHits);
   frame('Үсгийн аяллын амжилт',`<div class="game-body"><div class="reward">✦</div><h3 class="result-title">Үсгүүдтэйгээ танилцлаа!</h3><p class="result-copy">Эхний оролдлогоор <strong>${score} / ${round.queue.length}</strong> үсгийг зөв оллоо.<br>${lesson.title}: ${known} / ${round.pool.length} үсэгтэй танил болсон<br>◷ ${time(Math.floor((Date.now()-round.started)/1000))}</p><div class="alphabet-result-letters">${[...new Set(round.queue.map(letter=>letter.upper))].join(' ')}</div><div class="result-actions"><button class="secondary-button" id="alphabet-home">Үсгийн цомог</button><button class="primary-button" id="alphabet-again">Дахин тоглох →</button></div></div>`);
+  if(modeId==='star') $('.result-copy').insertAdjacentHTML('afterend',`<div class="star-result-rank${round.promotion?' star-promotion':''}"><strong>${rank.icon} ${rank.name}${round.promotion?' · Цол ахилаа!':''}</strong><p>★ ${rank.hits} од · ${rank.targets} үсгээс сонгоно</p></div>`);
   $('#alphabet-home').onclick=()=>dialog.close();$('#alphabet-again').onclick=()=>start(modeId);
 }
 

@@ -1,4 +1,4 @@
-import { createAudioSequence } from './shooter-audio.js';
+import { answerFeedbackClip, createAudioSequence } from './shooter-audio.js';
 
 const player=createAudioSequence();
 const idPattern=/^[a-z][a-z0-9-]*$/;
@@ -18,7 +18,15 @@ export function actionTokenClip(token){
   return `assets/actions-audio/token-${name}.mp3`;
 }
 export function stopLearningAudio(){player.stop();}
-export function playLearningAudio(path,enabled,onError=()=>{}){
+export function playLearningAudio(path,enabled,onError=()=>{},onEnded=()=>{}){
   if(!enabled){player.stop();return false;}
-  return player.play(Array.isArray(path)?path:[path],onError);
+  return player.play(Array.isArray(path)?path:[path],onError,onEnded);
+}
+export function playAnswerFeedback(correct,enabled,after=[],onDone=()=>{},onError=()=>{}){
+  let finished=false;
+  const done=()=>{if(!finished){finished=true;onDone();}};
+  const fail=()=>{if(!finished)onError();done();};
+  const started=playLearningAudio([answerFeedbackClip(correct),...after],enabled,fail,done);
+  if(!started)done();
+  return started;
 }

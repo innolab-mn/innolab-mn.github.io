@@ -66,7 +66,8 @@
           "upper": "assets/alphabet/a-handwritten-plain.svg",
           "lower": "assets/alphabet/a-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/apple.svg"
     },
     {
       "id": "b",
@@ -102,7 +103,8 @@
           "upper": "assets/alphabet/b-handwritten-plain.svg",
           "lower": "assets/alphabet/b-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/ball.svg"
     },
     {
       "id": "v",
@@ -174,7 +176,8 @@
           "upper": "assets/alphabet/g-handwritten-plain.svg",
           "lower": "assets/alphabet/g-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/ger.svg"
     },
     {
       "id": "d",
@@ -210,7 +213,8 @@
           "upper": "assets/alphabet/d-handwritten-plain.svg",
           "lower": "assets/alphabet/d-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/d.svg"
     },
     {
       "id": "ye",
@@ -246,7 +250,8 @@
           "upper": "assets/alphabet/ye-handwritten-plain.svg",
           "lower": "assets/alphabet/ye-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/ye.svg"
     },
     {
       "id": "yo",
@@ -318,7 +323,8 @@
           "upper": "assets/alphabet/zh-handwritten-plain.svg",
           "lower": "assets/alphabet/zh-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/zh.svg"
     },
     {
       "id": "z",
@@ -354,7 +360,8 @@
           "upper": "assets/alphabet/z-handwritten-plain.svg",
           "lower": "assets/alphabet/z-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/z.svg"
     },
     {
       "id": "i",
@@ -390,7 +397,8 @@
           "upper": "assets/alphabet/i-handwritten-plain.svg",
           "lower": "assets/alphabet/i-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/i.svg"
     },
     {
       "id": "short-i",
@@ -498,7 +506,8 @@
           "upper": "assets/alphabet/l-handwritten-plain.svg",
           "lower": "assets/alphabet/l-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/l.svg"
     },
     {
       "id": "m",
@@ -534,7 +543,8 @@
           "upper": "assets/alphabet/m-handwritten-plain.svg",
           "lower": "assets/alphabet/m-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/tree.svg"
     },
     {
       "id": "n",
@@ -570,7 +580,8 @@
           "upper": "assets/alphabet/n-handwritten-plain.svg",
           "lower": "assets/alphabet/n-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/sun.svg"
     },
     {
       "id": "o",
@@ -606,7 +617,8 @@
           "upper": "assets/alphabet/o-handwritten-plain.svg",
           "lower": "assets/alphabet/o-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/o.svg"
     },
     {
       "id": "oe",
@@ -642,7 +654,8 @@
           "upper": "assets/alphabet/oe-handwritten-plain.svg",
           "lower": "assets/alphabet/oe-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/oe.svg"
     },
     {
       "id": "p",
@@ -678,7 +691,8 @@
           "upper": "assets/alphabet/p-handwritten-plain.svg",
           "lower": "assets/alphabet/p-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/p.svg"
     },
     {
       "id": "r",
@@ -714,7 +728,8 @@
           "upper": "assets/alphabet/r-handwritten-plain.svg",
           "lower": "assets/alphabet/r-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/r.svg"
     },
     {
       "id": "s",
@@ -750,7 +765,8 @@
           "upper": "assets/alphabet/s-handwritten-plain.svg",
           "lower": "assets/alphabet/s-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/moon.svg"
     },
     {
       "id": "t",
@@ -786,7 +802,8 @@
           "upper": "assets/alphabet/t-handwritten-plain.svg",
           "lower": "assets/alphabet/t-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/t.svg"
     },
     {
       "id": "u",
@@ -822,7 +839,8 @@
           "upper": "assets/alphabet/u-handwritten-plain.svg",
           "lower": "assets/alphabet/u-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/water.svg"
     },
     {
       "id": "ue",
@@ -858,7 +876,8 @@
           "upper": "assets/alphabet/ue-handwritten-plain.svg",
           "lower": "assets/alphabet/ue-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/ue.svg"
     },
     {
       "id": "f",
@@ -930,7 +949,8 @@
           "upper": "assets/alphabet/kh-handwritten-plain.svg",
           "lower": "assets/alphabet/kh-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/kh.svg"
     },
     {
       "id": "ts",
@@ -966,7 +986,8 @@
           "upper": "assets/alphabet/ts-handwritten-plain.svg",
           "lower": "assets/alphabet/ts-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/flower.svg"
     },
     {
       "id": "ch",
@@ -1002,7 +1023,8 @@
           "upper": "assets/alphabet/ch-handwritten-plain.svg",
           "lower": "assets/alphabet/ch-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/ch.svg"
     },
     {
       "id": "sh",
@@ -1038,7 +1060,8 @@
           "upper": "assets/alphabet/sh-handwritten-plain.svg",
           "lower": "assets/alphabet/sh-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/images/bird.svg"
     },
     {
       "id": "shch",
@@ -1218,7 +1241,8 @@
           "upper": "assets/alphabet/e-handwritten-plain.svg",
           "lower": "assets/alphabet/e-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/e.svg"
     },
     {
       "id": "yu",
@@ -1290,7 +1314,8 @@
           "upper": "assets/alphabet/ya-handwritten-plain.svg",
           "lower": "assets/alphabet/ya-handwritten-lower.svg"
         }
-      }
+      },
+      "picture": "assets/alphabet-pictures/ya.svg"
     }
   ]
 }

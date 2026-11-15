@@ -1,0 +1,82 @@
+/* A shared, lightweight star launcher for letters, words and picture clues. */
+.shoot-stage, .star-range {
+  --aim-angle: 0deg;
+  border-color: #55558e;
+  background:
+    radial-gradient(circle at 12% 24%, #e3daff 1px, transparent 2px),
+    radial-gradient(circle at 83% 18%, #e3daff 1.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 61%, #b2d9ed 1px, transparent 2px),
+    radial-gradient(ellipse at 15% 0%, #7974bd66, transparent 65%),
+    linear-gradient(165deg, #393c70, #55528c 68%, #70619a);
+  box-shadow: inset 0 0 0 5px #ffffff08, inset 0 -26px 36px #292c5726;
+}
+.shoot-stage::before, .star-range::before {
+  content: ''; position: absolute; left: -10%; right: -10%; bottom: -90px;
+  height: 150px; border: 1px solid #b6b6e433; border-radius: 50%;
+  background: #b4b5e51a; pointer-events: none;
+}
+.shoot-sky-star { color: #f1dd9e; opacity: .7; }
+.shoot-target, .star-letter {
+  border: 3px solid #fff; background: linear-gradient(145deg, #fff, #ebe3ff);
+  color: #513b82; box-shadow: 0 5px 0 #24224638, 0 8px 15px #22214733, inset 0 -4px 0 #cdbce433;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.shoot-target.tone-1 { background: linear-gradient(145deg, #f4ffff, #c3edf0); color: #225b6a; }
+.shoot-target.tone-2 { background: linear-gradient(145deg, #fffef4, #ffe2ac); color: #7d4c16; }
+.shoot-target.tone-3 { background: linear-gradient(145deg, #fff7fd, #f2d1e7); color: #853e70; }
+.shoot-target small { color: currentColor; opacity: .45; }
+.shoot-target::after, .star-letter::after {
+  content: ''; position: absolute; inset: -8px; border: 2px dashed #ffe6a0;
+  border-radius: inherit; opacity: 0; pointer-events: none;
+}
+.shoot-target:hover:enabled, .shoot-target:focus-visible, .star-letter:hover:enabled, .star-letter:focus-visible {
+  animation-play-state: paused; outline: 3px solid #ffe6a0; outline-offset: 5px;
+}
+.shoot-target:hover:enabled::after, .shoot-target:focus-visible::after,
+.star-letter:hover:enabled::after, .star-letter:focus-visible::after { opacity: 1; }
+.shoot-stage.is-solved .shoot-target { opacity: .45; }
+.shoot-stage.is-solved .shoot-target.was-correct, .star-letter.correct {
+  opacity: 1; background: linear-gradient(145deg, #fffde8, #c7efc4); color: #275a37;
+  border-color: #f6ffda; box-shadow: 0 0 0 5px #e2f8a72e, 0 5px 0 #22374338;
+}
+.shoot-target.was-wrong, .star-letter.wrong {
+  background: #ffead6; color: #88522e; border-color: #eab988; box-shadow: 0 4px 0 #44324e33;
+}
+.shot-launcher { position: absolute; bottom: 7px; left: 50%; width: 100px; height: 60px; transform: translateX(-50%); z-index: 3; pointer-events: none; }
+.shot-barrel {
+  position: absolute; bottom: 18px; left: 50%; width: 28px; height: 42px; margin-left: -14px;
+  border: 3px solid #faf3ff; border-radius: 11px 11px 8px 8px;
+  background: linear-gradient(90deg, #9780d2, #d8c8fb 50%, #9c82db);
+  transform-origin: 50% calc(100% - 4px); transform: rotate(var(--aim-angle)); transition: transform .16s ease-out;
+  box-shadow: 0 0 0 3px #d2b8fb33;
+}
+.shot-barrel i { display: grid; place-items: center; height: 21px; margin: -9px -6px 0; border: 2px solid #fff8ce; border-radius: 9px; background: #f4c96e; color: #664273; font: normal 20px/1 sans-serif; }
+.shot-base { position: absolute; bottom: 0; inset-inline: 0; height: 27px; display: flex; justify-content: center; align-items: center; gap: 8px; border: 3px solid #ece6ff; border-radius: 55% 55% 14px 14px; background: linear-gradient(#b7a2e0, #8d75ba); box-shadow: 0 5px 0 #27234544; }
+.shot-base i { width: 7px; height: 7px; border-radius: 50%; background: #fff1a5; box-shadow: 0 0 6px #fff1a588; }
+.shot-base i:nth-child(2) { background: #c6f5da; }
+.star-range .shot-launcher { bottom: 3px; width: 58px; height: 35px; }
+.star-range .shot-barrel { bottom: 10px; width: 18px; height: 26px; margin-left: -9px; border-width: 2px; }
+.star-range .shot-barrel i { height: 14px; margin: -6px -4px 0; font-size: 13px; }
+.star-range .shot-base { height: 17px; border-width: 2px; gap: 5px; }
+.star-range .shot-base i { width: 4px; height: 4px; }
+.star-range { padding-bottom: 43px; }
+.star-letter { height: 50px; font-size: 35px; }
+.shoot-paused { z-index: 6; }
+.shot-effects { position: absolute; inset: 0; z-index: 4; pointer-events: none; --spark-color: #fff1a6; }
+.shot-effects.is-miss { --spark-color: #f6c89e; }
+.shot-flight { position: absolute; left: var(--start-x); top: var(--start-y); margin: -11px 0 0 -11px; width: 22px; height: 22px; color: #fff2b4; font: 25px/22px sans-serif; text-shadow: 0 0 9px #fff1b5; animation: shot-flight .24s ease-in forwards; }
+.shot-flight::before { content: ''; position: absolute; right: 18px; top: 10px; width: 30px; height: 4px; border-radius: 10px; background: linear-gradient(90deg, transparent, #ffe4a4); }
+.shot-impact { position: absolute; left: var(--hit-x); top: var(--hit-y); width: 58px; height: 58px; margin: -29px; border: 3px solid var(--spark-color); border-radius: 50%; opacity: 0; animation: shot-impact .46s .2s ease-out both; }
+.shot-spark { position: absolute; left: var(--hit-x); top: var(--hit-y); color: var(--spark-color); font: normal 20px/1 sans-serif; opacity: 0; animation: shot-spark .66s .2s ease-out both; }
+.shot-effects.is-hit .shot-spark:nth-child(3n) { color: #bff9d9; }
+@keyframes shot-flight { from { transform: translate(0,0) rotate(var(--flight-angle)); opacity: 1; } to { transform: translate(var(--fly-x),var(--fly-y)) rotate(var(--flight-angle)); opacity: 0; } }
+@keyframes shot-impact { from { transform: scale(.5); opacity: .9; } to { transform: scale(1.65); opacity: 0; } }
+@keyframes shot-spark { from { transform: translate(-50%,-50%) scale(.5); opacity: 1; } to { transform: translate(calc(var(--spark-x) - 50%),calc(var(--spark-y) - 50%)) rotate(var(--spark-turn)) scale(.3); opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .shot-fired .shot-base { animation: shot-recoil .24s ease-out; }
+  .shoot-target.shot-hit > span, .star-letter.shot-hit > span { display: block; animation: shot-letter-pop .5s .2s ease-out; }
+  @keyframes shot-recoil { 50% { transform: translateY(3px); } }
+  @keyframes shot-letter-pop { 45% { transform: scale(1.17); } }
+}
+@media (max-height: 700px) { .star-range { height: 144px; } .star-letter { height: 44px; font-size: 31px; } }
+@media (prefers-reduced-motion: reduce) { .shot-barrel { transition: none; } .shot-effects { display: none; } }
