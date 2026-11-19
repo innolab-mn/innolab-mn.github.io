@@ -54,7 +54,11 @@ for (const word of modelWords.filter(word => word.model.endsWith('.gltf'))) {
 }
 const story = JSON.parse(await readFile(new URL('data/story.json', root), 'utf8'));
 assert.deepEqual(story.chapters.map(chapter => chapter.id), [1,2,3]);
-for (const chapter of story.chapters) {
+const starBook = JSON.parse(await readFile(new URL('data/star-book.json', root), 'utf8'));
+assert.deepEqual(starBook.chapters.map(chapter => chapter.id), ['star-1','star-2','star-3']);
+assert.deepEqual(starBook.chapters.map(chapter => chapter.number), [1,2,3]);
+assert.ok(starBook.ending.title && starBook.ending.text);
+for (const chapter of [...story.chapters, ...starBook.chapters]) {
   for (const text of [chapter.title, chapter.intro, chapter.goal, chapter.scene.title, chapter.scene.text]) assert.ok(text?.trim());
   assert.equal(chapter.scene.choices.length, 2, 'Two narrative choices per chapter');
   const assets = [chapter.image, chapter.scene.image];
@@ -134,6 +138,15 @@ for(const action of actions.actions){
   }
 }
 const reading=JSON.parse(await readFile(new URL('data/readings.json',root),'utf8'));
+const dinosaurPassages=reading.passages.filter(passage=>passage.category==='dinosaurs');
+assert.equal(dinosaurPassages.length,50);
+assert.ok(dinosaurPassages.every(passage=>passage.categoryLabel==='Үлэг гүрвэл'&&passage.wordCount>=300&&passage.wordCount<=400));
+const classTripPassages=reading.passages.filter(passage=>passage.category==='class-trips');
+assert.equal(classTripPassages.length,40);
+assert.ok(classTripPassages.every(passage=>passage.categoryLabel==='Ангийн аялал'&&passage.ageGroup==='10-13'));
+const shortClassTrips=reading.passages.filter(passage=>passage.collection==='class-trips-short');
+assert.equal(shortClassTrips.length,20);
+assert.ok(shortClassTrips.every(passage=>passage.category==='class-trips'&&passage.wordCount>=250&&passage.wordCount<=300));
 const sourceDir = new URL('../content/fast_read/readings/', import.meta.url);
 const sourceFiles = (await readdir(sourceDir)).filter(name => name.endsWith('.json'));
 const sources = (await Promise.all(sourceFiles.map(async name => JSON.parse(await readFile(new URL(name, sourceDir), 'utf8'))))).flat();

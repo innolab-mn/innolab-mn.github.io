@@ -52,13 +52,20 @@ function frame(title, body, closeLabel='Хаах') {
   dialog.scrollTop=0;
   if(!dialog.open) dialog.showModal();
 }
-export function renderAlphabet(collection, callbacks) {
+function prepareAlphabet(collection, callbacks) {
   data=collection; hooks=callbacks; main=callbacks.main;
   if(!dialog) {
     dialog=$('#alphabet-dialog');
     dialog.addEventListener('close',()=>{stop();speaker.stop();stopLearningAudio();clearShotEffects($('.star-range'));round=null;if(location.hash==='#alphabet')renderAlphabet(data,hooks);});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   }
+}
+export function playAlphabetChapter(collection, callbacks, chapter) {
+  prepareAlphabet(collection, callbacks);
+  start('star', undefined, chapter);
+}
+export function renderAlphabet(collection, callbacks) {
+  prepareAlphabet(collection, callbacks);
   const fonts = data.fonts;
   const starRank = pictureShotRank(state.starHits);
   const availableModes = selectedLesson === 'beginner' ? modes : modes.filter(mode => mode.id !== 'star');
@@ -103,14 +110,15 @@ function detail(id) {
   $('#letter-learned').onclick=()=>{if(!state.learned.includes(id))state.learned.push(id);persist();hooks.chime(true);dialog.close();};
   $('#letter-practice').onclick=()=>start('art',letter);
 }
-function start(modeId,focusedLetter) {
+function start(modeId,focusedLetter,chapter) {
   stop();speaker.stop();stopLearningAudio();
   const mode=modes.find(item=>item.id===modeId);
-  const lesson=focusedLetter?.lesson||selectedLesson;
+  const lesson=chapter?'beginner':focusedLetter?.lesson||selectedLesson;
   const pool=getLessonLetters(data,lesson);
-  const shots = mode.id === 'star' ? pictureShotPlan(pool, questionCount) : null;
+  const shots = mode.id === 'star' ? pictureShotPlan(pool, chapter?.count ?? questionCount) : null;
   const queue = shots ? shots.map(shot => shot.letter) : focusedLetter ? data.fonts.map(() => focusedLetter) : shuffle(pool).slice(0, questionCount);
   round={mode,lesson,pool,focused:!!focusedLetter,shots,queue,index:0,mistakes:0,retried:false,answered:false,started:Date.now(),fontOffset:Math.floor(Math.random()*data.fonts.length),seconds:hooks.getQuestionSeconds()};
+  round.chapter=chapter;
   question();
 }
 function question() {
@@ -128,7 +136,7 @@ function question() {
   const title=shot ? 'Ямар үсгээр эхэлдэг вэ?' : round.lesson==='context'?'Үг доторх өнгөт үсгийг олъё.':letter.usage==='shape'?'Өнгөөр тодруулсан үсгийг олъё.':round.mode.id==='art'?'Дүрс дотор аль үсэг байна вэ?':round.mode.id==='font'?'Өөр фонтоор бичсэн ижил үсгийг олъё.':'Жижиг үсэг найзыг нь олъё.';
   const board = shot ? pictureShotBoard(shot, selectedFont) : `<div class="letter-prompt"><img src="${letter.variants[font][kind]}" alt="Таних үсгийн зураг"></div><div class="letter-answers" style="--answer-count:${choiceCount}">${options.map((item,index)=>`<button class="letter-answer" data-letter-answer="${item.id}" aria-label="${answerKind==='lower'?item.lower:item.upper} үсэг"><img src="${item.variants[answerFont][answerKind]}" alt=""><small>${data.fonts.find(entry=>entry.id===answerFont).label}</small></button>`).join('')}</div>`;
   frame(round.mode.title,`<div class="game-body letter-game${shot?' star-game':''}"><div class="game-progress" role="progressbar" aria-label="Үсгийн дасгалын ахиц" aria-valuemin="0" aria-valuemax="${round.queue.length}" aria-valuenow="${round.index}"><span style="width:${round.index/round.queue.length*100}%"></span></div><div class="game-clock-row"><span class="question-clock" role="timer" aria-label="Үлдсэн хугацаа">◷ <b class="letter-remaining">${round.seconds?time(round.seconds):'∞'}</b><small>${round.seconds?'үлдлээ':'хугацаагүй'}</small></span><span class="elapsed-clock">Нийт <b class="letter-elapsed">${time(Math.floor((Date.now()-round.started)/1000))}</b></span></div><div class="question-meta">ҮСЭГ ${round.index+1} / ${round.queue.length}${shot ? ` · ЦОЛ ${shot.rank.index+1} / 9 · ${choiceCount} бай · ★ ${state.starHits}` : ''}</div><h3 tabindex="-1">${title}</h3>${board}<div class="letter-feedback feedback" role="status" aria-live="polite">${shot ? 'Сонсоод, эхний үсгийг нь онилоорой.' : 'Үсгийнхээ хэлбэрийг сайн ажиглаарай.'}</div><button class="next-button letter-next" hidden>${round.index+1===round.queue.length?'Амжилтаа харах ✦':'Дараагийн үсэг →'}</button></div>`,'Үсгийн тоглоомоос гарах');
-  $('#alphabet-title').textContent = `${lessons.find(item=>item.id===round.lesson).title} · ${round.mode.title}`;
+  $('#alphabet-title').textContent = `${round.chapter?.title ?? lessons.find(item=>item.id===round.lesson).title} · ${round.mode.title}`;
   if (kind==='illustrated') addWordAudio(letter, $('.letter-prompt'));
   const spokenPrompt = shot || round.mode.id==='font' || round.mode.id==='case';
   if (spokenPrompt) {
@@ -273,6 +281,15 @@ function finish(){
   frame('Үсгийн аяллын амжилт',`<div class="game-body"><div class="reward">✦</div><h3 class="result-title">Үсгүүдтэйгээ танилцлаа!</h3><p class="result-copy">Эхний оролдлогоор <strong>${score} / ${round.queue.length}</strong> үсгийг зөв оллоо.<br>${lesson.title}: ${known} / ${round.pool.length} үсэгтэй танил болсон<br>◷ ${time(Math.floor((Date.now()-round.started)/1000))}</p><div class="alphabet-result-letters">${[...new Set(round.queue.map(letter=>letter.upper))].join(' ')}</div><div class="result-actions"><button class="secondary-button" id="alphabet-home">Үсгийн цомог</button><button class="primary-button" id="alphabet-again">Дахин тоглох →</button></div></div>`);
   if(modeId==='star') $('.result-copy').insertAdjacentHTML('afterend',`<div class="star-result-rank${round.promotion?' star-promotion':''}"><strong>${rank.icon} ${rank.name}${round.promotion?' · Цол ахилаа!':''}</strong><p>★ ${rank.hits} од · ${rank.targets} үсгээс сонгоно</p></div>`);
   $('#alphabet-home').onclick=()=>dialog.close();$('#alphabet-again').onclick=()=>start(modeId);
+  const chapter=round.chapter;
+  if(chapter){
+    const stars=round.mistakes===0?3:round.mistakes<=Math.ceil(round.queue.length/3)?2:1;
+    chapter.onComplete(stars);
+    $('.result-copy').insertAdjacentHTML('afterend',`<p class="result-stars" aria-label="${stars} од">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</p>`);
+    $('#alphabet-home').textContent='Бүлгийн эхлэл';
+    $('#alphabet-again').textContent='Түүхээ үргэлжлүүлэх →';
+    $('#alphabet-again').onclick=()=>{dialog.close();chapter.onContinue();};
+  }
 }
 
 function addWordAudio(letter, anchor) {

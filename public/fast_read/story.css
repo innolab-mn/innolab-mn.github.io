@@ -24,6 +24,12 @@
 .story-level-card h3 { font-size: 16px; line-height: 1.5; min-height: 48px; margin-top: 6px; }
 .story-level-card p { min-height: 18px; }
 .story-hero .hero-art { width: 42%; right: 8px; }
+.journey-book + .journey-book { margin-top: 34px; }
+.star-book-card .story-card-art { overflow: hidden; }
+.star-book-card .story-card-art img { object-fit: cover; object-position: center 53%; }
+.star-book-art { object-fit: cover; object-position: center 55%; }
+.star-book-hero .hero-copy { width: 53%; }
+.star-book-hero .hero-art { border-radius: 18px; object-fit: cover; height: 82%; top: 9%; right: 15px; }
 @media (max-width: 1100px) { .story-level-card h3 { font-size: 15px; } }
 @media (max-width: 560px) {
   .story-body { padding: 24px 20px; }
@@ -42,4 +48,6 @@
   .story-level-card p { max-width: 60%; }
   .story-hero .hero-art { width: 51%; bottom: -6px; top: auto; height: 55%; right: -3px; }
   .story-hero .hero-badge { max-width: 185px; }
+  .star-book-hero .hero-copy { width: 100%; }
+  .star-book-hero .hero-art { width: calc(100% - 44px); height: 42%; top: auto; bottom: 17px; right: 22px; }
 }

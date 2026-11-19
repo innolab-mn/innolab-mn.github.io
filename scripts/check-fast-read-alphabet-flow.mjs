@@ -91,6 +91,14 @@ const timed=await fixture({seconds:15});timed.run("start('star');round.deadline=
 assert.equal(timed.saved().starHits,0,'Timeouts do not award stars');
 assert.equal(timed.nodes.get('.letter-next').hidden,false,'Timeouts allow a calm manual continuation');
 assert.equal(timed.timers.size,0);
+const chapter=await fixture({sound:false});
+chapter.run(`selectedLesson='special';let recordedStars=0, continued=false;
+  playAlphabetChapter(data,hooks,{title:'Номноос ниссэн од',count:5,onComplete:stars=>{recordedStars=stars;},onContinue:()=>{continued=true;}});`);
+assert.equal(chapter.run('round.lesson'),'beginner','Journey uses picture letters even after visiting the advanced lesson');
+for(let i=0;i<5;i++){chapter.choose(true);chapter.flush();}
+assert.equal(chapter.run('recordedStars'),3,'A completed chapter awards its own stars');
+chapter.nodes.get('#alphabet-again').onclick();
+assert.equal(chapter.run('continued'),true,'The chapter result leads back to the book story');
 for (const mode of ['font','case']) {
   const exercise=await fixture();exercise.run(`start('${mode}',data.letters.find(letter=>letter.id==='a'))`);
   const prompt=exercise.audio.at(-1);prompt.onended();prompt.onended();

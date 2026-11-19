@@ -1,6 +1,6 @@
 import { renderProfiles, updateProfileHeader } from './profiles-ui.js';
 import { profileStorage } from './profiles-store.js';
-import { renderAlphabet, resetAlphabet, leaveAlphabet } from './alphabet.js';
+import { renderAlphabet, resetAlphabet, leaveAlphabet, playAlphabetChapter } from './alphabet.js';
 import { renderActions, resetActions, leaveActions } from './actions.js';
 import { renderReading, pauseReading, resetReading } from './reading.js';
 import { renderShooter, leaveShooter, resetShooter } from './shooter.js';
@@ -19,6 +19,7 @@ const levels = [
 let words = [];
 let shooterExtra = [];
 let story;
+let starBook;
 let alphabet;
 let actions;
 let progress = { completed: {}, learned: [], storyChoices: {}, sound: true, questionSeconds: 30 };
@@ -45,7 +46,7 @@ function save() {
   catch { toast('Ахиц хадгалагдсангүй. Энэ удаагийн тоглоомоо үргэлжлүүлж болно.'); }
   updateHeader();
 }
-function totalStars() { return levels.reduce((sum, level) => sum + (progress.completed[level.id] || 0), 0); }
+function totalStars() { return [...levels, ...(starBook?.chapters ?? [])].reduce((sum, level) => sum + (progress.completed[level.id] || 0), 0); }
 function updateHeader() {
   updateProfileHeader();
   $('#total-stars').textContent = totalStars();
@@ -93,7 +94,11 @@ function shuffle(items) {
   }
   return result;
 }
-function unlocked(id) { return id === 1 || !!progress.completed[id - 1]; }
+function unlocked(id) {
+  const chapters = typeof id === 'string' ? starBook.chapters : story.chapters;
+  const index = chapters.findIndex(part => part.id === id);
+  return index === 0 || (index > 0 && !!progress.completed[chapters[index - 1].id]);
+}
 function image(word, extra = '') { return `<img src="${word.image}" alt="" ${extra}>`; }
 function timeText(seconds) { return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`; }
 function stopClock() { clearInterval(questionTicker); questionTicker = undefined; }
@@ -141,11 +146,11 @@ function renderSettings() {
   $('#reset-cancel').onclick = () => { $('#reset-confirmation').hidden = true; $('#reset-ask').focus(); };
   $('#reset-progress').onclick = () => { progress.completed = {}; progress.learned = []; progress.storyChoices = {}; resetAlphabet(); resetActions(); resetReading(); resetShooter(); save(); renderSettings(); toast('Шинэ аялалд бэлэн боллоо!'); };
 }
-function chapter(id) { return story.chapters.find(item => item.id === id); }
+function chapter(id) { return (typeof id === 'string' ? starBook : story).chapters.find(item => item.id === id); }
 function storyFrame(id, content) {
   stopClock();
   gameDialog.classList.remove('question-dialog','result-dialog');
-  $('#game-content').innerHTML = `<div class="game-head"><h2 id="game-title">Бүлэг ${id} · ${chapter(id).place}</h2><button class="close-button" aria-label="Аяллаас гарах">×</button></div>${content}`;
+  $('#game-content').innerHTML = `<div class="game-head"><h2 id="game-title">Бүлэг ${chapter(id).number ?? id} · ${chapter(id).place}</h2><button class="close-button" aria-label="Аяллаас гарах">×</button></div>${content}`;
   $('#game-content .close-button').onclick = () => gameDialog.close();
   gameDialog.scrollTop = 0;
   if (!gameDialog.open) gameDialog.showModal();
@@ -156,9 +161,23 @@ function renderChapterIntro(id) {
   storyFrame(id, `<div class="story-body"><span class="story-kicker">БОРЫН НОМЫН АЯЛАЛ · ${id} / 3</span><img class="story-illustration" src="${part.image}" alt="${part.title}"><h3>${part.title}</h3><p class="story-text">${part.intro}</p><div class="story-goal"><span>▤</span><div><strong>${part.goal}</strong><small>${level.count} даалгавар · ${progress.questionSeconds ? `Нэг асуулт ${progress.questionSeconds} секунд` : 'Яарах хэрэггүй, хугацаагүй'}</small></div></div><button class="primary-button story-begin">${id === 1 ? 'Бортой хамт эхэлье →' : 'Аяллаа үргэлжлүүлье →'}</button><p class="story-footnote">Түүх унших үед цаг гүйхгүй.</p></div>`);
   $('.story-begin').onclick = () => { session.startedAt = Date.now(); renderQuestion(); $('#game-content .choice').focus(); };
 }
+function startStarChapter(id) {
+  if (!unlocked(id)) return;
+  const part = chapter(id);
+  storyFrame(id, `<div class="story-body"><img class="story-illustration star-book-art" src="${part.image}" alt=""><h3>${part.title}</h3><p class="story-text">${part.intro}</p><div class="story-goal"><div><strong>${part.goal}</strong><small>${part.count} зураг</small></div></div><button class="primary-button story-begin">Харваж эхлэх ✦</button></div>`);
+  $('.story-begin').onclick = () => playAlphabetChapter(alphabet, alphabetCallbacks, {
+    title: part.title,
+    count: part.count,
+    onComplete(stars) {
+      progress.completed[id] = Math.max(progress.completed[id] || 0, stars);
+      save();
+    },
+    onContinue: () => renderStoryScene(id),
+  });
+}
 function renderStoryScene(id) {
   const scene = chapter(id).scene;
-  storyFrame(id, `<div class="story-body"><span class="story-kicker">ЗАМД ТОХИОЛДСОН НЭГ МӨЧ</span><img class="story-illustration" src="${scene.image}" alt="${scene.title}"><h3>${scene.title}</h3><p class="story-text">${scene.text}</p><div class="story-choices">${shuffle(scene.choices).map(choice => `<button class="story-choice" data-story-choice="${choice.id}"><span>${choice.label}</span><span>→</span></button>`).join('')}</div><p class="story-footnote">Бортой хамт яаж үргэлжлүүлэх вэ?</p></div>`);
+  storyFrame(id, `<div class="story-body"><span class="story-kicker">ЗАМД ТОХИОЛДСОН НЭГ МӨЧ</span><img class="story-illustration" src="${scene.image}" alt="${scene.title}"><h3>${scene.title}</h3><p class="story-text">${scene.text}</p><div class="story-choices">${shuffle(scene.choices).map(choice => `<button class="story-choice" data-story-choice="${choice.id}"><span>${choice.label}</span><span>→</span></button>`).join('')}</div><p class="story-footnote">${typeof id === 'string' ? 'Цоохор одоо яах бол?' : 'Бортой хамт яаж үргэлжлүүлэх вэ?'}</p></div>`);
   $('#game-content').querySelectorAll('[data-story-choice]').forEach(button => button.onclick = () => renderStoryOutcome(id, button.dataset.storyChoice, false));
 }
 function renderStoryOutcome(id, choiceId, repaired) {
@@ -167,9 +186,17 @@ function renderStoryOutcome(id, choiceId, repaired) {
   const canContinue = !choice.repair || repaired;
   progress.storyChoices[id] = { choice: choiceId, repaired };
   save();
-  storyFrame(id, `<div class="story-body"><span class="story-kicker">${canContinue ? 'ЗАМ ЦААШ ҮРГЭЛЖИЛНЭ' : 'БОР ТҮР ЗОГСООД АЖИГЛАЛАА'}</span><img class="story-illustration" src="${repaired ? choice.repairImage : choice.image}" alt="Найзуудын замд тохиолдсон мөч"><h3>${canContinue ? 'Дахиад нэг алхам.' : 'Цааш яах бол?'}</h3><p class="story-text" role="status">${repaired ? choice.repaired : choice.outcome}</p><button class="primary-button" id="story-continue">${canContinue ? scene.continueLabel : choice.repair + ' →'}</button><button class="story-reconsider" id="story-reconsider">Өөрөөр бодоод үзье</button></div>`);
+  storyFrame(id, `<div class="story-body"><span class="story-kicker">${canContinue ? 'ЗАМ ЦААШ ҮРГЭЛЖИЛНЭ' : 'ТҮР ЗОГСООД АЖИГЛАЯ'}</span><img class="story-illustration" src="${repaired ? choice.repairImage : choice.image}" alt="Найзуудын замд тохиолдсон мөч"><h3>${canContinue ? 'Дахиад нэг алхам.' : 'Цааш яах бол?'}</h3><p class="story-text" role="status">${repaired ? choice.repaired : choice.outcome}</p><button class="primary-button" id="story-continue">${canContinue ? scene.continueLabel : choice.repair + ' →'}</button><button class="story-reconsider" id="story-reconsider">Өөрөөр бодоод үзье</button></div>`);
   $('#story-continue').onclick = () => {
     if (!canContinue) renderStoryOutcome(id, choiceId, true);
+    else if (typeof id === 'string') {
+      const next = starBook.chapters[chapter(id).number];
+      if (next) startStarChapter(next.id);
+      else {
+        storyFrame(id, `<div class="story-body"><img class="story-illustration star-book-art" src="${chapter(id).image}" alt=""><h3>${starBook.ending.title}</h3><p class="story-text">${starBook.ending.text}</p><button class="primary-button" id="story-end-home">Миний аялал руу →</button></div>`);
+        $('#story-end-home').onclick = () => gameDialog.close();
+      }
+    }
     else if (id < 3) startGame(id + 1);
     else renderStoryEnding();
   };
@@ -179,13 +206,29 @@ function renderStoryEnding() {
   storyFrame(3, `<div class="story-body"><span class="story-kicker">БИДНИЙ ХАМТДАА БҮТЭЭСЭН НОМ</span><img class="story-illustration" src="assets/story/ball-friends.svg" alt="Бор, нохой хоёр бөмбөгөөр тоглож байна"><h3>Ном дүүрэн үг.<br>Нуга дүүрэн найз.</h3><p class="story-text">Бор номоо найзууддаа дэлгэв. Хуудас бүрд нэг зураг, нэг үг, хамт өнгөрүүлсэн нэг мөч байлаа.</p><div class="story-word-shelf">${words.filter(word => ['dad','mom','cat','dog','sun','book'].includes(word.id)).map(word => `<div>${image(word)}<span>${word.text}</span></div>`).join('')}</div><button class="primary-button" id="story-end-home">Миний аялал руу →</button><p class="story-footnote">Номоо дахин дэлгэх бүрд шинэ зүйл анзаарч болно.</p></div>`);
   $('#story-end-home').onclick = () => gameDialog.close();
 }
+function renderStarBook() {
+  const cards = starBook.chapters.map(part => {
+    const open = unlocked(part.id);
+    const stars = progress.completed[part.id];
+    const startLabel = stars ? 'Дахин аялах' : open ? 'Бүлгээ нээх' : `Эхлээд ${part.number - 1}-р бүлгийг дуусгаарай`;
+    return `<article class="level-card story-level-card star-book-card">
+      <div class="level-top"><span class="pill">БҮЛЭГ ${part.number}</span><span class="level-status">${stars ? '★'.repeat(stars) + '☆'.repeat(3 - stars) : ''}</span></div>
+      <div class="level-illustration story-card-art"><img src="${part.image}" alt=""></div>
+      <small class="chapter-place">${part.place}</small><h3>${part.title}</h3><div class="level-meta"><span>${part.count} зураг</span></div>
+      <button class="level-button" data-star-chapter="${part.id}" ${open ? '' : 'disabled'}><span>${startLabel}</span><span>${open ? '→' : '⌑'}</span></button>
+      ${stars ? `<button class="revisit-story" data-star-scene="${part.id}">Түүхээ эргэн харах ↗</button>` : ''}
+    </article>`;
+  });
+  return `<section class="journey-book" aria-labelledby="star-book-title"><div class="section-heading"><div><h2 id="star-book-title">${starBook.title}</h2><p>Үсгийн дүрсийн одон харваа</p></div></div><div class="level-grid">${cards.join('')}</div></section>`;
+}
 function renderHome() {
-  const completed = levels.filter(level => progress.completed[level.id]).length;
+  const completed = [...levels, ...starBook.chapters].filter(level => progress.completed[level.id]).length;
   main.innerHTML = `
-    <section class="hero story-hero" aria-labelledby="hero-title"><div class="hero-copy"><div class="eyebrow">${words.length} ҮГ · 3 БҮЛЭГ · НЭГ ХАМТЫН АЯЛАЛ</div><h1 id="hero-title">Бяцхан Борын<br><em>номын аялал</em></h1><p>${story.subtitle}<br>Бортой хамт тоглонгоо уншиж сурцгаая!</p><span class="hero-badge"><span>✦</span> Замд юу тохиолдох бол?</span></div><img class="hero-art" src="assets/story/chapter-1.svg" alt="Бор шувуу гэрийнхээ дэргэд номоо дэлгэжээ"></section>
+    <section class="hero story-hero star-book-hero" aria-labelledby="hero-title"><div class="hero-copy"><h1 id="hero-title">Миний аялал</h1><p>${starBook.subtitle}</p></div><img class="hero-art" src="${starBook.chapters[0].image}" alt=""></section>
     <a class="alphabet-invite" href="#alphabet"><div><span>ШИНЭ ТОГЛООМ · 35 ҮСЭГ</span><strong>Үсгүүд дүрс болон хувирлаа!</strong><small>Өөр өөр фонттой үсэг найзуудаа таниарай. →</small></div><div aria-hidden="true"><img src="assets/alphabet/a-nunito.svg" alt=""><img src="assets/alphabet/m-comfortaa.svg" alt=""></div></a>
-    <section class="stats" aria-label="Миний ахиц"><div class="stat"><span class="stat-icon">▤</span><div><strong>${progress.learned.filter(id => words.some(word => word.id === id)).length}<span style="color:#bcc4d2;font-size:13px"> / ${words.length}</span></strong><small>Танил болсон үг</small></div></div><div class="stat"><span class="stat-icon">✦</span><div><strong>${totalStars()}<span style="color:#bcc4d2;font-size:13px"> / 9</span></strong><small>Цуглуулсан од</small></div></div><div class="stat"><span class="stat-icon">⚑</span><div><strong>${completed}<span style="color:#bcc4d2;font-size:13px"> / 3</span></strong><small>Дуусгасан түвшин</small></div></div></section>
-    <section aria-labelledby="levels-title"><div class="section-heading"><div><h2 id="levels-title">Аяллын гурван бүлэг</h2><p>Үгээ олоод, Борын түүхийг цааш үргэлжлүүлээрэй.</p></div><span style="font-size:10px;color:#a0a9b9">3 түвшин</span></div><div class="level-grid">${levels.map(level => {
+    <section class="stats" aria-label="Миний ахиц"><div class="stat"><span class="stat-icon">▤</span><div><strong>${progress.learned.filter(id => words.some(word => word.id === id)).length}<span style="color:#bcc4d2;font-size:13px"> / ${words.length}</span></strong><small>Танил болсон үг</small></div></div><div class="stat"><span class="stat-icon">✦</span><div><strong>${totalStars()}<span style="color:#bcc4d2;font-size:13px"> / 18</span></strong><small>Цуглуулсан од</small></div></div><div class="stat"><span class="stat-icon">⚑</span><div><strong>${completed}<span style="color:#bcc4d2;font-size:13px"> / 6</span></strong><small>Дуусгасан бүлэг</small></div></div></section>
+    ${renderStarBook()}
+    <section class="journey-book" aria-labelledby="levels-title"><div class="section-heading"><div><h2 id="levels-title">${story.title}</h2><p>Үгээ олоод, Борын түүхийг цааш үргэлжлүүлээрэй.</p></div><span style="font-size:10px;color:#a0a9b9">3 түвшин</span></div><div class="level-grid">${levels.map(level => {
       const open = unlocked(level.id); const stars = progress.completed[level.id];
       const part = chapter(level.id);
       return `<article class="level-card story-level-card"><div class="level-top"><span class="pill">БҮЛЭГ 0${level.id}</span><span class="level-status">${stars ? '★'.repeat(stars) + '☆'.repeat(3 - stars) : open ? '● Нээлттэй' : '⌑ Түгжээтэй'}</span></div><div class="level-illustration story-card-art" aria-hidden="true"><img src="${part.image}" alt=""></div><small class="chapter-place">${part.place}</small><h3>${part.title}</h3><p>${part.goal}</p><div class="level-meta"><span>◷ ${level.count} даалгавар</span><span>${level.options} сонголт</span></div><button class="level-button" data-start="${level.id}" ${open ? '' : 'disabled'}><span>${stars ? 'Дахин аялах' : open ? 'Тоглож эхлэх' : `Эхлээд ${level.id - 1}-р бүлгийг дуусгаарай`}</span><span>${open ? '→' : '⌑'}</span></button>${stars ? `<button class="revisit-story" data-scene="${level.id}">Борын мөчийг эргэн харах ↗</button>` : ''}</article>`;
@@ -193,6 +236,8 @@ function renderHome() {
     <aside class="daily-tip"><span class="tip-icon">☀</span><div><strong>Хамтдаа сурах жижигхэн зөвлөгөө</strong><p>Зургийг нь хараад, үгийг нь хамт чангаар хэлээрэй. Яарах хэрэггүй шүү!</p></div><span>✧</span></aside>`;
   main.querySelectorAll('[data-start]').forEach(button => button.addEventListener('click', () => startGame(Number(button.dataset.start))));
   main.querySelectorAll('[data-scene]').forEach(button => button.addEventListener('click', () => renderStoryScene(Number(button.dataset.scene))));
+  main.querySelectorAll('[data-star-chapter]').forEach(button => button.onclick = () => startStarChapter(button.dataset.starChapter));
+  main.querySelectorAll('[data-star-scene]').forEach(button => button.onclick = () => renderStoryScene(button.dataset.starScene));
 }
 function renderWords() {
   const categories = [{id:'all',label:'Бүх үг'}, ...words.reduce((map, word) => map.set(word.category, {id:word.category,label:word.categoryLabel}), new Map()).values()];
@@ -300,6 +345,7 @@ function finishGame() {
   $('#play-next').textContent = 'Бортой цааш алхъя →';
   $('#play-next').onclick = () => renderStoryScene(level.id);
 }
+const alphabetCallbacks = {main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds};
 function route() {
   const view = location.hash.slice(1) || 'home';
   stopLearningAudio();
@@ -307,12 +353,12 @@ function route() {
   if(view!=='alphabet')leaveAlphabet();
   if(view!=='reading')pauseReading();
   if(view!=='shooter')leaveShooter();
-  document.title = view === 'profiles' ? 'fast_read — Хүүхдийн профайлууд' : view === 'shooter' ? 'fast_read — Үсгийн одон харваа' : view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Бяцхан Борын номын аялал';
+  document.title = view === 'profiles' ? 'fast_read — Хүүхдийн профайлууд' : view === 'shooter' ? 'fast_read — Үсгийн одон харваа' : view === 'reading' ? 'fast_read — Уншлагын хурд' : view === 'actions' ? 'fast_read — Үйл үг, өгүүлбэр' : view === 'alphabet' ? 'fast_read — 35 үсгийн дүрст аялал' : 'fast_read — Миний аялал';
   document.querySelectorAll('[data-view]').forEach(link => {
     link.classList.toggle('active', link.dataset.view === view);
     if (link.dataset.view === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
-  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, {main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='actions')renderActions(actions,{main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast,isSoundOn:()=>progress.sound}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound,actions:actions.actions}); else renderHome();
+  if (view === 'profiles') renderProfiles({main,toast}); else if (view === 'words') renderWords(); else if (view === 'models') renderModels(); else if (view === 'settings') renderSettings(); else if (view === 'alphabet') renderAlphabet(alphabet, alphabetCallbacks); else if(view==='actions')renderActions(actions,{main,chime,toast,isSoundOn:()=>progress.sound,getQuestionSeconds:()=>progress.questionSeconds}); else if(view==='reading')renderReading({main,chime,toast,isSoundOn:()=>progress.sound}); else if(view==='shooter')renderShooter([...words,...shooterExtra],{main,chime,toast,isSoundOn:()=>progress.sound,actions:actions.actions}); else renderHome();
   window.scrollTo(0, 0);
 }
 gameDialog.addEventListener('close', () => { stopClock(); session = null; route(); });
@@ -322,11 +368,12 @@ for (const dialog of [gameDialog, wordDialog]) dialog.addEventListener('click', 
 $('#sound-toggle').onclick = () => { progress.sound = !progress.sound; if(!progress.sound)stopLearningAudio(); save(); if (progress.sound) chime(true); if (location.hash === '#settings') renderSettings(); };
 window.addEventListener('hashchange', route);
 try {
-  const responses = await Promise.all([fetch('./data/words.json'), fetch('./data/story.json'), fetch('./data/alphabet.json'),fetch('./data/actions.json'),fetch('./data/shooter-extra.json')]);
+  const responses = await Promise.all([fetch('./data/words.json'), fetch('./data/story.json'), fetch('./data/alphabet.json'),fetch('./data/actions.json'),fetch('./data/shooter-extra.json'),fetch('./data/star-book.json')]);
   if (responses.some(response => !response.ok)) throw new Error('Content unavailable');
-  [words, story, alphabet, actions, shooterExtra] = await Promise.all(responses.map(response => response.json()));
+  [words, story, alphabet, actions, shooterExtra, starBook] = await Promise.all(responses.map(response => response.json()));
   if (!Array.isArray(words) || words.length < 4) throw new Error('Invalid word collection');
   if (!Array.isArray(story?.chapters) || story.chapters.length !== levels.length) throw new Error('Invalid story');
+  if (!Array.isArray(starBook?.chapters) || starBook.chapters.length !== 3) throw new Error('Invalid star book');
   if (!Array.isArray(alphabet?.letters) || alphabet.letters.length !== 35) throw new Error('Invalid alphabet');
   if (!Array.isArray(actions?.actions) || actions.actions.length < 3) throw new Error('Invalid action collection');
   if (!Array.isArray(shooterExtra)) throw new Error('Invalid shooter word collection');
